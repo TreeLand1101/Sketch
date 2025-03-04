@@ -105,49 +105,39 @@ def plot_line_chart(data, metric, short_title, threshold, markers, line_styles, 
 # ---------------------------
 # Test data (Data structure changed to List)
 data = {
+    "memory_50000_threshold_0.0001": [
+        ("MomentumSketch", {"Insert": 0.294628, "Query": 0.229649, "Recall": 0.784257, "Precision": 1.000000, "F1-score": 0.879085, "AAE": 210.837670, "ARE": 0.035387}),
+        ("TightSketch", {"Insert": 0.331206, "Query": 0.237589, "Recall": 0.714286, "Precision": 1.000000, "F1-score": 0.833333, "AAE": 294.655782, "ARE": 0.048416}),
+        ("StableSketch", {"Insert": 0.310333, "Query": 0.241013, "Recall": 0.563654, "Precision": 1.000000, "F1-score": 0.720945, "AAE": 88.474138, "ARE": 0.010038}),
+        ("MVSketch", {"Insert": 0.352721, "Query": 0.332274, "Recall": 0.292517, "Precision": 0.222798, "F1-score": 0.252941, "AAE": 12385.063123, "ARE": 1.785260})
+    ],
+
     "memory_100000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.347919, "Query": 0.333422, "Recall": 0.521866, "Precision": 0.197572, "F1-score": 0.286629, "AAE": 3875.968343, "ARE": 0.687400}),
-        ("MVSketch(2stage)", {"Insert": 0.280355, "Query": 0.359183, "Recall": 0.542274, "Precision": 0.421132, "F1-score": 0.474087, "AAE": 1336.055556, "ARE": 0.233729}),
-        ("StableSketch", {"Insert": 0.301112, "Query": 0.234884, "Recall": 0.679300, "Precision": 1.000000, "F1-score": 0.809028, "AAE": 155.566524, "ARE": 0.015543}),
-        ("StableSketch(2stage)", {"Insert": 0.237258, "Query": 0.279340, "Recall": 0.793003, "Precision": 0.789168, "F1-score": 0.791081, "AAE": 312.789216, "ARE": 0.042036}),
-        ("TightSketch", {"Insert": 0.310383, "Query": 0.233490, "Recall": 0.764820, "Precision": 1.000000, "F1-score": 0.866740, "AAE": 210.993647, "ARE": 0.020289}),
-        ("TightSketch(2stage)", {"Insert": 0.240006, "Query": 0.273893, "Recall": 0.835763, "Precision": 0.848126, "F1-score": 0.841899, "AAE": 297.511628, "ARE": 0.043256})
+        ("MomentumSketch", {"Insert": 0.284502, "Query": 0.230061, "Recall": 0.939747, "Precision": 1.000000, "F1-score": 0.968938, "AAE": 79.865564, "ARE": 0.013122}),
+        ("TightSketch", {"Insert": 0.317620, "Query": 0.230657, "Recall": 0.906706, "Precision": 1.000000, "F1-score": 0.951070, "AAE": 84.231511, "ARE": 0.015558}),
+        ("StableSketch", {"Insert": 0.306151, "Query": 0.238039, "Recall": 0.679300, "Precision": 1.000000, "F1-score": 0.809028, "AAE": 155.566524, "ARE": 0.015543}),
+        ("MVSketch", {"Insert": 0.356080, "Query": 0.339518, "Recall": 0.521866, "Precision": 0.197572, "F1-score": 0.286629, "AAE": 3875.968343, "ARE": 0.687400})
+    ],
+
+    "memory_150000_threshold_0.0001": [
+        ("MomentumSketch", {"Insert": 0.281130, "Query": 0.230607, "Recall": 0.968902, "Precision": 1.000000, "F1-score": 0.984205, "AAE": 38.585757, "ARE": 0.006777}),
+        ("TightSketch", {"Insert": 0.302623, "Query": 0.224169, "Recall": 0.963071, "Precision": 1.000000, "F1-score": 0.981188, "AAE": 44.344097, "ARE": 0.008219}),
+        ("StableSketch", {"Insert": 0.292950, "Query": 0.230008, "Recall": 0.734694, "Precision": 1.000000, "F1-score": 0.847059, "AAE": 155.871693, "ARE": 0.014521}),
+        ("MVSketch", {"Insert": 0.349339, "Query": 0.348509, "Recall": 0.674441, "Precision": 0.170349, "F1-score": 0.271997, "AAE": 1920.936599, "ARE": 0.376095})
     ],
 
     "memory_200000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.348649, "Query": 0.340729, "Recall": 0.788144, "Precision": 0.180946, "F1-score": 0.294320, "AAE": 1053.277435, "ARE": 0.218353}),
-        ("MVSketch(2stage)", {"Insert": 0.257853, "Query": 0.317110, "Recall": 0.941691, "Precision": 0.818412, "F1-score": 0.875734, "AAE": 224.542828, "ARE": 0.039645}),
-        ("StableSketch", {"Insert": 0.280776, "Query": 0.220588, "Recall": 0.769679, "Precision": 1.000000, "F1-score": 0.869852, "AAE": 176.231061, "ARE": 0.015442}),
-        ("StableSketch(2stage)", {"Insert": 0.202193, "Query": 0.229141, "Recall": 0.971817, "Precision": 0.882613, "F1-score": 0.925069, "AAE": 169.438000, "ARE": 0.027589}),
-        ("TightSketch", {"Insert": 0.300127, "Query": 0.222544, "Recall": 0.859086, "Precision": 1.000000, "F1-score": 0.924203, "AAE": 85.467195, "ARE": 0.011484}),
-        ("TightSketch(2stage)", {"Insert": 0.199445, "Query": 0.222052, "Recall": 0.982507, "Precision": 0.879896, "F1-score": 0.928375, "AAE": 175.561820, "ARE": 0.028819})
+        ("MomentumSketch", {"Insert": 0.277224, "Query": 0.224556, "Recall": 0.986395, "Precision": 1.000000, "F1-score": 0.993151, "AAE": 24.029557, "ARE": 0.004618}),
+        ("TightSketch", {"Insert": 0.298075, "Query": 0.221479, "Recall": 0.984451, "Precision": 1.000000, "F1-score": 0.992165, "AAE": 26.871668, "ARE": 0.005139}),
+        ("StableSketch", {"Insert": 0.289244, "Query": 0.228674, "Recall": 0.769679, "Precision": 1.000000, "F1-score": 0.869852, "AAE": 176.231061, "ARE": 0.015442}),
+        ("MVSketch", {"Insert": 0.346282, "Query": 0.335618, "Recall": 0.788144, "Precision": 0.180946, "F1-score": 0.294320, "AAE": 1053.277435, "ARE": 0.218353})
     ],
 
-    "memory_300000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.351203, "Query": 0.344840, "Recall": 0.916424, "Precision": 0.434162, "F1-score": 0.589191, "AAE": 416.394486, "ARE": 0.087322}),
-        ("MVSketch(2stage)", {"Insert": 0.242354, "Query": 0.292015, "Recall": 0.984451, "Precision": 0.920909, "F1-score": 0.951620, "AAE": 127.978282, "ARE": 0.019453}),
-        ("StableSketch", {"Insert": 0.274037, "Query": 0.217830, "Recall": 0.808552, "Precision": 1.000000, "F1-score": 0.894143, "AAE": 125.830529, "ARE": 0.016621}),
-        ("StableSketch(2stage)", {"Insert": 0.197737, "Query": 0.209395, "Recall": 1.000000, "Precision": 0.923698, "F1-score": 0.960336, "AAE": 123.336249, "ARE": 0.018547}),
-        ("TightSketch", {"Insert": 0.294174, "Query": 0.215888, "Recall": 0.906706, "Precision": 1.000000, "F1-score": 0.951070, "AAE": 134.331190, "ARE": 0.015794}),
-        ("TightSketch(2stage)", {"Insert": 0.185501, "Query": 0.203590, "Recall": 1.000000, "Precision": 0.923698, "F1-score": 0.960336, "AAE": 123.532556, "ARE": 0.018596})
-    ],
-
-    "memory_400000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.354419, "Query": 0.366033, "Recall": 0.973761, "Precision": 0.716738, "F1-score": 0.825711, "AAE": 221.829341, "ARE": 0.045564}),
-        ("MVSketch(2stage)", {"Insert": 0.239958, "Query": 0.285740, "Recall": 0.996113, "Precision": 0.943831, "F1-score": 0.969267, "AAE": 93.243902, "ARE": 0.013326}),
-        ("StableSketch", {"Insert": 0.267896, "Query": 0.219807, "Recall": 0.849368, "Precision": 1.000000, "F1-score": 0.918550, "AAE": 172.344394, "ARE": 0.019784}),
-        ("StableSketch(2stage)", {"Insert": 0.186733, "Query": 0.201119, "Recall": 1.000000, "Precision": 0.944904, "F1-score": 0.971671, "AAE": 92.492711, "ARE": 0.013217}),
-        ("TightSketch", {"Insert": 0.283572, "Query": 0.212099, "Recall": 0.927114, "Precision": 1.000000, "F1-score": 0.962179, "AAE": 95.277778, "ARE": 0.011856}),
-        ("TightSketch(2stage)", {"Insert": 0.180631, "Query": 0.191512, "Recall": 1.000000, "Precision": 0.944904, "F1-score": 0.971671, "AAE": 92.492711, "ARE": 0.013217})
-    ],
-
-    "memory_500000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.354750, "Query": 0.356405, "Recall": 0.994169, "Precision": 0.852500, "F1-score": 0.917900, "AAE": 145.267840, "ARE": 0.028919}),
-        ("MVSketch(2stage)", {"Insert": 0.239136, "Query": 0.279251, "Recall": 0.998056, "Precision": 0.952690, "F1-score": 0.974846, "AAE": 71.045764, "ARE": 0.009802}),
-        ("StableSketch", {"Insert": 0.268006, "Query": 0.214250, "Recall": 0.846453, "Precision": 1.000000, "F1-score": 0.916842, "AAE": 130.363949, "ARE": 0.015159}),
-        ("StableSketch(2stage)", {"Insert": 0.178700, "Query": 0.186007, "Recall": 1.000000, "Precision": 0.953661, "F1-score": 0.976281, "AAE": 71.225462, "ARE": 0.009878}),
-        ("TightSketch", {"Insert": 0.278473, "Query": 0.208550, "Recall": 0.943635, "Precision": 1.000000, "F1-score": 0.971000, "AAE": 82.406797, "ARE": 0.011528}),
-        ("TightSketch(2stage)", {"Insert": 0.185588, "Query": 0.194557, "Recall": 1.000000, "Precision": 0.953661, "F1-score": 0.976281, "AAE": 71.225462, "ARE": 0.009878})
+    "memory_250000_threshold_0.0001": [
+        ("MomentumSketch", {"Insert": 0.273304, "Query": 0.225766, "Recall": 0.992225, "Precision": 1.000000, "F1-score": 0.996098, "AAE": 22.510284, "ARE": 0.003808}),
+        ("TightSketch", {"Insert": 0.295810, "Query": 0.223595, "Recall": 0.990282, "Precision": 1.000000, "F1-score": 0.995117, "AAE": 26.222767, "ARE": 0.004652}),
+        ("StableSketch", {"Insert": 0.282901, "Query": 0.227876, "Recall": 0.775510, "Precision": 1.000000, "F1-score": 0.873563, "AAE": 109.389724, "ARE": 0.012627}),
+        ("MVSketch", {"Insert": 0.355198, "Query": 0.351262, "Recall": 0.867833, "Precision": 0.281881, "F1-score": 0.425542, "AAE": 641.249720, "ARE": 0.134396})
     ]
 }
 

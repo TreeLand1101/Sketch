@@ -1,0 +1,60 @@
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.28113 ms
+    Query: 0.230607 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.968902
+    Precision: 1.000000
+    F1 Socre: 0.984205
+    AAE: 38.585757
+    ARE: 0.006777
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- TightSketch
+- Average Time Per Operation
+    Insert: 0.302623 ms
+    Query: 0.224169 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.963071
+    Precision: 1.000000
+    F1 Socre: 0.981188
+    AAE: 44.344097
+    ARE: 0.008219
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- StableSketch
+- Average Time Per Operation
+    Insert: 0.29295 ms
+    Query: 0.230008 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.734694
+    Precision: 1.000000
+    F1 Socre: 0.847059
+    AAE: 155.871693
+    ARE: 0.014521
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MVSketch
+- Average Time Per Operation
+    Insert: 0.349339 ms
+    Query: 0.348509 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.674441
+    Precision: 0.170349
+    F1 Socre: 0.271997
+    AAE: 1920.936599
+    ARE: 0.376095
++------------------------------------------------+

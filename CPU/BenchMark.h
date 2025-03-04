@@ -16,15 +16,14 @@
 #include "MVSketch.h"
 #include "StableSketch.h"
 #include "TwoStage.h"
-#include "OurSketch.h"
 #include "ElasticHeavyPart.h"
 #include "HeavyGuardian.h"
 #include "TwoFASketch.h"
 #include "TightSketch.h"
-#include "OurSketch2.h"
+#include "MomentumSketch.h"
 
 /* Modify SketchType to run on difference sketch */ 
-#define SketchType TightSketch
+#define SketchType MomentumSketch
 
 class BenchMark{
 public:

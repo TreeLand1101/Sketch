@@ -16,11 +16,10 @@
 #include "CountHeap.h"
 #include "SpaceSaving.h"
 #include "StableSketch.h"
-#include "OurSketch.h"
+#include "MomentumSketch.h"
 #include "TightSketch.h"
-#include "OurSketch2.h"
 
-#define Stage2SketchType TightSketch
+#define Stage2SketchType MomentumSketch
 
 template<typename DATA_TYPE>
 class TwoStage : public Abstract<DATA_TYPE>{
