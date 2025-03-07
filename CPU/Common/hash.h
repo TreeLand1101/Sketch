@@ -9,13 +9,13 @@
 
 template<typename T>
 inline uint32_t hash(const T& data, uint32_t seed = 0);
-inline uint32_t randomGenerator();
+inline long long randomGenerator();
 
 static std::random_device rd;
-static std::mt19937 rng(rd());
+static std::mt19937_64 rng(rd());
 static std::uniform_real_distribution<double> dis(0, 1);
 
-inline uint32_t randomGenerator(){
+inline long long randomGenerator(){
     return rng();
 }
 

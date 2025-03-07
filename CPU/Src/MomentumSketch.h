@@ -62,7 +62,7 @@ public:
                 return;
             }
             // Keep track of bucket with minimum counter for potential replacement
-            else if (sketch[i][pos].counter < min) {
+            if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
                 M = pos;
@@ -73,7 +73,7 @@ public:
         sketch[R][M].momentum /= 2;
 
         // Probabilistically replace the item based on counter and momentum
-        if (rand() % (long long)(sketch[R][M].counter * sketch[R][M].momentum + 1) == 0) {
+        if (randomGenerator() % ((long long)sketch[R][M].counter * sketch[R][M].momentum + 1) == 0) {
             // Decrement counter and if it reaches 0, replace with new item
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
@@ -111,10 +111,6 @@ private:
 
     uint32_t LENGTH;
     const uint32_t HASH_NUM = 4;
-
-    const uint32_t HH_THRESHOLD = 3216;
-    const double HH_RATIO = 0.005;
-    const uint32_t DECAY_CONST = HH_THRESHOLD * HH_RATIO;
 
     Bucket** sketch;
 };

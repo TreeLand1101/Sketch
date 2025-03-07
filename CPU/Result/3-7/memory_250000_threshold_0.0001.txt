@@ -1,0 +1,75 @@
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.276355 ms
+    Query: 0.222541 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.993197
+    Precision: 1.000000
+    F1 Socre: 0.996587
+    AAE: 23.580235
+    ARE: 0.004116
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- TightSketch
+- Average Time Per Operation
+    Insert: 0.306152 ms
+    Query: 0.229272 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.991254
+    Precision: 1.000000
+    F1 Socre: 0.995608
+    AAE: 26.953922
+    ARE: 0.004992
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- StableSketch
+- Average Time Per Operation
+    Insert: 0.294054 ms
+    Query: 0.233906 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.776482
+    Precision: 1.000000
+    F1 Socre: 0.874179
+    AAE: 157.470588
+    ARE: 0.015650
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- CocoSketch
+- Average Time Per Operation
+    Insert: 0.16239 ms
+    Query: 0.141108 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.965015
+    Precision: 0.804700
+    F1 Socre: 0.877596
+    AAE: 223.102719
+    ARE: 0.041947
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- HeavyGuardian
+- Average Time Per Operation
+    Insert: 0.28932 ms
+    Query: 0.13728 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.935860
+    Precision: 1.000000
+    F1 Socre: 0.966867
+    AAE: 42.670820
+    ARE: 0.006033
++------------------------------------------------+

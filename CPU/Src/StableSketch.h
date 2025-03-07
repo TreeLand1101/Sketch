@@ -52,15 +52,15 @@ public:
                 sketch[i][pos].counter++;
                 return;
             }
-            else if (sketch[i][pos].counter < min) {
+            if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
                 M = pos;
             }
         }
 
-        int k = rand() % (int)((sketch[R][M].counter * sketch[R][M].stability) + 1.0) + 1.0;
-        if (k > sketch[R][M].counter * sketch[R][M].stability) {
+        long long k = randomGenerator() % (((long long)sketch[R][M].counter * sketch[R][M].stability) + 1) + 1;
+        if (k > (long long)sketch[R][M].counter * sketch[R][M].stability) {
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;

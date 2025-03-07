@@ -61,7 +61,7 @@ public:
             }
         }
 
-        if (randomGenerator() % (int)(std::pow(decrementBase, buckets[pos].count[minPos])) == 0) {
+        if (randomGenerator() % ((long long)powl(decrementBase, buckets[pos].count[minPos])) == 0) {
             if (--buckets[pos].count[minPos] <= 0) {
                 buckets[pos].ID[minPos] = item;
                 buckets[pos].count[minPos] = 1;                

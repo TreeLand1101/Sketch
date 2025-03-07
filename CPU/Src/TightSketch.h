@@ -52,7 +52,7 @@ public:
                 sketch[i][pos].counter++;
                 return;
             }
-            else if (sketch[i][pos].counter < min) {
+            if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
                 M = pos;
@@ -61,12 +61,12 @@ public:
         }
 
         if (sketch[R][M].counter < DECAY_THRESHOLD) {
-            if (rand() % (sketch[R][M].counter + 1) == 0) {
+            if (randomGenerator() % (sketch[R][M].counter + 1) == 0) {
                 sketch[R][M].counter--;
             }
         }
         else {
-            if (rand() % (sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
+            if (randomGenerator() % ((long long)sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
                 sketch[R][M].counter--;
             }
         }
