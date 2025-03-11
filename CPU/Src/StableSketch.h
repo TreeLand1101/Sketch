@@ -59,8 +59,8 @@ public:
             }
         }
 
-        long long k = randomGenerator() % (((long long)sketch[R][M].counter * sketch[R][M].stability) + 1) + 1;
-        if (k > (long long)sketch[R][M].counter * sketch[R][M].stability) {
+        long long k = randomGenerator() % static_cast<long long>(((sketch[R][M].counter * sketch[R][M].stability) + 1) + 1);
+        if (k > static_cast<long long>(sketch[R][M].counter * sketch[R][M].stability)) {
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;

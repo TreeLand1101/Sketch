@@ -21,6 +21,7 @@
 #include "TwoFASketch.h"
 #include "TightSketch.h"
 #include "MomentumSketch.h"
+#include "MomentumSketch_SIMD.h"
 
 /* Modify SketchType to run on difference sketch */ 
 #define SketchType MomentumSketch

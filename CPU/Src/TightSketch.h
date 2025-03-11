@@ -66,7 +66,7 @@ public:
             }
         }
         else {
-            if (randomGenerator() % ((long long)sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
+            if (randomGenerator() % static_cast<long long>(sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
                 sketch[R][M].counter--;
             }
         }

@@ -1,0 +1,30 @@
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch_SIMD
+- Average Time Per Operation
+    Insert: 0.0907377 ms
+    Query: 0.0631165 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.943635
+    Precision: 1.000000
+    F1 Socre: 0.971000
+    AAE: 65.814624
+    ARE: 0.011863
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.133761 ms
+    Query: 0.11143 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.944606
+    Precision: 1.000000
+    F1 Socre: 0.971514
+    AAE: 71.083333
+    ARE: 0.012484
++------------------------------------------------+

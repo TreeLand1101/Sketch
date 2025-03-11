@@ -7,8 +7,18 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include <immintrin.h> // for avx2
+#include <emmintrin.h> // for sse2
+
 template<typename T>
 inline uint32_t hash(const T& data, uint32_t seed = 0);
+
+template<typename T>
+inline __m256i hash_avx2(const T& data, uint32_t seed1 = 0, uint32_t seed2 = 1, uint32_t seed3 = 2, uint32_t seed4 = 3);
+
+template<typename T>
+inline __m128i hash_sse2(const T& data, uint32_t seed1 = 0, uint32_t seed2 = 1, uint32_t seed3 = 2, uint32_t seed4 = 3);
+
 inline long long randomGenerator();
 
 static std::random_device rd;
@@ -37,6 +47,19 @@ inline long long randomGenerator(){
   c -= a; c -= b; c ^= (b>>15); \
 }\
 
+#define mix_sse2(a, b, c) \
+{ \
+    a = _mm_sub_epi32(a, b); a = _mm_sub_epi32(a, c); a = _mm_xor_si128(a, _mm_srli_epi32(c, 13)); \
+    b = _mm_sub_epi32(b, c); b = _mm_sub_epi32(b, a); b = _mm_xor_si128(b, _mm_slli_epi32(a, 8)); \
+    c = _mm_sub_epi32(c, a); c = _mm_sub_epi32(c, b); c = _mm_xor_si128(c, _mm_srli_epi32(b, 13)); \
+    a = _mm_sub_epi32(a, b); a = _mm_sub_epi32(a, c); a = _mm_xor_si128(a, _mm_srli_epi32(c, 12)); \
+    b = _mm_sub_epi32(b, c); b = _mm_sub_epi32(b, a); b = _mm_xor_si128(b, _mm_slli_epi32(a, 16)); \
+    c = _mm_sub_epi32(c, a); c = _mm_sub_epi32(c, b); c = _mm_xor_si128(c, _mm_srli_epi32(b, 5)); \
+    a = _mm_sub_epi32(a, b); a = _mm_sub_epi32(a, c); a = _mm_xor_si128(a, _mm_srli_epi32(c, 3)); \
+    b = _mm_sub_epi32(b, c); b = _mm_sub_epi32(b, a); b = _mm_xor_si128(b, _mm_slli_epi32(a, 10)); \
+    c = _mm_sub_epi32(c, a); c = _mm_sub_epi32(c, b); c = _mm_xor_si128(c, _mm_srli_epi32(b, 15)); \
+}\
+
 #define mix64(a,b,c) \
 {  \
   a -= b; a -= c; a ^= (c>>43); \
@@ -51,7 +74,23 @@ inline long long randomGenerator(){
   a -= b; a -= c; a ^= (c>>12); \
   b -= c; b -= a; b ^= (a<<18); \
   c -= a; c -= b; c ^= (b>>22); \
-}
+}\
+
+#define mix64_avx2(a,b,c) \
+{  \
+    a = _mm256_sub_epi64(a, b); a = _mm256_sub_epi64(a, c); a = _mm256_xor_si256(a, _mm256_srli_epi64(c, 43)); \
+    b = _mm256_sub_epi64(b, c); b = _mm256_sub_epi64(b, a); b = _mm256_xor_si256(b, _mm256_slli_epi64(a, 9)); \
+    c = _mm256_sub_epi64(c, a); c = _mm256_sub_epi64(c, b); c = _mm256_xor_si256(c, _mm256_srli_epi64(b, 8)); \
+    a = _mm256_sub_epi64(a, b); a = _mm256_sub_epi64(a, c); a = _mm256_xor_si256(a, _mm256_srli_epi64(c, 38)); \
+    b = _mm256_sub_epi64(b, c); b = _mm256_sub_epi64(b, a); b = _mm256_xor_si256(b, _mm256_slli_epi64(a, 23)); \
+    c = _mm256_sub_epi64(c, a); c = _mm256_sub_epi64(c, b); c = _mm256_xor_si256(c, _mm256_srli_epi64(b, 5)); \
+    a = _mm256_sub_epi64(a, b); a = _mm256_sub_epi64(a, c); a = _mm256_xor_si256(a, _mm256_srli_epi64(c, 35)); \
+    b = _mm256_sub_epi64(b, c); b = _mm256_sub_epi64(b, a); b = _mm256_xor_si256(b, _mm256_slli_epi64(a, 49)); \
+    c = _mm256_sub_epi64(c, a); c = _mm256_sub_epi64(c, b); c = _mm256_xor_si256(c, _mm256_srli_epi64(b, 11)); \
+    a = _mm256_sub_epi64(a, b); a = _mm256_sub_epi64(a, c); a = _mm256_xor_si256(a, _mm256_srli_epi64(c, 12)); \
+    b = _mm256_sub_epi64(b, c); b = _mm256_sub_epi64(b, a); b = _mm256_xor_si256(b, _mm256_slli_epi64(a, 18)); \
+    c = _mm256_sub_epi64(c, a); c = _mm256_sub_epi64(c, b); c = _mm256_xor_si256(c, _mm256_srli_epi64(b, 22)); \
+}\
 
 static const uint32_t prime[] = {
         181, 5197, 1151, 137, 5569, 7699, 2887, 8753, 9323, 8963, 6053, 8893, 9377, 6577, 733, 3527, 3881,
@@ -179,6 +218,76 @@ public:
         return c;
     }
 
+    static __m128i BOBHash32_SSE2(const uint8_t* str, uint32_t len, uint32_t seed1, uint32_t seed2, uint32_t seed3, uint32_t seed4) {
+        __m128i a, b, c;
+
+        // 初始化 a, b 為 golden ratio，4 個向量元素相同
+        const __m128i golden_ratio = _mm_set1_epi32(0x9e3779b9);
+        a = b = golden_ratio;
+
+        // 初始化 c 為 4 個不同的 seed
+        c = _mm_set_epi32(prime[seed4], prime[seed3], prime[seed2], prime[seed1]);
+
+        // 處理大於等於 12 字節的輸入塊
+        while (len >= 12) {
+            // 載入 12 字節數據，分為 3 個 32-bit 值
+            uint32_t block_a = *(const uint32_t*)(str);
+            uint32_t block_b = *(const uint32_t*)(str + 4);
+            uint32_t block_c = *(const uint32_t*)(str + 8);
+
+            // 將每個塊廣播到 4 組 hash 計算中
+            __m128i vec_a = _mm_set1_epi32(block_a);
+            __m128i vec_b = _mm_set1_epi32(block_b);
+            __m128i vec_c = _mm_set1_epi32(block_c);
+
+            // 將數據加到 a, b, c 中
+            a = _mm_add_epi32(a, vec_a);
+            b = _mm_add_epi32(b, vec_b);
+            c = _mm_add_epi32(c, vec_c);
+
+            // 執行 mix 操作
+            mix_sse2(a, b, c);
+
+            // 更新指針和長度
+            str += 12;
+            len -= 12;
+        }
+
+        // 處理長度（加到 c 中）
+        c = _mm_add_epi32(c, _mm_set1_epi32(len));
+
+        // 處理剩餘字節（模仿 switch 語句）
+        if (len > 0) {
+            __m128i vec_a = a;
+            __m128i vec_b = b;
+            __m128i vec_c = c;
+
+            // 根據剩餘字節數量，逐字節處理
+            if (len >= 11) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[10] << 24));
+            if (len >= 10) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[9] << 16));
+            if (len >= 9) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[8] << 8));
+            if (len >= 8) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[7] << 24));
+            if (len >= 7) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[6] << 16));
+            if (len >= 6) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[5] << 8));
+            if (len >= 5) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[4]));
+            if (len >= 4) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[3] << 24));
+            if (len >= 3) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[2] << 16));
+            if (len >= 2) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[1] << 8));
+            if (len >= 1) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[0]));
+
+            // 更新 a, b, c
+            a = vec_a;
+            b = vec_b;
+            c = vec_c;
+        }
+
+        // 執行最後的 mix 操作
+        mix_sse2(a, b, c);
+
+        // 返回最終的 c 向量，包含 4 個 hash 值
+        return c;
+    }
+
     static uint64_t BOBHash64(const uint8_t* str, uint32_t len, uint32_t num){
         uint64_t a,b,c;
         a = b = 0x9e3779b97f4a7c13LL;  /* the golden ratio; an arbitrary value */
@@ -232,11 +341,99 @@ public:
         mix64(a,b,c);
         return c;
     }
+
+    static __m256i BOBHash64_AVX2(const uint8_t* str, uint32_t len, uint32_t seed1, uint32_t seed2, uint32_t seed3, uint32_t seed4) {
+        __m256i a, b, c;
+
+        // 初始化 a, b 為 golden ratio，4 個向量元素相同
+        const __m256i golden_ratio = _mm256_set1_epi64x(0x9e3779b97f4a7c13LL);
+        a = b = golden_ratio;
+
+        // 初始化 c 為 4 個不同的 seed
+        c = _mm256_set_epi64x((uint64_t)prime[seed4], (uint64_t)prime[seed3], (uint64_t)prime[seed2], (uint64_t)prime[seed1]);
+
+        // 處理大於等於 24 字節的輸入塊
+        while (len >= 24) {
+            // 提取前 24 字節（3 個 64 位元值）
+            uint64_t block_a = *(const uint64_t*)(str);
+            uint64_t block_b = *(const uint64_t*)(str + 8);
+            uint64_t block_c = *(const uint64_t*)(str + 16);
+
+            __m256i vec_a = _mm256_set1_epi64x(block_a);
+            __m256i vec_b = _mm256_set1_epi64x(block_b);
+            __m256i vec_c = _mm256_set1_epi64x(block_c);
+
+            a = _mm256_add_epi64(a, vec_a);
+            b = _mm256_add_epi64(b, vec_b);
+            c = _mm256_add_epi64(c, vec_c);
+
+            mix64_avx2(a, b, c);
+
+            str += 24;
+            len -= 24;
+        }
+
+        // 處理長度（加到 c 中）
+        c = _mm256_add_epi64(c, _mm256_set1_epi64x(len));
+
+        // 處理剩餘字節
+        if (len > 0) {
+            __m256i vec_a = a;
+            __m256i vec_b = b;
+            __m256i vec_c = c;
+
+            // 根據剩餘字節數量，逐字節處理
+            if (len >= 23) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[22] << 56));
+            if (len >= 22) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[21] << 48));
+            if (len >= 21) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[20] << 40));
+            if (len >= 20) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[19] << 32));
+            if (len >= 19) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[18] << 24));
+            if (len >= 18) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[17] << 16));
+            if (len >= 17) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[16] << 8));
+            if (len >= 16) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[15] << 56));
+            if (len >= 15) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[14] << 48));
+            if (len >= 14) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[13] << 40));
+            if (len >= 13) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[12] << 32));
+            if (len >= 12) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[11] << 24));
+            if (len >= 11) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[10] << 16));
+            if (len >= 10) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[9] << 8));
+            if (len >= 9) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[8]));
+            if (len >= 8) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[7] << 56));
+            if (len >= 7) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[6] << 48));
+            if (len >= 6) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[5] << 40));
+            if (len >= 5) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[4] << 32));
+            if (len >= 4) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[3] << 24));
+            if (len >= 3) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[2] << 16));
+            if (len >= 2) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[1] << 8));
+            if (len >= 1) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[0]));
+
+            // 更新 a, b, c
+            a = vec_a;
+            b = vec_b;
+            c = vec_c;
+        }
+
+        // 執行最後的 mix64 操作
+        mix64_avx2(a, b, c);
+
+        // 返回最終的 c 向量，包含 4 個 hash 值
+        return c;
+    }
 };
 
 template<typename T>
 inline uint32_t hash(const T& data, uint32_t seed){
     return Hash::BOBHash32((uint8_t*)&data, sizeof(T), seed);
+}
+
+template<typename T>
+inline __m256i hash_avx2(const T& data, uint32_t seed1,  uint32_t seed2, uint32_t seed3, uint32_t seed4){
+    return Hash::BOBHash64_AVX2((uint8_t*)&data, sizeof(T), seed1, seed2, seed3, seed4);
+}
+
+template<typename T>
+inline __m128i hash_sse2(const T& data, uint32_t seed1,  uint32_t seed2, uint32_t seed3, uint32_t seed4){
+    return Hash::BOBHash32_SSE2((uint8_t*)&data, sizeof(T), seed1, seed2, seed3, seed4);
 }
 
 #endif

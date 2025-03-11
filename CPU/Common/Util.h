@@ -7,6 +7,7 @@
 #include <chrono>
 #include <algorithm>
 #include <functional>
+#include <cstring>
 
 #include "hash.h"
 

@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(CPU)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
+add_compile_options(-O1 -mavx2 -mfma -mbmi2 -march=native)
 
 include_directories(.)
 include_directories(Common)
