@@ -24,7 +24,7 @@
 #include "MomentumSketch_SIMD.h"
 
 /* Modify SketchType to run on difference sketch */ 
-#define SketchType MomentumSketch
+#define SketchType MomentumSketch_SIMD
 
 class BenchMark{
 public:
@@ -51,8 +51,8 @@ public:
 
         COUNT_TYPE threshold = alpha * length;
 
-        // tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold); /* TwoStage */
-        tupleSketch = new SketchType<TUPLES>(MEMORY); /* Sketch */
+        tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold); /* TwoStage */
+        // tupleSketch = new SketchType<TUPLES>(MEMORY); /* Sketch */
 
         std::cout << "+------------------------------------------------+" << std::endl;
         std::cout << "- " << tupleSketch->name << std::endl;

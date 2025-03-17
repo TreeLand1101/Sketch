@@ -1,0 +1,45 @@
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.131781 ms
+    Query: 0.110723 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.995141
+    Precision: 1.000000
+    F1 Socre: 0.997565
+    AAE: 9.136719
+    ARE: 0.001635
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- TwoStage ( CountingBloomFilter + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.0744381 ms
+    Query: 0.0828401 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 1.000000
+    Precision: 0.953661
+    F1 Socre: 0.976281
+    AAE: 71.225462
+    ARE: 0.009878
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch_SIMD
+- Average Time Per Operation
+    Insert: 0.0907912 ms
+    Query: 0.0721136 ms
+- CompareHH
+    Total Packets: 32163023
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.995141
+    Precision: 1.000000
+    F1 Socre: 0.997565
+    AAE: 9.329102
+    ARE: 0.001658
++------------------------------------------------+
