@@ -2,29 +2,29 @@ equinix-chicago.dirA.20160121-140000.UTC.anon.dat
 +------------------------------------------------+
 - TwoStage ( CountingBloomFilter + MomentumSketch )
 - Average Time Per Operation
-    Insert: 0.0819986 ms
-    Query: 0.103246 ms
+    Insert: 0.136566 ms
+    Query: 0.159107 ms
 - CompareHH
     Total Packets: 32163023
     Threshold: 0.010000% (Packet Count: 3216)
-    Recall: 0.999028
-    Precision: 0.875639
-    F1 Socre: 0.933273
-    AAE: 174.684825
-    ARE: 0.029085
+    Recall: 0.595724
+    Precision: 0.960815
+    F1 Socre: 0.735453
+    AAE: 531.391517
+    ARE: 0.064560
 +------------------------------------------------+
 equinix-chicago.dirA.20160121-140000.UTC.anon.dat
 +------------------------------------------------+
 - MomentumSketch
 - Average Time Per Operation
-    Insert: 0.133626 ms
-    Query: 0.110611 ms
+    Insert: 0.150429 ms
+    Query: 0.123957 ms
 - CompareHH
     Total Packets: 32163023
     Threshold: 0.010000% (Packet Count: 3216)
-    Recall: 0.983479
+    Recall: 0.772595
     Precision: 1.000000
-    F1 Socre: 0.991671
-    AAE: 23.698617
-    ARE: 0.004347
+    F1 Socre: 0.871711
+    AAE: 187.018868
+    ARE: 0.031069
 +------------------------------------------------+

@@ -1,5 +1,5 @@
-#ifndef MOMENTUMSKETCH_SIMD_H
-#define MOMENTUMSKETCH_SIMD_H
+#ifndef MOMENTUMSKETCHSIMD_H
+#define MOMENTUMSKETCHSIMD_H
 
 #include "Abstract.h"
 #include <bit>
@@ -10,7 +10,7 @@
 #include <omp.h>
 
 template<typename DATA_TYPE>
-class MomentumSketch_SIMD : public Abstract<DATA_TYPE> {
+class MomentumSketchSIMD : public Abstract<DATA_TYPE> {
 public:
 
     typedef std::unordered_map<DATA_TYPE, COUNT_TYPE> HashMap;
@@ -21,7 +21,7 @@ public:
         COUNT_TYPE counter;
     };
 
-    MomentumSketch_SIMD(uint32_t _MEMORY, uint32_t _STAGE1_BIAS = 0, std::string _name = "MomentumSketch_SIMD"){
+    MomentumSketchSIMD(uint32_t _MEMORY, uint32_t _STAGE1_BIAS = 0, std::string _name = "MomentumSketchSIMD"){
         this->name = _name;
 
         LENGTH = _MEMORY / sizeof(Bucket) / HASH_NUM;
@@ -33,7 +33,7 @@ public:
         }
     }
 
-    ~MomentumSketch_SIMD(){
+    ~MomentumSketchSIMD(){
         for(uint32_t i = 0; i < HASH_NUM; ++i)
             delete [] sketch[i];
         delete [] sketch;

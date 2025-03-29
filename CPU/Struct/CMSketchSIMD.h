@@ -1,14 +1,14 @@
-#ifndef CMSKETCH_SIMD_H
-#define CMSKETCH_SIMD_H
+#ifndef CMSKETCHSIMD_H
+#define CMSKETCHSIMD_H
 
 #include "Util.h"
 
 template<typename DATA_TYPE,typename COUNT_TYPE>
-class CMSketch_SIMD{
+class CMSketchSIMD{
 public:
-    std::string name = "CMSketch_SIMD";   
+    std::string name = "CMSketchSIMD";   
 
-    CMSketch_SIMD(uint32_t _MEMORY){
+    CMSketchSIMD(uint32_t _MEMORY){
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
 
         sketch = new COUNT_TYPE* [HASH_NUM];
@@ -18,7 +18,7 @@ public:
         }
     }
 
-    ~CMSketch_SIMD(){
+    ~CMSketchSIMD(){
         for(uint32_t i = 0;i < HASH_NUM;++i)
             delete [] sketch[i];
         delete [] sketch;

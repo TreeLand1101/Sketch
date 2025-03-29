@@ -4,9 +4,8 @@
 #include "Abstract.h"
 #include "Util.h"
 
-#include "ColdFilter.h"
-#include "CountingBloomFilter.h"
-#include "CMSketch_SIMD.h"
+#include "CBFCU.h"
+#include "CMSketchSIMD.h"
 #include "MVSketch.h"
 #include "TwoFASketch.h"
 #include "CocoSketch.h"
@@ -18,9 +17,10 @@
 #include "SpaceSaving.h"
 #include "StableSketch.h"
 #include "MomentumSketch.h"
-#include "MomentumSketch_SIMD.h"
+#include "MomentumSketchSIMD.h"
 #include "TightSketch.h"
 
+#define Stage1FilterType CBFCU
 #define Stage2SketchType MomentumSketch
 
 template<typename DATA_TYPE>
@@ -34,10 +34,7 @@ public:
         STAGE1_THRESHOLD = _THRESHOLD * STAGE1_TRESHOLD_RATIO;
         // STAGE2_THRESHOLD = _THRESHOLD * STAGE2_TRESHOLD_RATIO;
 
-        // filter = new CountingBloomFilter<DATA_TYPE, uint16_t>(FILTER_MEMORY);
-        // filter = new ColdFilter<DATA_TYPE, COUNT_TYPE>(FILTER_MEMORY, _THRESHOLD);
-        filter = new CMSketch_SIMD<DATA_TYPE, uint16_t>(FILTER_MEMORY);
-
+        filter = new Stage1FilterType<DATA_TYPE, uint16_t>(FILTER_MEMORY);
         sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY, STAGE1_THRESHOLD);
 
         this->name = "TwoStage ( " + filter->name + " + " + sketch->name + " )";
@@ -73,10 +70,10 @@ private:
     COUNT_TYPE STAGE1_THRESHOLD;
     // COUNT_TYPE STAGE2_THRESHOLD;
 
-    const double STAGE1_TRESHOLD_RATIO = 0.5;
+    const double STAGE1_TRESHOLD_RATIO = 0.8;
     // const double STAGE2_TRESHOLD_RATIO = 0.2;
 
-    CMSketch_SIMD<DATA_TYPE, uint16_t>* filter;
+    Stage1FilterType<DATA_TYPE, uint16_t>* filter;
     Stage2SketchType<DATA_TYPE>* sketch;
 };
 

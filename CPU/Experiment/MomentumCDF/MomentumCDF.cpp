@@ -110,7 +110,7 @@ int main() {
     std::string PATH = "./equinix-chicago.dirA.20160121-140000.UTC.anon_first_100000.dat"; 
     uint32_t MEMORY = 100000;
     double alpha = 0.0001;
-    COUNT_TYPE maxMomentum = 3000;
+    COUNT_TYPE maxMomentum = 2000;
 
     LoadResult result = Load(PATH.c_str());
     TUPLES* dataset = (TUPLES*)result.start;
@@ -119,7 +119,7 @@ int main() {
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMp;
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMomentum;
 
-    MVSketch_MomentumCDF<TUPLES> sketch(MEMORY); 
+    MVSketch_MomentumCDF<TUPLES>* sketch = new MVSketch_MomentumCDF<TUPLES>(MEMORY);
 
     for (uint64_t i = 0; i < length; ++i) {
         TUPLES flow = dataset[i];
@@ -130,8 +130,8 @@ int main() {
             tuplesMomentum[flow] = 0;
         }        
 
-        if (sketch.Search(flow)) {
-            tuplesMomentum[flow] += sketch.Query(flow);
+        if (sketch->Search(flow)) {
+            tuplesMomentum[flow] += sketch->Query(flow);
             if (tuplesMomentum[flow] > maxMomentum) {
                 tuplesMomentum[flow] = maxMomentum; 
             } 
@@ -140,7 +140,7 @@ int main() {
             tuplesMomentum[flow] = std::max(tuplesMomentum[flow] / 2, 0);
         }
 
-        sketch.Insert(flow);
+        sketch->Insert(flow);
     }
 
     COUNT_TYPE threshold = static_cast<COUNT_TYPE>(alpha * length);
@@ -171,7 +171,6 @@ int main() {
     miceCDFLog << std::fixed << std::setprecision(6);
     elephantCDFLog << std::fixed << std::setprecision(6);
 
-    // 計算 Mice flow 的 CDF
     if (!miceMomentum.empty()) {
         for (size_t i = 0; i < miceMomentum.size(); ++i) {
             COUNT_TYPE momentum = miceMomentum[i];
@@ -182,7 +181,6 @@ int main() {
         miceCDFLog << "No data available\n";
     }
 
-    // 計算 Elephant flow 的 CDF
     if (!elephantMomentum.empty()) {
         for (size_t i = 0; i < elephantMomentum.size(); ++i) {
             COUNT_TYPE momentum = elephantMomentum[i];

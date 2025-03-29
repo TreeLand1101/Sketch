@@ -1,27 +1,38 @@
-#ifndef COUNTINGBLOOMFILTER_H
-#define COUNTINGBLOOMFILTER_H
+#ifndef CBFCU_H
+#define CBFCU_H
 
 #include "Util.h"
 #include <cstdint>
 #include <algorithm>
 
 template<typename DATA_TYPE, typename COUNT_TYPE>
-class CountingBloomFilter {
+class CBFCU {
 public:
-    std::string name = "CountingBloomFilter";
+    std::string name = "CBFCU";
 
-    CountingBloomFilter(uint32_t _MEMORY) {
+    CBFCU(uint32_t _MEMORY) {
         LENGTH = _MEMORY / sizeof(COUNT_TYPE); 
         filter = new COUNT_TYPE[LENGTH];
         memset(filter, 0, sizeof(COUNT_TYPE) * LENGTH);
     }
 
-    ~CountingBloomFilter() {
+    ~CBFCU() {
         delete [] filter;
     }
 
     COUNT_TYPE Insert(const DATA_TYPE item) {
-        return std::min(++filter[hash(item, 0) % LENGTH], ++filter[hash(item, 1) % LENGTH]);
+        uint32_t i1 = hash(item, 0) % LENGTH;
+        uint32_t i2 = hash(item, 1) % LENGTH;
+        if (filter[i1] < filter[i2]) {
+            return ++filter[i1]; 
+        }
+        else if (filter[i1] > filter[i2]) {
+            return ++filter[i2]; 
+        }
+
+        ++filter[i1];
+        ++filter[i2];
+        return filter[i1];
     }
 
     COUNT_TYPE Query(const DATA_TYPE item) {

@@ -221,70 +221,43 @@ public:
     static __m128i BOBHash32_SSE2(const uint8_t* str, uint32_t len, uint32_t seed1, uint32_t seed2, uint32_t seed3, uint32_t seed4) {
         __m128i a, b, c;
 
-        // 初始化 a, b 為 golden ratio，4 個向量元素相同
-        const __m128i golden_ratio = _mm_set1_epi32(0x9e3779b9);
-        a = b = golden_ratio;
-
-        // 初始化 c 為 4 個不同的 seed
+        a = _mm_set1_epi32(0x9e3779b9);
+        b = _mm_set1_epi32(0x9e3779b9);
         c = _mm_set_epi32(prime[seed4], prime[seed3], prime[seed2], prime[seed1]);
 
-        // 處理大於等於 12 字節的輸入塊
         while (len >= 12) {
-            // 載入 12 字節數據，分為 3 個 32-bit 值
             uint32_t block_a = *(const uint32_t*)(str);
             uint32_t block_b = *(const uint32_t*)(str + 4);
             uint32_t block_c = *(const uint32_t*)(str + 8);
 
-            // 將每個塊廣播到 4 組 hash 計算中
-            __m128i vec_a = _mm_set1_epi32(block_a);
-            __m128i vec_b = _mm_set1_epi32(block_b);
-            __m128i vec_c = _mm_set1_epi32(block_c);
+            a = _mm_add_epi32(a, _mm_set1_epi32(block_a));
+            b = _mm_add_epi32(b, _mm_set1_epi32(block_b));
+            c = _mm_add_epi32(c, _mm_set1_epi32(block_c));
 
-            // 將數據加到 a, b, c 中
-            a = _mm_add_epi32(a, vec_a);
-            b = _mm_add_epi32(b, vec_b);
-            c = _mm_add_epi32(c, vec_c);
-
-            // 執行 mix 操作
             mix_sse2(a, b, c);
 
-            // 更新指針和長度
             str += 12;
             len -= 12;
         }
 
-        // 處理長度（加到 c 中）
         c = _mm_add_epi32(c, _mm_set1_epi32(len));
 
-        // 處理剩餘字節（模仿 switch 語句）
         if (len > 0) {
-            __m128i vec_a = a;
-            __m128i vec_b = b;
-            __m128i vec_c = c;
-
-            // 根據剩餘字節數量，逐字節處理
-            if (len >= 11) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[10] << 24));
-            if (len >= 10) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[9] << 16));
-            if (len >= 9) vec_c = _mm_add_epi32(vec_c, _mm_set1_epi32((uint32_t)str[8] << 8));
-            if (len >= 8) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[7] << 24));
-            if (len >= 7) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[6] << 16));
-            if (len >= 6) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[5] << 8));
-            if (len >= 5) vec_b = _mm_add_epi32(vec_b, _mm_set1_epi32((uint32_t)str[4]));
-            if (len >= 4) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[3] << 24));
-            if (len >= 3) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[2] << 16));
-            if (len >= 2) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[1] << 8));
-            if (len >= 1) vec_a = _mm_add_epi32(vec_a, _mm_set1_epi32((uint32_t)str[0]));
-
-            // 更新 a, b, c
-            a = vec_a;
-            b = vec_b;
-            c = vec_c;
+            if (len >= 11) c = _mm_add_epi32(c, _mm_set1_epi32((uint32_t)str[10] << 24));
+            if (len >= 10) c = _mm_add_epi32(c, _mm_set1_epi32((uint32_t)str[9] << 16));
+            if (len >= 9)  c = _mm_add_epi32(c, _mm_set1_epi32((uint32_t)str[8] << 8));
+            if (len >= 8)  b = _mm_add_epi32(b, _mm_set1_epi32((uint32_t)str[7] << 24));
+            if (len >= 7)  b = _mm_add_epi32(b, _mm_set1_epi32((uint32_t)str[6] << 16));
+            if (len >= 6)  b = _mm_add_epi32(b, _mm_set1_epi32((uint32_t)str[5] << 8));
+            if (len >= 5)  b = _mm_add_epi32(b, _mm_set1_epi32((uint32_t)str[4]));
+            if (len >= 4)  a = _mm_add_epi32(a, _mm_set1_epi32((uint32_t)str[3] << 24));
+            if (len >= 3)  a = _mm_add_epi32(a, _mm_set1_epi32((uint32_t)str[2] << 16));
+            if (len >= 2)  a = _mm_add_epi32(a, _mm_set1_epi32((uint32_t)str[1] << 8));
+            if (len >= 1)  a = _mm_add_epi32(a, _mm_set1_epi32((uint32_t)str[0]));
         }
-
-        // 執行最後的 mix 操作
+        
         mix_sse2(a, b, c);
 
-        // 返回最終的 c 向量，包含 4 個 hash 值
         return c;
     }
 
@@ -344,79 +317,57 @@ public:
 
     static __m256i BOBHash64_AVX2(const uint8_t* str, uint32_t len, uint32_t seed1, uint32_t seed2, uint32_t seed3, uint32_t seed4) {
         __m256i a, b, c;
-
-        // 初始化 a, b 為 golden ratio，4 個向量元素相同
         const __m256i golden_ratio = _mm256_set1_epi64x(0x9e3779b97f4a7c13LL);
-        a = b = golden_ratio;
 
-        // 初始化 c 為 4 個不同的 seed
+        a = _mm256_set1_epi64x(0x9e3779b97f4a7c13LL);
+        b = _mm256_set1_epi64x(0x9e3779b97f4a7c13LL);
         c = _mm256_set_epi64x((uint64_t)prime[seed4], (uint64_t)prime[seed3], (uint64_t)prime[seed2], (uint64_t)prime[seed1]);
-
-        // 處理大於等於 24 字節的輸入塊
+    
         while (len >= 24) {
-            // 提取前 24 字節（3 個 64 位元值）
             uint64_t block_a = *(const uint64_t*)(str);
             uint64_t block_b = *(const uint64_t*)(str + 8);
             uint64_t block_c = *(const uint64_t*)(str + 16);
 
-            __m256i vec_a = _mm256_set1_epi64x(block_a);
-            __m256i vec_b = _mm256_set1_epi64x(block_b);
-            __m256i vec_c = _mm256_set1_epi64x(block_c);
-
-            a = _mm256_add_epi64(a, vec_a);
-            b = _mm256_add_epi64(b, vec_b);
-            c = _mm256_add_epi64(c, vec_c);
+            a = _mm256_add_epi64(a, _mm256_set1_epi64x(block_a));
+            b = _mm256_add_epi64(b, _mm256_set1_epi64x(block_b));
+            c = _mm256_add_epi64(c, _mm256_set1_epi64x(block_c));
 
             mix64_avx2(a, b, c);
 
             str += 24;
             len -= 24;
         }
-
-        // 處理長度（加到 c 中）
+    
         c = _mm256_add_epi64(c, _mm256_set1_epi64x(len));
-
-        // 處理剩餘字節
+    
         if (len > 0) {
-            __m256i vec_a = a;
-            __m256i vec_b = b;
-            __m256i vec_c = c;
-
-            // 根據剩餘字節數量，逐字節處理
-            if (len >= 23) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[22] << 56));
-            if (len >= 22) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[21] << 48));
-            if (len >= 21) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[20] << 40));
-            if (len >= 20) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[19] << 32));
-            if (len >= 19) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[18] << 24));
-            if (len >= 18) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[17] << 16));
-            if (len >= 17) vec_c = _mm256_add_epi64(vec_c, _mm256_set1_epi64x((uint64_t)str[16] << 8));
-            if (len >= 16) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[15] << 56));
-            if (len >= 15) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[14] << 48));
-            if (len >= 14) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[13] << 40));
-            if (len >= 13) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[12] << 32));
-            if (len >= 12) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[11] << 24));
-            if (len >= 11) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[10] << 16));
-            if (len >= 10) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[9] << 8));
-            if (len >= 9) vec_b = _mm256_add_epi64(vec_b, _mm256_set1_epi64x((uint64_t)str[8]));
-            if (len >= 8) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[7] << 56));
-            if (len >= 7) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[6] << 48));
-            if (len >= 6) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[5] << 40));
-            if (len >= 5) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[4] << 32));
-            if (len >= 4) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[3] << 24));
-            if (len >= 3) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[2] << 16));
-            if (len >= 2) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[1] << 8));
-            if (len >= 1) vec_a = _mm256_add_epi64(vec_a, _mm256_set1_epi64x((uint64_t)str[0]));
-
-            // 更新 a, b, c
-            a = vec_a;
-            b = vec_b;
-            c = vec_c;
+            if (len >= 23) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[22] << 56));
+            if (len >= 22) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[21] << 48));
+            if (len >= 21) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[20] << 40));
+            if (len >= 20) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[19] << 32));
+            if (len >= 19) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[18] << 24));
+            if (len >= 18) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[17] << 16));
+            if (len >= 17) c = _mm256_add_epi64(c, _mm256_set1_epi64x((uint64_t)str[16] << 8));
+            if (len >= 16) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[15] << 56));
+            if (len >= 15) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[14] << 48));
+            if (len >= 14) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[13] << 40));
+            if (len >= 13) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[12] << 32));
+            if (len >= 12) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[11] << 24));
+            if (len >= 11) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[10] << 16));
+            if (len >= 10) b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[9] << 8));
+            if (len >= 9)  b = _mm256_add_epi64(b, _mm256_set1_epi64x((uint64_t)str[8]));
+            if (len >= 8)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[7] << 56));
+            if (len >= 7)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[6] << 48));
+            if (len >= 6)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[5] << 40));
+            if (len >= 5)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[4] << 32));
+            if (len >= 4)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[3] << 24));
+            if (len >= 3)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[2] << 16));
+            if (len >= 2)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[1] << 8));
+            if (len >= 1)  a = _mm256_add_epi64(a, _mm256_set1_epi64x((uint64_t)str[0]));
         }
-
-        // 執行最後的 mix64 操作
+    
         mix64_avx2(a, b, c);
-
-        // 返回最終的 c 向量，包含 4 個 hash 值
+        
         return c;
     }
 };
