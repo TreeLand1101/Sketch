@@ -4,10 +4,10 @@
 make
 
 # Dataset file
-dataset="equinix-chicago.dirA.20160121-140000.UTC.anon.dat"
+dataset="equinix-chicago.dirA.20160121-125911.UTC.anon.dat 202201011400.dat"
 
 # Configurable parameters
-memory_values="50000 100000 150000 200000 250000"
+memory_values="50000 100000 150000"
 threshold_values="0.0001" 
 
 # Nested loops for memory and threshold combinations

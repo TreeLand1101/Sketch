@@ -5,6 +5,7 @@
 #include "Util.h"
 
 #include "CBFCU.h"
+#include "CMCUSketch.h"
 #include "CMSketchSIMD.h"
 #include "MVSketch.h"
 #include "TwoFASketch.h"

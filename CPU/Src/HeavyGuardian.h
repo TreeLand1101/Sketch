@@ -61,8 +61,8 @@ public:
             }
         }
 
-        if (randomGenerator() % ((long long)powl(decrementBase, buckets[pos].count[minPos])) == 0) {
-            if (--buckets[pos].count[minPos] <= 0) {
+        if (randomGenerator() % static_cast<long long>(powl(decrementBase, buckets[pos].count[minPos])) == 0) {
+            if (--buckets[pos].count[minPos] == 0) {
                 buckets[pos].ID[minPos] = item;
                 buckets[pos].count[minPos] = 1;                
             }

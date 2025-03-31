@@ -24,7 +24,7 @@
 #include "MomentumSketchSIMD.h"
 
 /* Modify SketchType to run on difference sketch */ 
-#define SketchType MomentumSketchSIMD
+#define SketchType MomentumSketch
 
 class BenchMark{
 public:
@@ -51,8 +51,8 @@ public:
 
         COUNT_TYPE threshold = alpha * length;
 
-        // tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold); /* TwoStage */
-        tupleSketch = new SketchType<TUPLES>(MEMORY); /* Sketch */
+        tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold); /* TwoStage */
+        // tupleSketch = new SketchType<TUPLES>(MEMORY); /* Sketch */
 
         std::cout << "+------------------------------------------------+" << std::endl;
         std::cout << "- " << tupleSketch->name << std::endl;
@@ -106,6 +106,8 @@ private:
 
         std::cout << "- CompareHH" << std::endl;
         std::cout << "    Total Packets: " << length << std::endl;
+        std::cout << "    Total Flows: " << record.size() << std::endl;
+        std::cout << "    Elephant Flows: " << (int)realHH << std::endl;
         std::cout << "    Threshold: " << std::fixed << alpha * 100 << "% (Packet Count: "<< threshold << ")" << std::endl;
         std::cout << "    Recall: " << recall << std::endl;
         std::cout << "    Precision: " << precision << std::endl;

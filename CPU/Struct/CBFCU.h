@@ -23,16 +23,20 @@ public:
     COUNT_TYPE Insert(const DATA_TYPE item) {
         uint32_t i1 = hash(item, 0) % LENGTH;
         uint32_t i2 = hash(item, 1) % LENGTH;
-        if (filter[i1] < filter[i2]) {
-            return ++filter[i1]; 
-        }
-        else if (filter[i1] > filter[i2]) {
-            return ++filter[i2]; 
+
+        if (i1 != i2) {
+            if (filter[i1] < filter[i2]) {
+                return ++filter[i1]; 
+            }
+            else if (filter[i1] > filter[i2]) {
+                return ++filter[i2]; 
+            }
+            ++filter[i1];
+            ++filter[i2];
+            return filter[i1];
         }
 
-        ++filter[i1];
-        ++filter[i2];
-        return filter[i1];
+        return ++filter[i1];
     }
 
     COUNT_TYPE Query(const DATA_TYPE item) {
