@@ -1,0 +1,170 @@
+202111011400.dat
++------------------------------------------------+
+- TwoStage ( CBFCU + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.116755 ms
+    Query: 0.109901 ms
+- CompareHH
+    Total Packets: 74874817
+    Total Flows: 11517777
+    Elephant Flows: 836
+    Threshold: 0.010000% (Packet Count: 7487)
+    Recall: 0.998804
+    Precision: 0.956472
+    F1 Socre: 0.977180
+    AAE: 2379.729341
+    ARE: 0.024021
++------------------------------------------------+
+202211011400.dat
++------------------------------------------------+
+- TwoStage ( CBFCU + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.107694 ms
+    Query: 0.101528 ms
+- CompareHH
+    Total Packets: 105785612
+    Total Flows: 11780751
+    Elephant Flows: 951
+    Threshold: 0.010000% (Packet Count: 10578)
+    Recall: 0.997897
+    Precision: 0.967380
+    F1 Socre: 0.982402
+    AAE: 5057.540569
+    ARE: 0.040273
++------------------------------------------------+
+equinix-chicago.dirA.20160121-125911.UTC.anon.dat
++------------------------------------------------+
+- TwoStage ( CBFCU + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.096995 ms
+    Query: 0.102209 ms
+- CompareHH
+    Total Packets: 22567092
+    Total Flows: 898943
+    Elephant Flows: 1291
+    Threshold: 0.010000% (Packet Count: 2256)
+    Recall: 0.958947
+    Precision: 0.906960
+    F1 Socre: 0.932229
+    AAE: 99.854604
+    ARE: 0.027700
++------------------------------------------------+
+equinix-nyc.dirA.20180315-125910.UTC.anon.dat
++------------------------------------------------+
+- TwoStage ( CBFCU + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.097546 ms
+    Query: 0.113530 ms
+- CompareHH
+    Total Packets: 22366454
+    Total Flows: 1197319
+    Elephant Flows: 1456
+    Threshold: 0.010000% (Packet Count: 2236)
+    Recall: 0.963599
+    Precision: 0.949898
+    F1 Socre: 0.956700
+    AAE: 98.690663
+    ARE: 0.019641
++------------------------------------------------+
+equinix-nyc.dirA.20190117-125910.UTC.anon.dat
++------------------------------------------------+
+- TwoStage ( CBFCU + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.107399 ms
+    Query: 0.120278 ms
+- CompareHH
+    Total Packets: 29578511
+    Total Flows: 2318625
+    Elephant Flows: 1551
+    Threshold: 0.010000% (Packet Count: 2957)
+    Recall: 0.960026
+    Precision: 0.937657
+    F1 Socre: 0.948710
+    AAE: 122.529214
+    ARE: 0.023550
++------------------------------------------------+
+202111011400.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.118739 ms
+    Query: 0.103627 ms
+- CompareHH
+    Total Packets: 74874817
+    Total Flows: 11517777
+    Elephant Flows: 836
+    Threshold: 0.010000% (Packet Count: 7487)
+    Recall: 0.991627
+    Precision: 1.000000
+    F1 Socre: 0.995796
+    AAE: 59.302774
+    ARE: 0.002985
++------------------------------------------------+
+202211011400.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.126723 ms
+    Query: 0.111912 ms
+- CompareHH
+    Total Packets: 105785612
+    Total Flows: 11780751
+    Elephant Flows: 951
+    Threshold: 0.010000% (Packet Count: 10578)
+    Recall: 0.987382
+    Precision: 1.000000
+    F1 Socre: 0.993651
+    AAE: 117.919063
+    ARE: 0.004877
++------------------------------------------------+
+equinix-chicago.dirA.20160121-125911.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.145019 ms
+    Query: 0.118816 ms
+- CompareHH
+    Total Packets: 22567092
+    Total Flows: 898943
+    Elephant Flows: 1291
+    Threshold: 0.010000% (Packet Count: 2256)
+    Recall: 0.907823
+    Precision: 1.000000
+    F1 Socre: 0.951685
+    AAE: 55.738055
+    ARE: 0.013550
++------------------------------------------------+
+equinix-nyc.dirA.20180315-125910.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.140830 ms
+    Query: 0.111613 ms
+- CompareHH
+    Total Packets: 22366454
+    Total Flows: 1197319
+    Elephant Flows: 1456
+    Threshold: 0.010000% (Packet Count: 2236)
+    Recall: 0.955357
+    Precision: 1.000000
+    F1 Socre: 0.977169
+    AAE: 45.126528
+    ARE: 0.011194
++------------------------------------------------+
+equinix-nyc.dirA.20190117-125910.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.147513 ms
+    Query: 0.116325 ms
+- CompareHH
+    Total Packets: 29578511
+    Total Flows: 2318625
+    Elephant Flows: 1551
+    Threshold: 0.010000% (Packet Count: 2957)
+    Recall: 0.947131
+    Precision: 1.000000
+    F1 Socre: 0.972848
+    AAE: 71.114364
+    ARE: 0.013121
++------------------------------------------------+
