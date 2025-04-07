@@ -64,8 +64,8 @@ int main() {
     std::cout << "Number of Total Packets After Filter: " << lengthAfterFilter << std::endl;
     std::cout << "Number of Total Flows: After Filter " << tuplesMpAfterFilter.size() << std::endl;
 
-    ComputeFrequencyDistribution(tuplesMpAll, "memory_" + std::to_string(500000) + "_threshold_" + std::to_string(alpha) + "_all.txt");
-    ComputeFrequencyDistribution(tuplesMpAfterFilter, "memory_" + std::to_string(500000) + "_threshold_" + std::to_string(alpha) + "_filtered.txt");
+    ComputeFrequencyDistribution(tuplesMpAll, "memory_" + std::to_string(MEMORY) + "_threshold_" + std::to_string(alpha) + "_all.txt");
+    ComputeFrequencyDistribution(tuplesMpAfterFilter, "memory_" + std::to_string(MEMORY) + "_threshold_" + std::to_string(alpha) + "_filtered.txt");
 
     UnLoad(result);
 

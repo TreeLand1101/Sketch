@@ -6,8 +6,11 @@
 template<typename DATA_TYPE,typename COUNT_TYPE>
 class CMSketch{
 public:
+    std::string name = "CMSketch";
 
-    CMSketch(uint32_t _MEMORY){
+    CMSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 4) {
+        HASH_NUM = _HASH_NUM;
+        name += " (row = " + std::to_string(_HASH_NUM) + ")";
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
 
         sketch = new COUNT_TYPE* [HASH_NUM];
@@ -23,19 +26,24 @@ public:
         delete [] sketch;
     }
 
-    void Insert(const DATA_TYPE item) {
+    COUNT_TYPE Insert(const DATA_TYPE& item) {
+        COUNT_TYPE ret = std::numeric_limits<COUNT_TYPE>::max();
+
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t position = hash(item, i) % LENGTH;
             sketch[i][position] += 1;
+            ret = std::min(ret, sketch[i][position]);
         }
+
+        return ret;
     }
 
-    COUNT_TYPE Query(const DATA_TYPE item){
-        COUNT_TYPE ret = 0x7fffffff;
+    COUNT_TYPE Query(const DATA_TYPE& item){
+        COUNT_TYPE ret = std::numeric_limits<COUNT_TYPE>::max();
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t position = hash(item, i) % LENGTH;
-            ret = MIN(ret, sketch[i][position]);
+            ret = std::min(ret, sketch[i][position]);
         }
 
         return ret;
@@ -43,7 +51,7 @@ public:
 
 private:
     uint32_t LENGTH;
-    const uint32_t HASH_NUM = 4;
+    uint32_t HASH_NUM;
 
     COUNT_TYPE** sketch;
 };

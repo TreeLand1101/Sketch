@@ -8,9 +8,11 @@ class CMCUSketch{
 public:
     std::string name = "CMCUSketch";   
 
-    CMCUSketch(uint32_t _MEMORY){
+    CMCUSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 4) {
+        HASH_NUM = _HASH_NUM;
+        name += " (row = " + std::to_string(_HASH_NUM) + ")";
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
-
+        index = new COUNT_TYPE [HASH_NUM];
         sketch = new COUNT_TYPE* [HASH_NUM];
         for(uint32_t i = 0;i < HASH_NUM; ++i){
             sketch[i] = new COUNT_TYPE[LENGTH];
@@ -22,29 +24,33 @@ public:
         for(uint32_t i = 0;i < HASH_NUM;++i)
             delete [] sketch[i];
         delete [] sketch;
+        delete [] index;
     }
 
-    COUNT_TYPE Insert(const DATA_TYPE item) {
-        uint32_t i1 = hash(item, 0) % LENGTH;
-        uint32_t i2 = hash(item, 1) % LENGTH;
-        if (sketch[0][i1] < sketch[1][i2]) {
-            return ++sketch[0][i1]; 
-        }
-        else if (sketch[0][i1] > sketch[1][i2]) {
-            return ++sketch[1][i2]; 
+    COUNT_TYPE Insert(const DATA_TYPE& item) {
+        COUNT_TYPE minVal = std::numeric_limits<COUNT_TYPE>::max();
+
+        for (uint32_t i = 0; i < HASH_NUM; ++i) {
+            uint32_t position = hash(item, i) % LENGTH;
+            index[i] = position;
+            minVal = std::min(minVal, sketch[i][position]);
         }
 
-        ++sketch[0][i1]; 
-        ++sketch[1][i2]; 
-        return sketch[0][i1];
+        for (uint32_t i = 0; i < HASH_NUM; ++i) {
+            if (sketch[i][index[i]] == minVal) {
+                ++sketch[i][index[i]];
+            }
+        }
+
+        return minVal + 1;
     }
 
-    COUNT_TYPE Query(const DATA_TYPE item){
+    COUNT_TYPE Query(const DATA_TYPE& item){
         COUNT_TYPE ret = std::numeric_limits<COUNT_TYPE>::max();
 
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t position = hash(item, i) % LENGTH;
-            ret = MIN(ret, sketch[i][position]);
+            ret = std::min(ret, sketch[i][position]);
         }
 
         return ret;
@@ -52,9 +58,10 @@ public:
 
 private:
     uint32_t LENGTH;
-    const uint32_t HASH_NUM = 2;
+    uint32_t HASH_NUM;
     uint32_t COUNTER_BIT = 16;
     COUNT_TYPE** sketch;
+    COUNT_TYPE* index;
 };
 
 #endif

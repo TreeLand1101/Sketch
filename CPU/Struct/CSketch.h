@@ -6,8 +6,10 @@
 template<typename DATA_TYPE,typename COUNT_TYPE>
 class CSketch{
 public:
+    std::string name = "CSketch";
 
-    CSketch(uint32_t _MEMORY){
+    CSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 3) {
+        HASH_NUM = _HASH_NUM;
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
 
         sketch = new COUNT_TYPE* [HASH_NUM];
@@ -23,7 +25,7 @@ public:
         delete [] sketch;
     }
 
-    void Insert(const DATA_TYPE item) {
+    void Insert(const DATA_TYPE& item) {
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t position = hash(item, i) % LENGTH;
             uint32_t polar = hash(item, i + HASH_NUM) & 1;
@@ -32,7 +34,7 @@ public:
         }
     }
 
-    COUNT_TYPE Query(const DATA_TYPE item){
+    COUNT_TYPE Query(const DATA_TYPE& item){
         std::vector<COUNT_TYPE> result(HASH_NUM);
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
@@ -49,7 +51,7 @@ private:
     const int32_t delta[2] = {+1, -1};
 
     uint32_t LENGTH;
-    const uint32_t HASH_NUM = 3;
+    uint32_t HASH_NUM;
 
     COUNT_TYPE** sketch;
 };

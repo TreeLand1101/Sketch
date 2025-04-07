@@ -10,9 +10,12 @@ int main(int argc, char *argv[]) {
     double threshold = std::stod(argv[2]);
 
     for(uint32_t i = 3; i < argc; ++i) {
+        std::cout << "+------------------------------------------------+" << std::endl;
         std::cout << argv[i] << std::endl;
+        std::cout << "+------------------------------------------------+" << std::endl;
         BenchMark dataset(argv[i], "Dataset");
-        dataset.HHBench(memory, threshold);
+        dataset.HHBench<MomentumSketch<TUPLES>>(memory, threshold);
+        dataset.HHBench<TwoStage<TUPLES>>(memory, threshold);
     }
     return 0;
 }

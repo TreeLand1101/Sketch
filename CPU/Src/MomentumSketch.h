@@ -54,9 +54,11 @@ public:
             }
             // If item already exists, update its momentum and counter
             if (item == sketch[i][pos].ID) {
-                sketch[i][pos].momentum += sketch[i][pos].counter;
-                if (sketch[i][pos].momentum < 0) {
+                if (std::numeric_limits<COUNT_TYPE>::max() - sketch[i][pos].momentum < sketch[i][pos].counter) {
                     sketch[i][pos].momentum = std::numeric_limits<COUNT_TYPE>::max();
+                } 
+                else {
+                    sketch[i][pos].momentum += sketch[i][pos].counter;
                 }
                 sketch[i][pos].counter++;
                 return;

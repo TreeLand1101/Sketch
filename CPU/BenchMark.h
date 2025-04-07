@@ -23,9 +23,6 @@
 #include "MomentumSketch.h"
 #include "MomentumSketchSIMD.h"
 
-/* Modify SketchType to run on difference sketch */ 
-#define SketchType MomentumSketch
-
 class BenchMark{
 public:
 
@@ -45,16 +42,20 @@ public:
         UnLoad(result);
     }
 
+    template<typename Sketch>
     void HHBench(uint32_t MEMORY, double alpha) {
 
         Abstract<TUPLES>* tupleSketch;
 
         COUNT_TYPE threshold = alpha * length;
 
-        // tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold); /* TwoStage */
-        tupleSketch = new SketchType<TUPLES>(MEMORY); /* Sketch */
+        if constexpr (std::is_same_v<Sketch, TwoStage<TUPLES>>) {
+            tupleSketch = new Sketch(MEMORY, threshold);
+        } 
+        else {
+            tupleSketch = new Sketch(MEMORY);
+        }
 
-        std::cout << "+------------------------------------------------+" << std::endl;
         std::cout << "- " << tupleSketch->name << std::endl;
 
         Throughput(tupleSketch);
@@ -62,7 +63,7 @@ public:
         std::unordered_map<TUPLES, COUNT_TYPE> estTuple = tupleSketch->AllQuery();
 
         CompareHH(estTuple, tuplesMp, threshold, alpha);
-        std::cout << "+------------------------------------------------+" << std::endl;
+
         // printTopK(estTuple, 10000);
         // printTopK(tuplesMp, 10);
 
@@ -80,7 +81,7 @@ private:
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMp;
 
     template<class T>
-    void CompareHH(T mp, T record, COUNT_TYPE threshold, double alpha){
+    void CompareHH(T& mp, T& record, COUNT_TYPE threshold, double alpha){
         double realHH = 0, estHH = 0, bothHH = 0, aae = 0, are = 0;
 
         for(auto it = record.begin(); it != record.end(); ++it){
@@ -114,6 +115,7 @@ private:
         std::cout << "    F1 Socre: " <<  f1score << std::endl;        
         std::cout << "    AAE: " << aae / bothHH << std::endl;
         std::cout << "    ARE: " << are / bothHH << std::endl;
+        std::cout << "+------------------------------------------------+" << std::endl;
     }
 
     template<class T>
@@ -135,7 +137,6 @@ private:
         end = std::chrono::high_resolution_clock::now(); 
         std::cout << "    Query: " << (durationms(end, start) / length) << " ms" << std::endl;
     }
-
 
     // Print the top K most frequent TUPLES
     template<class T>
