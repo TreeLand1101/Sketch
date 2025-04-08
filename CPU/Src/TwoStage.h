@@ -4,8 +4,8 @@
 #include "Abstract.h"
 #include "Util.h"
 
-#include "CBFCU.h"
-#include "CMCUSketch.h"
+#include "CUCBF.h"
+#include "CUSketch.h"
 #include "MVSketch.h"
 #include "TwoFASketch.h"
 #include "CocoSketch.h"
@@ -20,7 +20,7 @@
 #include "MomentumSketchSIMD.h"
 #include "TightSketch.h"
 
-#define Stage1FilterType CBFCU
+#define Stage1FilterType CUCBF
 #define Stage2SketchType MomentumSketch
 
 template<typename DATA_TYPE>

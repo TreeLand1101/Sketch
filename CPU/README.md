@@ -16,7 +16,7 @@ Requirements
 How to run
 -------
 - To modify `memory` and the `heavy hitter threshold`, please refer to `run.sh`
-- To run on a difference sketch, please refer to `BenchMark.h`
+- To run on a difference sketch, please refer to `main.cpp`
 
 ```bash
 $ cmake .

@@ -1,25 +1,24 @@
-#ifndef CBFCU_H
-#define CBFCU_H
+#ifndef CUCBF_H
+#define CUCBF_H
 
 #include "Util.h"
 #include <cstdint>
 #include <algorithm>
 
 template<typename DATA_TYPE, typename COUNT_TYPE>
-class CBFCU {
+class CUCBF {
 public:
-    std::string name = "CBFCU";
+    std::string name = "CUCBF";
 
-    CBFCU(uint32_t _MEMORY, uint32_t _HASH_NUM = 2) {
+    CUCBF(uint32_t _MEMORY, uint32_t _HASH_NUM = 2) {
         HASH_NUM = _HASH_NUM;
-        name += " (row = " + std::to_string(_HASH_NUM) + ")";
         LENGTH = _MEMORY / sizeof(COUNT_TYPE); 
         filter = new COUNT_TYPE[LENGTH];
-        index = new COUNT_TYPE[HASH_NUM];
+        index = new uint32_t[HASH_NUM];
         memset(filter, 0, sizeof(COUNT_TYPE) * LENGTH);
     }
 
-    ~CBFCU() {
+    ~CUCBF() {
         delete [] filter;
         delete [] index;
     }
@@ -33,13 +32,13 @@ public:
             minVal = std::min(minVal, filter[position]);
         }
 
+        COUNT_TYPE ret = minVal + 1;
+
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
-            if (filter[index[i]] == minVal) {
-                ++filter[index[i]];
-            }
+            filter[index[i]] = std::max(filter[index[i]], ret);
         }
 
-        return minVal + 1;
+        return ret;
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item) {
@@ -54,12 +53,11 @@ public:
     }
 
 private:
-    uint32_t COUNTER_BIT = 16;
     uint32_t HASH_NUM;
     uint32_t LENGTH;
 
     COUNT_TYPE* filter;
-    COUNT_TYPE* index;
+    uint32_t* index;
 };
 
 #endif

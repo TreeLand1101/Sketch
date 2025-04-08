@@ -13,11 +13,11 @@ int main(int argc, char *argv[]) {
         std::cout << argv[i] << std::endl;
         std::cout << "+------------------------------------------------+" << std::endl;
         FilterBenchMark dataset(argv[i], "Dataset");
-        dataset.Bench<CBFCU<TUPLES, uint16_t>>(memory);
+        dataset.Bench<CUCBF<TUPLES, uint16_t>>(memory);
         dataset.Bench<CMSketch<TUPLES, uint16_t>>(memory);
         dataset.Bench<CMSketch<TUPLES, uint16_t>>(memory, 2);
-        dataset.Bench<CMCUSketch<TUPLES, uint16_t>>(memory);
-        dataset.Bench<CMCUSketch<TUPLES, uint16_t>>(memory, 2);
+        dataset.Bench<CUSketch<TUPLES, uint16_t>>(memory);
+        dataset.Bench<CUSketch<TUPLES, uint16_t>>(memory, 2);
     }
     return 0;
 }

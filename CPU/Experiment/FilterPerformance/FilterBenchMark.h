@@ -5,8 +5,8 @@
 
 #include "MMap.h"
 
-#include "CBFCU.h"
-#include "CMCUSketch.h"
+#include "CUCBF.h"
+#include "CUSketch.h"
 #include "CMSketch.h"
 #include "CSketch.h"
 

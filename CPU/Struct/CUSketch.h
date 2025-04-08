@@ -1,18 +1,18 @@
-#ifndef CMCUSKETCH_H
-#define CMCUSKETCH_H
+#ifndef CUSKETCH_H
+#define CUSKETCH_H
 
 #include "Util.h"
 
 template<typename DATA_TYPE,typename COUNT_TYPE>
-class CMCUSketch{
+class CUSketch{
 public:
-    std::string name = "CMCUSketch";   
+    std::string name = "CUSketch";   
 
-    CMCUSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 4) {
+    CUSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 4) {
         HASH_NUM = _HASH_NUM;
-        name += " (row = " + std::to_string(_HASH_NUM) + ")";
+        name += " (d = " + std::to_string(_HASH_NUM) + ")";
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
-        index = new COUNT_TYPE [HASH_NUM];
+        index = new uint32_t [HASH_NUM];
         sketch = new COUNT_TYPE* [HASH_NUM];
         for(uint32_t i = 0;i < HASH_NUM; ++i){
             sketch[i] = new COUNT_TYPE[LENGTH];
@@ -20,7 +20,7 @@ public:
         }
     }
 
-    ~CMCUSketch(){
+    ~CUSketch(){
         for(uint32_t i = 0;i < HASH_NUM;++i)
             delete [] sketch[i];
         delete [] sketch;
@@ -36,13 +36,13 @@ public:
             minVal = std::min(minVal, sketch[i][position]);
         }
 
+        COUNT_TYPE ret = minVal + 1;
+
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
-            if (sketch[i][index[i]] == minVal) {
-                ++sketch[i][index[i]];
-            }
+            sketch[i][index[i]] = std::max(sketch[i][index[i]], ret);
         }
 
-        return minVal + 1;
+        return ret;
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item){
@@ -59,9 +59,8 @@ public:
 private:
     uint32_t LENGTH;
     uint32_t HASH_NUM;
-    uint32_t COUNTER_BIT = 16;
     COUNT_TYPE** sketch;
-    COUNT_TYPE* index;
+    uint32_t* index;
 };
 
 #endif

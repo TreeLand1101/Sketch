@@ -10,7 +10,7 @@ public:
 
     CMSketch(uint32_t _MEMORY, uint32_t _HASH_NUM = 4) {
         HASH_NUM = _HASH_NUM;
-        name += " (row = " + std::to_string(_HASH_NUM) + ")";
+        name += " (d = " + std::to_string(_HASH_NUM) + ")";
         LENGTH = _MEMORY / sizeof(COUNT_TYPE) / HASH_NUM;
 
         sketch = new COUNT_TYPE* [HASH_NUM];
