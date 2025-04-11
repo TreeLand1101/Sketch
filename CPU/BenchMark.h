@@ -18,7 +18,6 @@
 #include "TwoStage.h"
 #include "ElasticHeavyPart.h"
 #include "HeavyGuardian.h"
-#include "TwoFASketch.h"
 #include "TightSketch.h"
 #include "MomentumSketch.h"
 #include "MomentumSketchSIMD.h"

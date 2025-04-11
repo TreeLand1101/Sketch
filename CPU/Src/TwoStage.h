@@ -7,7 +7,6 @@
 #include "CUCBF.h"
 #include "CUSketch.h"
 #include "MVSketch.h"
-#include "TwoFASketch.h"
 #include "CocoSketch.h"
 #include "UnivMon.h"
 #include "Elastic.h"
@@ -20,7 +19,7 @@
 #include "MomentumSketchSIMD.h"
 #include "TightSketch.h"
 
-#define Stage1FilterType CUCBF
+#define Stage1FilterType CUSketch
 #define Stage2SketchType MomentumSketch
 
 template<typename DATA_TYPE>
@@ -28,14 +27,13 @@ class TwoStage : public Abstract<DATA_TYPE>{
 public:
     typedef std::unordered_map<DATA_TYPE, COUNT_TYPE> HashMap;
     
-    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD){
-        uint32_t FILTER_MEMORY = _MEMORY * FILTER_RATIO;
-        uint32_t SKETCH_MEMORY = _MEMORY * SKETCH_RATIO;
-        STAGE1_THRESHOLD = _THRESHOLD * STAGE1_TRESHOLD_RATIO;
-        // STAGE2_THRESHOLD = _THRESHOLD * STAGE2_TRESHOLD_RATIO;
+    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD, double _FILTER_RATIO = 0.6, double _SKETCH_RATIO = 0.4, double _FORWARD_TRESHOLD_RATIO = 0.9){
+        uint32_t FILTER_MEMORY = _MEMORY * _FILTER_RATIO;
+        uint32_t SKETCH_MEMORY = _MEMORY * _SKETCH_RATIO;
+        FORWARD_TRESHOLD = _THRESHOLD * _FORWARD_TRESHOLD_RATIO;
 
-        filter = new Stage1FilterType<DATA_TYPE, uint16_t>(FILTER_MEMORY);
-        sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY, STAGE1_THRESHOLD);
+        filter = new Stage1FilterType<DATA_TYPE, uint16_t>(FILTER_MEMORY, 2);
+        sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY, FORWARD_TRESHOLD);
 
         this->name = "TwoStage ( " + filter->name + " + " + sketch->name + " )";
     }
@@ -46,14 +44,14 @@ public:
     }
 
     void Insert(const DATA_TYPE& item){
-        if (filter->Insert(item) >= STAGE1_THRESHOLD) {
+        if (filter->Insert(item) >= FORWARD_TRESHOLD) {
             sketch->Insert(item);
         }
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item){
         COUNT_TYPE temp = filter->Query(item);
-        if (temp >= STAGE1_THRESHOLD) {
+        if (temp >= FORWARD_TRESHOLD) {
             return temp + sketch->Query(item);
         }
         return temp;
@@ -64,14 +62,7 @@ public:
     }
     
 private:
-    const double FILTER_RATIO = 0.5;
-    const double SKETCH_RATIO = 0.5;
-
-    COUNT_TYPE STAGE1_THRESHOLD;
-    // COUNT_TYPE STAGE2_THRESHOLD;
-
-    const double STAGE1_TRESHOLD_RATIO = 0.8;
-    // const double STAGE2_TRESHOLD_RATIO = 0.2;
+    COUNT_TYPE FORWARD_TRESHOLD;
 
     Stage1FilterType<DATA_TYPE, uint16_t>* filter;
     Stage2SketchType<DATA_TYPE>* sketch;

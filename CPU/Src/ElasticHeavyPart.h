@@ -25,10 +25,10 @@ public:
         }
     };
 
-    ElasticHeavyPart(uint32_t _MEMORY, uint32_t _STAGE1_BIAS = 0, std::string _name = "ElasticHeavyPart"){
+    ElasticHeavyPart(uint32_t _MEMORY, uint32_t _FORWARD_TRESHOLD = 0, std::string _name = "ElasticHeavyPart"){
         this->name = _name;
 
-        this->stage1_bias = _STAGE1_BIAS;
+        this->stage1_bias = _FORWARD_TRESHOLD;
         LENGTH = _MEMORY / sizeof(Bucket);
 
         buckets = new Bucket[LENGTH];

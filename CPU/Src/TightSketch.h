@@ -16,11 +16,11 @@ public:
         COUNT_TYPE counter;
     };
 
-    TightSketch(uint32_t _MEMORY, uint32_t _STAGE1_BIAS = 0, std::string _name = "TightSketch"){
+    TightSketch(uint32_t _MEMORY, uint32_t _FORWARD_TRESHOLD = 0, std::string _name = "TightSketch"){
         this->name = _name;
 
         LENGTH = _MEMORY / sizeof(Bucket) / HASH_NUM;
-        this->stage1_bias = _STAGE1_BIAS;
+        this->stage1_bias = _FORWARD_TRESHOLD;
         sketch = new Bucket* [HASH_NUM];
         for(uint32_t i = 0; i < HASH_NUM; ++i){
             sketch[i] = new Bucket[LENGTH];

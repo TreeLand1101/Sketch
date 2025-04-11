@@ -1,0 +1,33 @@
++------------------------------------------------+
+equinix-chicago.dirA.20160121-125911.UTC.anon.dat
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.134912 ms
+    Query: 0.109279 ms
+- CompareHH
+    Total Packets: 22567092
+    Total Flows: 898943
+    Elephant Flows: 1291
+    Threshold: 0.010000% (Packet Count: 2256)
+    Recall: 0.920217
+    Precision: 1.000000
+    F1 Socre: 0.958451
+    AAE: 52.400673
+    ARE: 0.013156
++------------------------------------------------+
+- TwoStage ( CUSketch (d = 2) + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.073663 ms
+    Query: 0.085923 ms
+- CompareHH
+    Total Packets: 22567092
+    Total Flows: 898943
+    Elephant Flows: 1291
+    Threshold: 0.010000% (Packet Count: 2256)
+    Recall: 0.926414
+    Precision: 0.930739
+    F1 Socre: 0.928571
+    AAE: 171.082776
+    ARE: 0.022389
++------------------------------------------------+
