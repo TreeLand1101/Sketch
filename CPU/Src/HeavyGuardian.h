@@ -24,10 +24,10 @@ public:
         }
     };
 
-    HeavyGuardian(uint32_t _MEMORY, uint32_t _FORWARD_TRESHOLD = 0, std::string _name = "HeavyGuardian"){
+    HeavyGuardian(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "HeavyGuardian"){
         this->name = _name;
 
-        this->stage1_bias = _FORWARD_TRESHOLD;
+        this->stage1_bias = _ADMISSION_THRESHOLD;
         LENGTH = _MEMORY / sizeof(Bucket);
 
         buckets = new Bucket[LENGTH];

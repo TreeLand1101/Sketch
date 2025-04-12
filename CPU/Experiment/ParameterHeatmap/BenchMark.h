@@ -36,9 +36,9 @@ public:
         UnLoad(result);
     }
 
-    Metrics HHBenchWithMetrics(uint32_t MEMORY, double alpha, double FILTER_RATIO, double SKETCH_RATIO, double FORWARD_RATIO) {
+    Metrics HHBenchWithMetrics(uint32_t MEMORY, double alpha, double FILTER_RATIO, double SKETCH_RATIO, double ADMISSION_RATIO) {
         COUNT_TYPE threshold = alpha * length;
-        TwoStage<TUPLES>* tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold, FILTER_RATIO, SKETCH_RATIO, FORWARD_RATIO);
+        TwoStage<TUPLES>* tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold, FILTER_RATIO, SKETCH_RATIO, ADMISSION_RATIO);
 
         Metrics metrics = ComputeMetrics(tupleSketch, threshold, alpha);
 

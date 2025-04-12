@@ -27,10 +27,10 @@ public:
         }
     };
 
-    Elastic(uint32_t _MEMORY, uint32_t _FORWARD_TRESHOLD = 0, std::string _name = "Elastic"){
+    Elastic(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "Elastic"){
         this->name = _name;
 
-        this->stage1_bias = _FORWARD_TRESHOLD;
+        this->stage1_bias = _ADMISSION_THRESHOLD;
         HEAVY_LENGTH = _MEMORY * HEAVY_RATIO / sizeof(Bucket);
         LIGHT_LENGTH = _MEMORY * LIGHT_RATIO / sizeof(COUNT_TYPE);
 

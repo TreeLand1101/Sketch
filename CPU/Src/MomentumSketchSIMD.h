@@ -21,11 +21,11 @@ public:
         COUNT_TYPE counter;
     };
 
-    MomentumSketchSIMD(uint32_t _MEMORY, uint32_t _FORWARD_TRESHOLD = 0, std::string _name = "MomentumSketchSIMD"){
+    MomentumSketchSIMD(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "MomentumSketchSIMD"){
         this->name = _name;
 
         LENGTH = _MEMORY / sizeof(Bucket) / HASH_NUM;
-        this->stage1_bias = _FORWARD_TRESHOLD;
+        this->stage1_bias = _ADMISSION_THRESHOLD;
         sketch = new Bucket* [HASH_NUM];
         for(uint32_t i = 0; i < HASH_NUM; ++i){
             sketch[i] = new Bucket[LENGTH];

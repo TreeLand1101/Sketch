@@ -27,13 +27,13 @@ class TwoStage : public Abstract<DATA_TYPE>{
 public:
     typedef std::unordered_map<DATA_TYPE, COUNT_TYPE> HashMap;
     
-    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD, double _FILTER_RATIO = 0.6, double _SKETCH_RATIO = 0.4, double _FORWARD_TRESHOLD_RATIO = 0.9){
+    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD, double _FILTER_RATIO = 0.6, double _SKETCH_RATIO = 0.4, double _ADMISSION_THRESHOLD_RATIO = 0.9){
         uint32_t FILTER_MEMORY = _MEMORY * _FILTER_RATIO;
         uint32_t SKETCH_MEMORY = _MEMORY * _SKETCH_RATIO;
-        FORWARD_TRESHOLD = _THRESHOLD * _FORWARD_TRESHOLD_RATIO;
+        ADMISSION_TRESHOLD = _THRESHOLD * _ADMISSION_THRESHOLD_RATIO;
 
         filter = new Stage1FilterType<DATA_TYPE, uint16_t>(FILTER_MEMORY, 2);
-        sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY, FORWARD_TRESHOLD);
+        sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY, ADMISSION_TRESHOLD);
 
         this->name = "TwoStage ( " + filter->name + " + " + sketch->name + " )";
     }
@@ -44,14 +44,14 @@ public:
     }
 
     void Insert(const DATA_TYPE& item){
-        if (filter->Insert(item) >= FORWARD_TRESHOLD) {
+        if (filter->Insert(item) >= ADMISSION_TRESHOLD) {
             sketch->Insert(item);
         }
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item){
         COUNT_TYPE temp = filter->Query(item);
-        if (temp >= FORWARD_TRESHOLD) {
+        if (temp >= ADMISSION_TRESHOLD) {
             return temp + sketch->Query(item);
         }
         return temp;
@@ -62,7 +62,7 @@ public:
     }
     
 private:
-    COUNT_TYPE FORWARD_TRESHOLD;
+    COUNT_TYPE ADMISSION_TRESHOLD;
 
     Stage1FilterType<DATA_TYPE, uint16_t>* filter;
     Stage2SketchType<DATA_TYPE>* sketch;

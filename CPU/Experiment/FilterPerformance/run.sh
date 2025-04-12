@@ -18,3 +18,6 @@ do
 done
 
 echo "Finished all run."
+
+
+python3 metric.py

@@ -1,10 +1,10 @@
 +------------------------------------------------+
 ../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat
 +------------------------------------------------+
-- CUCBF (d = 2)
+- CUCBF
 - Average Time Per Operation
-    Insert: 0.048493 ms
-    Query: 0.04324 ms
+    Insert: 0.0504974 ms
+    Query: 0.0440134 ms
 - Compare
     Total Packets: 32163023
     Total Flows: 1155323
@@ -13,8 +13,8 @@
 +------------------------------------------------+
 - CMSketch (d = 4)
 - Average Time Per Operation
-    Insert: 0.0881667 ms
-    Query: 0.0842106 ms
+    Insert: 0.0962794 ms
+    Query: 0.0897128 ms
 - Compare
     Total Packets: 32163023
     Total Flows: 1155323
@@ -23,8 +23,8 @@
 +------------------------------------------------+
 - CMSketch (d = 2)
 - Average Time Per Operation
-    Insert: 0.0465235 ms
-    Query: 0.0422373 ms
+    Insert: 0.0509972 ms
+    Query: 0.0465586 ms
 - Compare
     Total Packets: 32163023
     Total Flows: 1155323
@@ -33,8 +33,8 @@
 +------------------------------------------------+
 - CUSketch (d = 4)
 - Average Time Per Operation
-    Insert: 0.0911642 ms
-    Query: 0.0831371 ms
+    Insert: 0.0973463 ms
+    Query: 0.0884257 ms
 - Compare
     Total Packets: 32163023
     Total Flows: 1155323
@@ -43,8 +43,8 @@
 +------------------------------------------------+
 - CUSketch (d = 2)
 - Average Time Per Operation
-    Insert: 0.0474355 ms
-    Query: 0.04238 ms
+    Insert: 0.0498366 ms
+    Query: 0.0441111 ms
 - Compare
     Total Packets: 32163023
     Total Flows: 1155323

@@ -36,7 +36,7 @@ def plot_rank_frequency_distribution(file_path, title, use_log_scale=False):
     plt.close()
     print(f"saved to {output_file}")
 
-def plot_packet_count_cdf(file_path, title):
+def plot_frequency_cdf_log(file_path, title):
     frequencies = np.loadtxt(file_path)
     sorted_freq = np.sort(frequencies)
     cdf = np.arange(1, len(sorted_freq) + 1) / len(sorted_freq)
@@ -45,40 +45,41 @@ def plot_packet_count_cdf(file_path, title):
     plt.plot(sorted_freq, cdf, marker='o', linestyle='-', alpha=0.7)
     plt.xscale('log', base=10)
     
-    plt.title(f"{title} CDF")
-    plt.xlabel("Packet Count (Frequency, Log Scale)")
+    plt.title(f"{title} (Log Scale)")
+    plt.xlabel("Frequency (Log Scale)")
     plt.ylabel("Probability")
     plt.grid(True, which="both", linestyle='--', linewidth=0.5)
     
-    output_file = file_path.replace('.txt', '') + "_packet_count_cdf.png"
+    output_file = file_path.replace('.txt', '') + "_frequency_cdf_log.png"
     plt.savefig(output_file)
     plt.close()
     print(f"saved to {output_file}")
 
-def plot_packet_count_cdf_linear(file_path, title):
+def plot_frequency_cdf_linear(file_path, title):
     frequencies = np.loadtxt(file_path)
     sorted_freq = np.sort(frequencies)
     cdf = np.arange(1, len(sorted_freq) + 1) / len(sorted_freq)
     
     plt.figure(figsize=(10, 5))
     plt.plot(sorted_freq, cdf, marker='o', linestyle='-', alpha=0.7)
-    plt.title(f"{title} CDF (Linear Scale)")
-    plt.xlabel("Packet Count (Frequency)")
+    plt.title(f"{title} (Linear Scale)")
+    plt.xlabel("Frequency")
     plt.ylabel("Probability")
     plt.grid(True, which="both", linestyle='--', linewidth=0.5)
     
-    output_file = file_path.replace('.txt', '') + "_packet_count_cdf_linear.png"
+    output_file = file_path.replace('.txt', '') + "_frequency_cdf_linear.png"
     plt.savefig(output_file)
     plt.close()
     print(f"saved to {output_file}")
 
+# Plotting
 plot_rank_frequency_distribution(prefix + "_all.txt", "Rank-Frequency Distribution for All Flows", use_log_scale=False)
 plot_rank_frequency_distribution(prefix + "_all.txt", "Rank-Frequency Distribution for All Flows", use_log_scale=True)
 plot_rank_frequency_distribution(prefix + "_filtered.txt", "Rank-Frequency Distribution for Filtered Flows", use_log_scale=False)
 plot_rank_frequency_distribution(prefix + "_filtered.txt", "Rank-Frequency Distribution for Filtered Flows", use_log_scale=True)
 
-plot_packet_count_cdf(prefix + "_all.txt", "Packet Count CDF for All Flows")
-plot_packet_count_cdf(prefix + "_filtered.txt", "Packet Count CDF for Filtered Flows")
+plot_frequency_cdf_log(prefix + "_all.txt", "Frequency CDF for All Flows")
+plot_frequency_cdf_log(prefix + "_filtered.txt", "Frequency CDF for Filtered Flows")
 
-plot_packet_count_cdf_linear(prefix + "_all.txt", "Packet Count CDF for All Flows")
-plot_packet_count_cdf_linear(prefix + "_filtered.txt", "Packet Count CDF for Filtered Flows")
+plot_frequency_cdf_linear(prefix + "_all.txt", "Frequency CDF for All Flows")
+plot_frequency_cdf_linear(prefix + "_filtered.txt", "Frequency CDF for Filtered Flows")

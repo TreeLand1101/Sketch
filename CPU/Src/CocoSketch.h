@@ -15,12 +15,12 @@ public:
 
     typedef std::unordered_map<DATA_TYPE, COUNT_TYPE> HashMap;
 
-    CocoSketch(uint32_t _MEMORY, uint32_t _STAGE1_BIAS = 0, uint32_t _HASH_NUM = 2, std::string _name = "CocoSketch"){
+    CocoSketch(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, uint32_t _HASH_NUM = 2, std::string _name = "CocoSketch"){
         this->name = _name;
 
         HASH_NUM = _HASH_NUM;
         LENGTH = _MEMORY / _HASH_NUM / sizeof(Counter);
-        this->stage1_bias = _STAGE1_BIAS;
+        this->stage1_bias = _ADMISSION_THRESHOLD;
 
         counter = new Counter* [HASH_NUM];
         for(uint32_t i = 0;i < HASH_NUM;++i){

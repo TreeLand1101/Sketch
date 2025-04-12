@@ -2,22 +2,13 @@ Requirements
 -------
 - cmake
 - g++
+- matplotlib
+- numpy
 
 How to run
 ```bash
 $ cmake .
-$ make
-$ ./PacketCountDistribution
-```
-
-Plot PacketCountDistribution
-```python
-python3 PlotCDF.py
-```
-
-Calculate mice / elephant info
-```python
-python3 ElephantMiceSums.py
+$ sh run.sh
 ```
 
 Dump first 50000 from pcap
