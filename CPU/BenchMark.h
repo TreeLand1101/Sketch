@@ -8,15 +8,12 @@
 
 #include "MMap.h"
 #include "CocoSketch.h"
-#include "UnivMon.h"
 #include "Elastic.h"
 #include "CMHeap.h"
-#include "CountHeap.h"
 #include "SpaceSaving.h"
 #include "MVSketch.h"
 #include "StableSketch.h"
 #include "TwoStage.h"
-#include "ElasticHeavyPart.h"
 #include "HeavyGuardian.h"
 #include "TightSketch.h"
 #include "MomentumSketch.h"
@@ -63,7 +60,7 @@ public:
 
         CompareHH(estTuple, tuplesMp, threshold, alpha);
 
-        // printTopK(estTuple, 10000);
+        // printTopK(estTuple, 10);
         // printTopK(tuplesMp, 10);
 
         delete tupleSketch;
@@ -159,7 +156,7 @@ private:
             const TUPLES& tuple = entry.first;
             COUNT_TYPE freq = entry.second;
 
-            std::cout << "FLow: " << ipToString(tuple.srcIP()) << " / "
+            std::cout << "Flow: " << ipToString(tuple.srcIP()) << " / "
                     << ipToString(tuple.dstIP()) << " / "
                     << ntohs(tuple.srcPort()) << " / "
                     << ntohs(tuple.dstPort()) << " / "

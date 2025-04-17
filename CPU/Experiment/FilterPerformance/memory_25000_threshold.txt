@@ -1,16 +1,6 @@
 +------------------------------------------------+
 ../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat
 +------------------------------------------------+
-- CUCBF
-- Average Time Per Operation
-    Insert: 0.0504974 ms
-    Query: 0.0440134 ms
-- Compare
-    Total Packets: 32163023
-    Total Flows: 1155323
-    AAE: 2101.9
-    ARE: 964.61
-+------------------------------------------------+
 - CMSketch (d = 4)
 - Average Time Per Operation
     Insert: 0.0962794 ms

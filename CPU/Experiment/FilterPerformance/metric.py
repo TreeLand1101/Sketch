@@ -111,28 +111,24 @@ def plot_line_chart(data, metric, short_title, markers, line_styles, trace_label
 # CAIDA2016 example data with keys in the format "memory_xxxxx"
 CAIDA2016 = {
     "memory_25000": [
-        ("CUCBF", {"Insert": 0.048493, "Query": 0.04324, "AAE": 2101.9, "ARE": 964.61}),
         ("CMSketch (d = 4)", {"Insert": 0.0881667, "Query": 0.0842106, "AAE": 5531.77, "ARE": 2525.17}),
         ("CMSketch (d = 2)", {"Insert": 0.0465235, "Query": 0.0422373, "AAE": 3075.34, "ARE": 1403.35}),
         ("CUSketch (d = 4)", {"Insert": 0.0911642, "Query": 0.0831371, "AAE": 3013, "ARE": 1383.41}),
         ("CUSketch (d = 2)", {"Insert": 0.0474355, "Query": 0.04238, "AAE": 2106.68, "ARE": 966.505}),
     ],
     "memory_50000": [
-        ("CUCBF", {"Insert": 0.0486111, "Query": 0.044212, "AAE": 920.945, "ARE": 424.311}),
         ("CMSketch (d = 4)", {"Insert": 0.0900734, "Query": 0.0838306, "AAE": 2333.08, "ARE": 1064.67}),
         ("CMSketch (d = 2)", {"Insert": 0.0469074, "Query": 0.0441466, "AAE": 1330.5, "ARE": 607.137}),
         ("CUSketch (d = 4)", {"Insert": 0.0932119, "Query": 0.0831253, "AAE": 1289, "ARE": 594.799}),
         ("CUSketch (d = 2)", {"Insert": 0.0477625, "Query": 0.0431878, "AAE": 923.238, "ARE": 425.567}),
     ],
     "memory_75000": [
-        ("CUCBF", {"Insert": 0.0491939, "Query": 0.0436499, "AAE": 563.311, "ARE": 260.683}),
         ("CMSketch (d = 4)", {"Insert": 0.0912972, "Query": 0.0832254, "AAE": 1387.17, "ARE": 632.996}),
         ("CMSketch (d = 2)", {"Insert": 0.0466963, "Query": 0.0428217, "AAE": 806.731, "ARE": 367.82}),
         ("CUSketch (d = 4)", {"Insert": 0.0927431, "Query": 0.0839826, "AAE": 768.718, "ARE": 356.484}),
         ("CUSketch (d = 2)", {"Insert": 0.0481841, "Query": 0.0436529, "AAE": 562.575, "ARE": 260.111}),
     ],
     "memory_100000": [
-        ("CUCBF", {"Insert": 0.0496697, "Query": 0.046035, "AAE": 393.697, "ARE": 182.761}),
         ("CMSketch (d = 4)", {"Insert": 0.0941356, "Query": 0.0882141, "AAE": 953.778, "ARE": 434.912}),
         ("CMSketch (d = 2)", {"Insert": 0.0498252, "Query": 0.0450795, "AAE": 562.123, "ARE": 256.181}),
         ("CUSketch (d = 4)", {"Insert": 0.0963442, "Query": 0.0866493, "AAE": 530.908, "ARE": 247.304}),

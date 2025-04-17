@@ -5,10 +5,8 @@
 
 #include "MMap.h"
 
-#include "CUCBF.h"
 #include "CUSketch.h"
 #include "CMSketch.h"
-#include "CSketch.h"
 
 class FilterBenchMark{
 public:

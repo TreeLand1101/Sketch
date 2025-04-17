@@ -45,6 +45,28 @@ public:
         return ret;
     }
 
+    bool InsertWithThreshold(const DATA_TYPE& item, COUNT_TYPE ADMISSION_TRESHOLD) {
+        COUNT_TYPE minVal = std::numeric_limits<COUNT_TYPE>::max();
+
+        for (uint32_t i = 0; i < HASH_NUM; ++i) {
+            uint32_t position = hash(item, i) % LENGTH;
+            index[i] = position;
+            minVal = std::min(minVal, sketch[i][position]);
+        }
+
+        if (minVal >= ADMISSION_TRESHOLD) {
+            return false;
+        }
+
+        COUNT_TYPE updateVal = minVal + 1;
+
+        for (uint32_t i = 0; i < HASH_NUM; ++i) {
+            sketch[i][index[i]] = std::max(sketch[i][index[i]], updateVal);
+        }
+
+        return true;
+    }
+
     COUNT_TYPE Query(const DATA_TYPE& item){
         COUNT_TYPE ret = std::numeric_limits<COUNT_TYPE>::max();
 

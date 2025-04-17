@@ -16,11 +16,10 @@ public:
         COUNT_TYPE counter;
     };
 
-    StableSketch(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "StableSketch"){
+    StableSketch(uint32_t _MEMORY, std::string _name = "StableSketch"){
         this->name = _name;
 
         LENGTH = _MEMORY / sizeof(Bucket) / HASH_NUM;
-        this->stage1_bias = _ADMISSION_THRESHOLD;
         sketch = new Bucket* [HASH_NUM];
         for(uint32_t i = 0; i < HASH_NUM; ++i){
             sketch[i] = new Bucket[LENGTH];
@@ -85,7 +84,7 @@ public:
         for(uint32_t i = 0; i < HASH_NUM; ++i){
             for (uint32_t j = 0; j < LENGTH; ++j) {
                 if (sketch[i][j].ID[0] != '\0' && ret.find(sketch[i][j].ID) == ret.end()) {
-                    ret[sketch[i][j].ID] = Query(sketch[i][j].ID) + this->stage1_bias;
+                    ret[sketch[i][j].ID] = Query(sketch[i][j].ID);
                 }
             }
         }

@@ -24,10 +24,9 @@ public:
         }
     };
 
-    HeavyGuardian(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "HeavyGuardian"){
+    HeavyGuardian(uint32_t _MEMORY, std::string _name = "HeavyGuardian"){
         this->name = _name;
 
-        this->stage1_bias = _ADMISSION_THRESHOLD;
         LENGTH = _MEMORY / sizeof(Bucket);
 
         buckets = new Bucket[LENGTH];
@@ -78,7 +77,7 @@ public:
         for(uint32_t i = 0; i < LENGTH; ++i){
             for(uint32_t j = 0; j < COUNTER_PER_BUCKET; ++j) {
                 if (buckets[i].ID[j][0] != '\0') {
-                    ret[buckets[i].ID[j]] = buckets[i].count[j] + this->stage1_bias;
+                    ret[buckets[i].ID[j]] = buckets[i].count[j];
                 }
             }
         }

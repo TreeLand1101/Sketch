@@ -27,10 +27,9 @@ public:
         }
     };
 
-    Elastic(uint32_t _MEMORY, uint32_t _ADMISSION_THRESHOLD = 0, std::string _name = "Elastic"){
+    Elastic(uint32_t _MEMORY, std::string _name = "Elastic"){
         this->name = _name;
 
-        this->stage1_bias = _ADMISSION_THRESHOLD;
         HEAVY_LENGTH = _MEMORY * HEAVY_RATIO / sizeof(Bucket);
         LIGHT_LENGTH = _MEMORY * LIGHT_RATIO / sizeof(COUNT_TYPE);
 
@@ -87,9 +86,9 @@ public:
         uint8_t flag = 1;
         COUNT_TYPE result = buckets[hash(item) % HEAVY_LENGTH].Query(item, flag);
         if(flag)
-            return result + counters[hash(item, 101) % LIGHT_LENGTH] + this->stage1_bias;
+            return result + counters[hash(item, 101) % LIGHT_LENGTH];
         else
-            return result + this->stage1_bias;
+            return result;
     }
 
     HashMap AllQuery(){
@@ -97,12 +96,10 @@ public:
         for(uint32_t i = 0;i < HEAVY_LENGTH;++i){
             for(uint32_t j = 0;j < COUNTER_PER_BUCKET;++j){
                 if(buckets[i].flags[j] == 1){
-                    ret[buckets[i].ID[j]] = buckets[i].count[j] +
-                    counters[hash(buckets[i].ID[j], 101) % LIGHT_LENGTH] + 
-                    this->stage1_bias;
+                    ret[buckets[i].ID[j]] = buckets[i].count[j] + counters[hash(buckets[i].ID[j], 101) % LIGHT_LENGTH];
                 }
                 else{
-                    ret[buckets[i].ID[j]] = buckets[i].count[j] + this->stage1_bias;
+                    ret[buckets[i].ID[j]] = buckets[i].count[j];
                 }
             }
         }
