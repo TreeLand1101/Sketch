@@ -106,10 +106,10 @@ private:
 };
 
 int main() {
-    std::string PATH = "../../equinix-chicago.dirA.20160121-140000.UTC.anon_first_100000.dat"; 
-    uint32_t MEMORY = 100000;
+    std::string PATH = "../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat"; 
+    uint32_t MEMORY = 500000;
     double alpha = 0.0001;
-    COUNT_TYPE maxMomentum = 2000;
+    COUNT_TYPE maxMomentum = 1e8;
 
     LoadResult result = Load(PATH.c_str());
     TUPLES* dataset = (TUPLES*)result.start;

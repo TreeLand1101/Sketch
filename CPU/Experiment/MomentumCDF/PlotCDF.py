@@ -9,18 +9,24 @@ def read_log(file_name):
     data = np.loadtxt(file_name)
     return data[:, 0], data[:, 1]
 
+# File names
 mice_file = 'mice_momentum_cdf.log'
 elephant_file = 'elephant_momentum_cdf.log'
 
+# Read data
 mice_x, mice_y = read_log(mice_file)
 elephant_x, elephant_y = read_log(elephant_file)
+
+# Plot the data
 plt.plot(mice_x, mice_y, marker='o', linestyle='-', label='Mice Flow')
 plt.plot(elephant_x, elephant_y, marker='o', linestyle='-', label='Elephant Flow')
 
+# Set labels and title
 plt.xlabel("Momentum")
 plt.ylabel("CDF")
 plt.title("Momentum CDF")
 plt.legend()
 plt.grid(True, which="both", linestyle="--")
 
+# Save the plot
 plt.savefig("momentum_cdf_plot.png")

@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
         dataset.HHBench<CocoSketch<TUPLES>>(memory, threshold);
         dataset.HHBench<StableSketch<TUPLES>>(memory, threshold);
         dataset.HHBench<TightSketch<TUPLES>>(memory, threshold);
+        dataset.HHBench<StableSketch<TUPLES>>(memory, threshold);
         dataset.HHBench<MomentumSketch<TUPLES>>(memory, threshold);
         dataset.HHBench<TwoStage<TUPLES>>(memory, threshold);
     }
