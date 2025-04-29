@@ -1,0 +1,108 @@
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MVSketch
+- Average Time Per Operation
+    Insert: 0.187319 ms
+    Query: 0.143232 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.521866
+    Precision: 0.197572
+    F1 Socre: 0.286629
+    AAE: 3875.968343
+    ARE: 0.687400
++------------------------------------------------+
+- Elastic
+- Average Time Per Operation
+    Insert: 0.087610 ms
+    Query: 0.085786 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.736638
+    Precision: 0.807242
+    F1 Socre: 0.770325
+    AAE: 1094.941953
+    ARE: 0.161874
++------------------------------------------------+
+- CocoSketch
+- Average Time Per Operation
+    Insert: 0.084665 ms
+    Query: 0.070285 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.840622
+    Precision: 0.147359
+    F1 Socre: 0.250761
+    AAE: 985.369942
+    ARE: 0.201137
++------------------------------------------------+
+- TightSketch
+- Average Time Per Operation
+    Insert: 0.153358 ms
+    Query: 0.120063 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.892128
+    Precision: 1.000000
+    F1 Socre: 0.942989
+    AAE: 83.590414
+    ARE: 0.015261
++------------------------------------------------+
+- StableSketch
+- Average Time Per Operation
+    Insert: 0.155023 ms
+    Query: 0.122363 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.672498
+    Precision: 1.000000
+    F1 Socre: 0.804184
+    AAE: 137.465318
+    ARE: 0.012877
++------------------------------------------------+
+- MomentumSketch
+- Average Time Per Operation
+    Insert: 0.155925 ms
+    Query: 0.128578 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.948494
+    Precision: 1.000000
+    F1 Socre: 0.973566
+    AAE: 69.051230
+    ARE: 0.012536
++------------------------------------------------+
+- TwoStage ( CUSketch (d = 2) + MomentumSketch )
+- Average Time Per Operation
+    Insert: 0.076961 ms
+    Query: 0.088200 ms
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.979592
+    Precision: 0.919708
+    F1 Socre: 0.948706
+    AAE: 87.765873
+    ARE: 0.017616
++------------------------------------------------+

@@ -19,13 +19,13 @@ inline __m256i hash_avx2(const T& data, uint32_t seed1 = 0, uint32_t seed2 = 1, 
 template<typename T>
 inline __m128i hash_sse2(const T& data, uint32_t seed1 = 0, uint32_t seed2 = 1, uint32_t seed3 = 2, uint32_t seed4 = 3);
 
-inline long long randomGenerator();
+inline unsigned long long randomGenerator();
 
 static std::random_device rd;
 static std::mt19937_64 rng(rd());
 static std::uniform_real_distribution<double> dis(0, 1);
 
-inline long long randomGenerator(){
+inline unsigned long long randomGenerator(){
     return rng();
 }
 

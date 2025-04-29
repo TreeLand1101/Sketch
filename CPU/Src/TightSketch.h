@@ -56,7 +56,9 @@ public:
                 R = i;
                 M = pos;
             }
-            sketch[i][pos].arrival_strength = std::max(0, sketch[i][pos].arrival_strength - 1);
+            if (sketch[i][pos].arrival_strength > 0) {
+                sketch[i][pos].arrival_strength--;
+            }
         }
 
         if (sketch[R][M].counter < DECAY_THRESHOLD) {
@@ -65,7 +67,7 @@ public:
             }
         }
         else {
-            if (randomGenerator() % static_cast<long long>(sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
+            if (randomGenerator() % static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].arrival_strength + 1) == 0) {
                 sketch[R][M].counter--;
             }
         }

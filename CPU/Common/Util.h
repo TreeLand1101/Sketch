@@ -61,7 +61,7 @@ namespace std{
     };
 }
 
-typedef int32_t COUNT_TYPE;   
+typedef uint32_t COUNT_TYPE;   
 
 typedef std::chrono::high_resolution_clock::time_point TP;
 

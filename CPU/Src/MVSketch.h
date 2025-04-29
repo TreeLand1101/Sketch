@@ -44,9 +44,14 @@ public:
             else if (item == sketch[i][pos].ID) {
                 sketch[i][pos].counter++;
             }
-            else if (--sketch[i][pos].counter < 0) {
-                sketch[i][pos].ID = item;
-                sketch[i][pos].counter = 1;
+            else {
+                if (sketch[i][pos].counter == 0) {
+                    sketch[i][pos].ID = item;
+                    sketch[i][pos].counter = 1;                    
+                }
+                else {
+                    --sketch[i][pos].counter;
+                }
             }
         }
     }

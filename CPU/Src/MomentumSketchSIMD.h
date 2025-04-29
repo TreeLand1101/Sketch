@@ -73,7 +73,7 @@ public:
 
         sketch[R][M].momentum /= 2;
 
-        if (randomGenerator() % (static_cast<long long>(sketch[R][M].counter * sketch[R][M].momentum + 1)) == 0) {
+        if (randomGenerator() % (static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].momentum + 1)) == 0) {
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;
