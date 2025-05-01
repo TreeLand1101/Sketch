@@ -55,7 +55,7 @@ public:
         }
 
         if (minVal >= ADMISSION_TRESHOLD) {
-            return false;
+            return true;
         }
 
         COUNT_TYPE updateVal = minVal + 1;
@@ -64,7 +64,7 @@ public:
             sketch[i][index[i]] = std::max(sketch[i][index[i]], updateVal);
         }
 
-        return true;
+        return false;
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item){

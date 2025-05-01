@@ -49,14 +49,14 @@ public:
         }
 
         if (minVal >= ADMISSION_TRESHOLD) {
-            return false;
+            return true;
         }
 
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
             sketch[i][index[i]]++;
         }
 
-        return true;
+        return false;
     }
 
     COUNT_TYPE Query(const DATA_TYPE& item){

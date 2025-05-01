@@ -40,7 +40,8 @@ public:
     }
 
     void Insert(const DATA_TYPE& item){
-        if (filter->InsertWithThreshold(item, ADMISSION_TRESHOLD) == false) {
+        bool admitted =  filter->InsertWithThreshold(item, ADMISSION_TRESHOLD);
+        if (admitted) {
             sketch->Insert(item);
         }
     }
