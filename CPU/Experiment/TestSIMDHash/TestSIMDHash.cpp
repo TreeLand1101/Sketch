@@ -1,54 +1,85 @@
 #include <iostream>
 #include <cstdint>
+#include <ctime>
+#include <cstdlib>
 #include <emmintrin.h>
 #include "hash.h"
 #include "Util.h"
 
-int main()
-{
-    // Test data
-    TUPLES data;
-    for (int i = 0; i < TUPLES_LEN; ++i) {
-        data[i] = i;
+int main() {
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    constexpr int NUM_TESTS = 100;
+    constexpr int NUM_SEEDS = 4;
+
+    int fail_count = 0;
+
+    for (int t = 0; t < NUM_TESTS; ++t) {
+        std::cout << "=== Test " << (t + 1) << " ===" << std::endl;
+
+        // 1) generate 4 random seeds [0,255]
+        uint32_t seeds[NUM_SEEDS];
+        std::cout << "seed: (";
+        for (int i = 0; i < NUM_SEEDS; ++i) {
+            seeds[i] = std::rand() % 256;
+            std::cout << seeds[i];
+            if (i < NUM_SEEDS - 1) std::cout << ", ";
+        }
+        std::cout << ")" << std::endl;
+
+        // 2) fill data buffer with random bytes
+        TUPLES data;
+        for (size_t i = 0; i < TUPLES_LEN; ++i) {
+            data[i] = static_cast<uint8_t>(std::rand() & 0xFF);
+        }
+
+        // 3) compute scalar hashes
+        uint32_t h_scalar[NUM_SEEDS];
+        std::cout << "scalar: (";
+        for (int i = 0; i < NUM_SEEDS; ++i) {
+            h_scalar[i] = hash(data, seeds[i]);
+            std::cout << "0x" << std::hex << h_scalar[i] << std::dec;
+            if (i < NUM_SEEDS - 1) std::cout << ", ";
+        }
+        std::cout << ")" << std::endl;
+
+        // 4) compute SIMD hash
+        __m128i simdHash = hash_sse2(data, seeds[0], seeds[1], seeds[2], seeds[3]);
+
+        // 5) extract SIMD results
+        alignas(16) uint32_t simdResults[NUM_SEEDS];
+        _mm_store_si128(reinterpret_cast<__m128i*>(simdResults), simdHash);
+
+        // 6) compare & report
+        bool passed = true;
+        std::cout << "simd  : (";
+        for (int i = 0; i < NUM_SEEDS; ++i) {
+            std::cout << "0x" << std::hex << simdResults[i] << std::dec;
+            if (simdResults[i] != h_scalar[i]) {
+                std::cout << " MISMATCH!";
+                passed = false;
+                fail_count++;
+            }
+            if (i < NUM_SEEDS - 1) std::cout << ", ";
+        }
+        std::cout << ")" << std::endl;
+
+        if (passed) {
+            std::cout << "Result: PASS" << std::endl << std::endl;
+        } 
+        else {
+            std::cout << "Result: FAIL" << std::endl << std::endl;
+        }
     }
 
-    // Compute hash values using the scalar version (for different seeds)
-    uint32_t h0 = hash(data, 0);
-    uint32_t h1 = hash(data, 1);
-    uint32_t h2 = hash(data, 2);
-    uint32_t h3 = hash(data, 3);
-
-    // Compute hash values using the SIMD version (obtain 4 results simultaneously)
-    __m128i simdHash = hash_sse2(data, 0, 1, 2, 3);
-
-    // Store the SIMD results into a 4-element 32-bit array
-    uint32_t simdResults[4];
-    _mm_store_si128(reinterpret_cast<__m128i*>(simdResults), simdHash);
-
-    // Compare the results for each seed to check if they match
-    bool allMatch = true;
-    if (h0 != simdResults[0]) {
-        std::cerr << "Seed 0 mismatch: scalar = " << h0 << ", SIMD = " << simdResults[0] << "\n";
-        allMatch = false;
-    }
-    if (h1 != simdResults[1]) {
-        std::cerr << "Seed 1 mismatch: scalar = " << h1 << ", SIMD = " << simdResults[1] << "\n";
-        allMatch = false;
-    }
-    if (h2 != simdResults[2]) {
-        std::cerr << "Seed 2 mismatch: scalar = " << h2 << ", SIMD = " << simdResults[2] << "\n";
-        allMatch = false;
-    }
-    if (h3 != simdResults[3]) {
-        std::cerr << "Seed 3 mismatch: scalar = " << h3 << ", SIMD = " << simdResults[3] << "\n";
-        allMatch = false;
+    std::cout << "==============================" << std::endl;
+    if (fail_count == 0) {
+        std::cout << "All tests PASSED." << std::endl;
+    } 
+    else {
+        std::cout << "Tests FAILED." << std::endl;
+        std::cout << "TOTAL FAILS = " << fail_count << std::endl;
     }
 
-    if (allMatch) {
-        std::cout << "All hash values match, test passed!\n";
-    } else {
-        std::cerr << "Test failed!\n";
-    }
-
-    return allMatch ? 0 : 1;
+    return 0;
 }
