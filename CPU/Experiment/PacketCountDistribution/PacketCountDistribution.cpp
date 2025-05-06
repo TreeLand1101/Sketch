@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
-#include <cstdlib>   // for std::atoll, std::atof
+#include <cstdlib> 
 
 #include "Util.h"
 #include "MMap.h"
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
         uint64_t length = result.length / sizeof(TUPLES);
 
         // Count-Min Sketch & frequency maps
-        std::unordered_map<TUPLES, COUNT_TYPE> flowFrequencyAll, flowFrequencyFiltered;
+        std::unordered_map<TUPLES, COUNT_TYPE> flowFrequencyAll, flowFrequencyRetained;
         CMSketch<TUPLES, COUNT_TYPE> sketch(MEMORY);
         COUNT_TYPE threshold = static_cast<COUNT_TYPE>(alpha * length);
         uint64_t countAfter = 0;
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
             flowFrequencyAll[key]++;
             sketch.Insert(key);
             if (sketch.Query(key) >= threshold) {
-                flowFrequencyFiltered[key]++;
+                flowFrequencyRetained[key]++;
                 countAfter++;
             }
         }
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
                   << "Total Packets: " << length << "\n"
                   << "Flows Before Filter: " << flowFrequencyAll.size() << "\n"
                   << "Packets After Filter: " << countAfter << "\n"
-                  << "Flows After Filter: " << flowFrequencyFiltered.size() << "\n";
+                  << "Flows After Filter: " << flowFrequencyRetained.size() << "\n";
 
         // Output frequency files
         ComputeFrequencyDistribution(
@@ -98,8 +98,8 @@ int main(int argc, char* argv[]) {
             outDir / (prefix + "_all.txt")
         );
         ComputeFrequencyDistribution(
-            flowFrequencyFiltered,
-            outDir / (prefix + "_filtered.txt")
+            flowFrequencyRetained,
+            outDir / (prefix + "_retained.txt")
         );
 
         UnLoad(result);

@@ -61,7 +61,6 @@ def plot_cdf(freqs, out_dir: Path, prefix: str, tag: str, label: str, log_x: boo
     plt.close(fig)
     print(f"saved to {out}")
 
-
 def process_file(out_dir: Path, prefix: str, tag: str, label: str):
     txt_file = out_dir / f"{prefix}_{tag}.txt"
     freqs = np.loadtxt(txt_file)
@@ -93,7 +92,7 @@ def main():
             print(f"Warning: not a directory: {out_dir}")
             continue
 
-        for tag, label in [("all", "All Flows"), ("filtered", "Filtered Flows")]:
+        for tag, label in [("all", "All Flows"), ("retained", "Retained Flows")]:
             txt_path = out_dir / f"{prefix}_{tag}.txt"
             if not txt_path.exists():
                 print(f"Missing: {txt_path}")

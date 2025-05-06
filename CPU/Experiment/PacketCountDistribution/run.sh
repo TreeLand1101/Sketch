@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RUN_CPP=false
+RUN_CPP=true
 RUN_PY=true
 
 MEMORY=100000
