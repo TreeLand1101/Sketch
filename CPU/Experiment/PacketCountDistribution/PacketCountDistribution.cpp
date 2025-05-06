@@ -1,73 +1,109 @@
+#include <filesystem>
+#include <iostream>
 #include <vector>
 #include <fstream>
+#include <algorithm>
+#include <unordered_map>
+#include <string>
+#include <cstdlib>   // for std::atoll, std::atof
 
 #include "Util.h"
 #include "MMap.h"
 #include "CMSketch.h"
-#include <unordered_map>
-#include <string.h>
-#include <cstring>
+
+namespace fs = std::filesystem;
 
 template<class T>
-void ComputeFrequencyDistribution(T &record, const std::string& outputFile) {
-    std::vector<std::pair<TUPLES, COUNT_TYPE>> freqVector(record.begin(), record.end());
-
-    std::sort(freqVector.begin(), freqVector.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second;
-    });
+void ComputeFrequencyDistribution(const std::unordered_map<T, COUNT_TYPE>& record,
+                                  const fs::path& outputFile) {
+    std::vector<std::pair<T, COUNT_TYPE>> freqVector(record.begin(), record.end());
+    std::sort(freqVector.begin(), freqVector.end(),
+              [](auto const& a, auto const& b){ return a.second > b.second; });
 
     std::ofstream file(outputFile);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << outputFile << std::endl;
+    if (!file) {
+        std::cerr << "Error opening file: " << outputFile << "\n";
         return;
     }
-
-    for (const auto& pair : freqVector) {
-        file << pair.second << std::endl;
-    }
-
-    file.close();
-    std::cout << "Frequency distribution saved to: " << outputFile << std::endl;
+    for (auto const& p : freqVector)
+        file << p.second << "\n";
+    std::cout << "Saved: " << outputFile << "\n";
 }
 
-int main() {
-    std::string filename = "equinix-chicago.dirA.20160121-140000.UTC.anon.dat"; 
-    std::string PATH = "../../" + filename; 
-    uint32_t MEMORY = 500000;
-    double alpha = 0.0001;
-
-    LoadResult result = Load(PATH.c_str());
-    TUPLES* dataset = (TUPLES*)result.start;
-    uint64_t length = result.length / sizeof(TUPLES);
-
-    std::unordered_map<TUPLES, COUNT_TYPE> tuplesMpAll;
-    std::unordered_map<TUPLES, COUNT_TYPE> tuplesMpAfterFilter;
-
-    CMSketch<TUPLES, COUNT_TYPE>* sketch = new CMSketch<TUPLES, COUNT_TYPE>(MEMORY);
-
-    COUNT_TYPE threshold = static_cast<COUNT_TYPE>(alpha * length);
-
-    COUNT_TYPE lengthAfterFilter = 0;
-
-    for (uint32_t i = 0; i < length; ++i) {
-        tuplesMpAll[dataset[i]] += 1;
-        sketch->Insert(dataset[i]);
-        if (sketch->Query(dataset[i]) >= threshold) {
-            tuplesMpAfterFilter[dataset[i]] += 1;
-            lengthAfterFilter++;
-        }
+int main(int argc, char* argv[]) {
+    if (argc < 4) {
+        std::cerr << "Usage: " << argv[0]
+                  << " <MEMORY> <ALPHA> <dataset1> [dataset2 ...]\n";
+        return 1;
     }
 
-    std::cout << "Threshold: " << threshold << std::endl;
-    std::cout << "Number of Total Packets Before Filter: " << length << std::endl;
-    std::cout << "Number of Total Flows: Before Filter " << tuplesMpAll.size() << std::endl;
-    std::cout << "Number of Total Packets After Filter: " << lengthAfterFilter << std::endl;
-    std::cout << "Number of Total Flows: After Filter " << tuplesMpAfterFilter.size() << std::endl;
+    // 1) Parse MEMORY and alpha
+    uint32_t MEMORY = static_cast<uint32_t>(std::atoll(argv[1]));
+    double alpha = std::atof(argv[2]);
 
-    ComputeFrequencyDistribution(tuplesMpAll, "memory_" + std::to_string(MEMORY) + "_threshold_" + std::to_string(alpha) + "_all.txt");
-    ComputeFrequencyDistribution(tuplesMpAfterFilter, "memory_" + std::to_string(MEMORY) + "_threshold_" + std::to_string(alpha) + "_filtered.txt");
+    // Build filename prefix: threshold printed with 6 decimal places
+    char buf[64];
+    std::snprintf(buf, sizeof(buf), "memory_%u_threshold_%.6f", MEMORY, alpha);
+    std::string prefix(buf);
 
-    UnLoad(result);
+    // 2) Process each dataset
+    for (int idx = 3; idx < argc; ++idx) {
+        fs::path inFile{ argv[idx] };
+        fs::path stem = inFile.stem();
+        fs::path outDir = fs::current_path() / stem;
+
+        if (!fs::exists(outDir)) {
+            if (!fs::create_directory(outDir)) {
+                std::cerr << "Failed to create directory: " << outDir << "\n";
+                continue;
+            }
+        }
+
+        // Load data
+        LoadResult result = Load(inFile.string().c_str());
+        if (!result.start) {
+            std::cerr << "Failed to load file: " << inFile << "\n";
+            continue;
+        }
+        TUPLES* dataset = reinterpret_cast<TUPLES*>(result.start);
+        uint64_t length = result.length / sizeof(TUPLES);
+
+        // Count-Min Sketch & frequency maps
+        std::unordered_map<TUPLES, COUNT_TYPE> flowFrequencyAll, flowFrequencyFiltered;
+        CMSketch<TUPLES, COUNT_TYPE> sketch(MEMORY);
+        COUNT_TYPE threshold = static_cast<COUNT_TYPE>(alpha * length);
+        uint64_t countAfter = 0;
+
+        for (uint64_t i = 0; i < length; ++i) {
+            auto& key = dataset[i];
+            flowFrequencyAll[key]++;
+            sketch.Insert(key);
+            if (sketch.Query(key) >= threshold) {
+                flowFrequencyFiltered[key]++;
+                countAfter++;
+            }
+        }
+
+        // Log summary
+        std::cout << "\n=== File: " << inFile << " ===\n"
+                  << "Threshold: " << threshold << "\n"
+                  << "Total Packets: " << length << "\n"
+                  << "Flows Before Filter: " << flowFrequencyAll.size() << "\n"
+                  << "Packets After Filter: " << countAfter << "\n"
+                  << "Flows After Filter: " << flowFrequencyFiltered.size() << "\n";
+
+        // Output frequency files
+        ComputeFrequencyDistribution(
+            flowFrequencyAll,
+            outDir / (prefix + "_all.txt")
+        );
+        ComputeFrequencyDistribution(
+            flowFrequencyFiltered,
+            outDir / (prefix + "_filtered.txt")
+        );
+
+        UnLoad(result);
+    }
 
     return 0;
 }

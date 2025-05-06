@@ -1,0 +1,104 @@
+>>> Compiling C++ program...
+[100%] Built target PacketCountDistribution
+>>> Running C++ on: ../../202111011400.dat
+
+=== File: "../../202111011400.dat" ===
+Threshold: 7487
+Total Packets: 74874817
+Flows Before Filter: 11517777
+Packets After Filter: 36699992
+Flows After Filter: 9617
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/202111011400/memory_100000_threshold_0.000100_all.txt"
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/202111011400/memory_100000_threshold_0.000100_filtered.txt"
+>>> Running C++ on: ../../202211011400.dat
+
+=== File: "../../202211011400.dat" ===
+Threshold: 10578
+Total Packets: 105785612
+Flows Before Filter: 11780751
+Packets After Filter: 52999587
+Flows After Filter: 8969
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/202211011400/memory_100000_threshold_0.000100_all.txt"
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/202211011400/memory_100000_threshold_0.000100_filtered.txt"
+>>> Running C++ on: ../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat
+
+=== File: "../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat" ===
+Threshold: 3216
+Total Packets: 32163023
+Flows Before Filter: 1155323
+Packets After Filter: 9095638
+Flows After Filter: 31412
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_all.txt"
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_filtered.txt"
+>>> Running C++ on: ../../equinix-nyc.dirA.20180315-125910.UTC.anon.dat
+
+=== File: "../../equinix-nyc.dirA.20180315-125910.UTC.anon.dat" ===
+Threshold: 2236
+Total Packets: 22366454
+Flows Before Filter: 1197319
+Packets After Filter: 7947383
+Flows After Filter: 14209
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_all.txt"
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_filtered.txt"
+>>> Running C++ on: ../../equinix-nyc.dirA.20190117-125910.UTC.anon.dat
+
+=== File: "../../equinix-nyc.dirA.20190117-125910.UTC.anon.dat" ===
+Threshold: 2957
+Total Packets: 29578511
+Flows Before Filter: 2318625
+Packets After Filter: 9656682
+Flows After Filter: 32620
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_all.txt"
+Saved: "/home/treeland/Thesis/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_filtered.txt"
+>>> Plotting with Python for stems: 202111011400 202211011400 equinix-chicago.dirA.20160121-140000.UTC.anon equinix-nyc.dirA.20180315-125910.UTC.anon equinix-nyc.dirA.20190117-125910.UTC.anon
+Processing memory_100000_threshold_0.000100_all.txt...
+saved to 202111011400/memory_100000_threshold_0.000100_all_rank_frequency_normal.png
+saved to 202111011400/memory_100000_threshold_0.000100_all_rank_frequency_log.png
+saved to 202111011400/memory_100000_threshold_0.000100_all_frequency_cdf_linear.png
+saved to 202111011400/memory_100000_threshold_0.000100_all_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_filtered.txt...
+saved to 202111011400/memory_100000_threshold_0.000100_filtered_rank_frequency_normal.png
+saved to 202111011400/memory_100000_threshold_0.000100_filtered_rank_frequency_log.png
+saved to 202111011400/memory_100000_threshold_0.000100_filtered_frequency_cdf_linear.png
+saved to 202111011400/memory_100000_threshold_0.000100_filtered_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_all.txt...
+saved to 202211011400/memory_100000_threshold_0.000100_all_rank_frequency_normal.png
+saved to 202211011400/memory_100000_threshold_0.000100_all_rank_frequency_log.png
+saved to 202211011400/memory_100000_threshold_0.000100_all_frequency_cdf_linear.png
+saved to 202211011400/memory_100000_threshold_0.000100_all_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_filtered.txt...
+saved to 202211011400/memory_100000_threshold_0.000100_filtered_rank_frequency_normal.png
+saved to 202211011400/memory_100000_threshold_0.000100_filtered_rank_frequency_log.png
+saved to 202211011400/memory_100000_threshold_0.000100_filtered_frequency_cdf_linear.png
+saved to 202211011400/memory_100000_threshold_0.000100_filtered_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_all.txt...
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_normal.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_log.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_linear.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_filtered.txt...
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_normal.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_log.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_linear.png
+saved to equinix-chicago.dirA.20160121-140000.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_all.txt...
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_normal.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_log.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_linear.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_filtered.txt...
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_normal.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_log.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_linear.png
+saved to equinix-nyc.dirA.20180315-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_all.txt...
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_normal.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_all_rank_frequency_log.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_linear.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_all_frequency_cdf_log.png
+Processing memory_100000_threshold_0.000100_filtered.txt...
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_normal.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_rank_frequency_log.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_linear.png
+saved to equinix-nyc.dirA.20190117-125910.UTC.anon/memory_100000_threshold_0.000100_filtered_frequency_cdf_log.png
+>>> All done.
