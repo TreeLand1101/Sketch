@@ -57,9 +57,8 @@ public:
                 M = pos;
             }
         }
-
-        long long k = randomGenerator() % static_cast<unsigned long long>(((sketch[R][M].counter * sketch[R][M].stability) + 1) + 1);
-        if (k > static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].stability)) {
+        
+        if (randomGenerator() % static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].stability + 1) == 0) {
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;

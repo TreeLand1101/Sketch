@@ -14,7 +14,6 @@
 #include "MVSketch.h"
 #include "StableSketch.h"
 #include "TwoStage.h"
-#include "HeavyGuardian.h"
 #include "TightSketch.h"
 #include "MomentumSketch.h"
 #include "MomentumSketchSIMD.h"
