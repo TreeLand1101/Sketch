@@ -88,65 +88,45 @@ def plot_line_chart(data, metric, short_title, threshold, markers, line_styles, 
 
 
 CAIDA2016 = {
+    "memory_50000_threshold_0.0001": [
+        ("MVSketch", {"Insert": 6.024430, "Query": 7.765940, "Recall": 0.292517, "Precision": 0.222798, "F1-score": 0.252941, "AAE": 12385.063123, "ARE": 1.785260}),
+        ("Elastic", {"Insert": 10.735006, "Query": 13.894351, "Recall": 0.448008, "Precision": 0.792096, "F1-score": 0.572315, "AAE": 2483.477223, "ARE": 0.303714}),
+        ("CocoSketch", {"Insert": 13.194628, "Query": 16.533598, "Recall": 0.607386, "Precision": 0.212585, "F1-score": 0.314941, "AAE": 3385.027200, "ARE": 0.630769}),
+        ("TightSketch", {"Insert": 6.830302, "Query": 8.838263, "Recall": 0.715258, "Precision": 1.000000, "F1-score": 0.833994, "AAE": 344.831522, "ARE": 0.055440}),
+        ("StableSketch", {"Insert": 6.898424, "Query": 8.918854, "Recall": 0.562682, "Precision": 1.000000, "F1-score": 0.720149, "AAE": 154.526770, "ARE": 0.012750}),
+        ("MomentumSketch", {"Insert": 7.261927, "Query": 8.731873, "Recall": 0.782313, "Precision": 1.000000, "F1-score": 0.877863, "AAE": 213.732919, "ARE": 0.035894}),
+        ("TwoStage", {"Insert": 12.673771, "Query": 10.443607, "Recall": 0.718173, "Precision": 0.906748, "F1-score": 0.801518, "AAE": 360.458728, "ARE": 0.059723})
+    ],
+
     "memory_75000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.167950, "Query": 0.139450, "Recall": 0.402332, "Precision": 0.200387, "F1-score": 0.267528, "AAE": 6355.154589, "ARE": 0.967376}),
-        ("Elastic", {"Insert": 0.088097, "Query": 0.078406, "Recall": 0.618076, "Precision": 0.806084, "F1-score": 0.699670, "AAE": 1562.849057, "ARE": 0.218279}),
-        ("CocoSketch", {"Insert": 0.084840, "Query": 0.068036, "Recall": 0.741497, "Precision": 0.173016, "F1-score": 0.280566, "AAE": 1678.501966, "ARE": 0.326966}),
-        ("StableSketch", {"Insert": 0.140305, "Query": 0.113408, "Recall": 0.624879, "Precision": 1.000000, "F1-score": 0.769139, "AAE": 198.108865, "ARE": 0.016661}),
-        ("TightSketch", {"Insert": 0.148303, "Query": 0.112372, "Recall": 0.838678, "Precision": 1.000000, "F1-score": 0.912262, "AAE": 150.519119, "ARE": 0.026880}),
-        ("MomentumSketch", {"Insert": 0.139875, "Query": 0.117106, "Recall": 0.900875, "Precision": 1.000000, "F1-score": 0.947853, "AAE": 108.320388, "ARE": 0.019546}),
-        ("TwoStage", {"Insert": 0.074506, "Query": 0.090123, "Recall": 0.931001, "Precision": 0.901223, "F1-score": 0.915870, "AAE": 141.363257, "ARE": 0.027633})
+        ("MVSketch", {"Insert": 6.221490, "Query": 7.667350, "Recall": 0.402332, "Precision": 0.200387, "F1-score": 0.267528, "AAE": 6355.154589, "ARE": 0.967376}),
+        ("Elastic", {"Insert": 12.049863, "Query": 14.856592, "Recall": 0.618076, "Precision": 0.806084, "F1-score": 0.699670, "AAE": 1562.849057, "ARE": 0.218279}),
+        ("CocoSketch", {"Insert": 12.723206, "Query": 15.770011, "Recall": 0.750243, "Precision": 0.175057, "F1-score": 0.283876, "AAE": 1696.484456, "ARE": 0.331825}),
+        ("TightSketch", {"Insert": 6.796109, "Query": 9.455965, "Recall": 0.831876, "Precision": 1.000000, "F1-score": 0.908223, "AAE": 145.133178, "ARE": 0.025724}),
+        ("StableSketch", {"Insert": 7.372509, "Query": 8.982033, "Recall": 0.628766, "Precision": 1.000000, "F1-score": 0.772076, "AAE": 162.749614, "ARE": 0.015773}),
+        ("MomentumSketch", {"Insert": 7.250595, "Query": 8.757726, "Recall": 0.884354, "Precision": 1.000000, "F1-score": 0.938628, "AAE": 121.029670, "ARE": 0.018788}),
+        ("TwoStage", {"Insert": 13.871141, "Query": 11.583262, "Recall": 0.932945, "Precision": 0.901408, "F1-score": 0.916905, "AAE": 142.056250, "ARE": 0.027640})
     ],
 
     "memory_100000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.166286, "Query": 0.137567, "Recall": 0.521866, "Precision": 0.197572, "F1-score": 0.286629, "AAE": 3875.968343, "ARE": 0.687400}),
-        ("Elastic", {"Insert": 0.082677, "Query": 0.070546, "Recall": 0.736638, "Precision": 0.807242, "F1-score": 0.770325, "AAE": 1094.941953, "ARE": 0.161874}),
-        ("CocoSketch", {"Insert": 0.079537, "Query": 0.065921, "Recall": 0.836735, "Precision": 0.146678, "F1-score": 0.249601, "AAE": 944.269454, "ARE": 0.190132}),
-        ("StableSketch", {"Insert": 0.147240, "Query": 0.114338, "Recall": 0.663751, "Precision": 1.000000, "F1-score": 0.797897, "AAE": 139.543192, "ARE": 0.014003}),
-        ("TightSketch", {"Insert": 0.153731, "Query": 0.114423, "Recall": 0.909621, "Precision": 1.000000, "F1-score": 0.952672, "AAE": 86.378205, "ARE": 0.016077}),
-        ("MomentumSketch", {"Insert": 0.143632, "Query": 0.110898, "Recall": 0.947522, "Precision": 1.000000, "F1-score": 0.973054, "AAE": 89.537436, "ARE": 0.013690}),
-        ("TwoStage", {"Insert": 0.067052, "Query": 0.080129, "Recall": 0.980564, "Precision": 0.919781, "F1-score": 0.949200, "AAE": 88.616452, "ARE": 0.017836})
+        ("MVSketch", {"Insert": 6.062370, "Query": 7.446290, "Recall": 0.521866, "Precision": 0.197572, "F1-score": 0.286629, "AAE": 3875.968343, "ARE": 0.687400}),
+        ("Elastic", {"Insert": 11.984691, "Query": 14.624700, "Recall": 0.736638, "Precision": 0.807242, "F1-score": 0.770325, "AAE": 1094.941953, "ARE": 0.161874}),
+        ("CocoSketch", {"Insert": 12.779560, "Query": 15.254449, "Recall": 0.846453, "Precision": 0.148356, "F1-score": 0.252464, "AAE": 985.800230, "ARE": 0.194897}),
+        ("TightSketch", {"Insert": 6.747759, "Query": 9.121569, "Recall": 0.906706, "Precision": 1.000000, "F1-score": 0.951070, "AAE": 87.136120, "ARE": 0.016272}),
+        ("StableSketch", {"Insert": 7.352423, "Query": 9.376116, "Recall": 0.686103, "Precision": 1.000000, "F1-score": 0.813833, "AAE": 146.249292, "ARE": 0.015382}),
+        ("MomentumSketch", {"Insert": 7.692966, "Query": 8.951552, "Recall": 0.953353, "Precision": 1.000000, "F1-score": 0.976119, "AAE": 72.039755, "ARE": 0.012574}),
+        ("TwoStage", {"Insert": 14.153718, "Query": 11.679674, "Recall": 0.979592, "Precision": 0.919708, "F1-score": 0.948706, "AAE": 88.395833, "ARE": 0.017781})
     ],
 
     "memory_125000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.156428, "Query": 0.130463, "Recall": 0.605442, "Precision": 0.182591, "F1-score": 0.280567, "AAE": 2702.016051, "ARE": 0.503618}),
-        ("Elastic", {"Insert": 0.078472, "Query": 0.070798, "Recall": 0.820214, "Precision": 0.809981, "F1-score": 0.815065, "AAE": 830.319905, "ARE": 0.135894}),
-        ("CocoSketch", {"Insert": 0.076196, "Query": 0.064652, "Recall": 0.894072, "Precision": 0.182467, "F1-score": 0.303080, "AAE": 669.688043, "ARE": 0.134901}),
-        ("StableSketch", {"Insert": 0.144679, "Query": 0.116204, "Recall": 0.696793, "Precision": 1.000000, "F1-score": 0.821306, "AAE": 213.702929, "ARE": 0.017309}),
-        ("TightSketch", {"Insert": 0.145649, "Query": 0.108757, "Recall": 0.947522, "Precision": 1.000000, "F1-score": 0.973054, "AAE": 61.153846, "ARE": 0.011376}),
-        ("MomentumSketch", {"Insert": 0.133832, "Query": 0.111979, "Recall": 0.963071, "Precision": 1.000000, "F1-score": 0.981188, "AAE": 49.158426, "ARE": 0.008605}),
-        ("TwoStage", {"Insert": 0.070754, "Query": 0.081737, "Recall": 0.995141, "Precision": 0.943779, "F1-score": 0.968780, "AAE": 67.704102, "ARE": 0.013586})
+        ("MVSketch", {"Insert": 6.022940, "Query": 7.249720, "Recall": 0.605442, "Precision": 0.182591, "F1-score": 0.280567, "AAE": 2702.016051, "ARE": 0.503618}),
+        ("Elastic", {"Insert": 11.842075, "Query": 14.164647, "Recall": 0.820214, "Precision": 0.809981, "F1-score": 0.815065, "AAE": 830.319905, "ARE": 0.135894}),
+        ("CocoSketch", {"Insert": 12.168683, "Query": 14.815088, "Recall": 0.888241, "Precision": 0.180205, "F1-score": 0.299623, "AAE": 640.817287, "ARE": 0.126540}),
+        ("TightSketch", {"Insert": 6.615575, "Query": 9.182888, "Recall": 0.939747, "Precision": 1.000000, "F1-score": 0.968938, "AAE": 61.577042, "ARE": 0.011390}),
+        ("StableSketch", {"Insert": 7.480634, "Query": 9.383278, "Recall": 0.716229, "Precision": 1.000000, "F1-score": 0.834655, "AAE": 143.382632, "ARE": 0.014109}),
+        ("MomentumSketch", {"Insert": 7.698030, "Query": 8.683162, "Recall": 0.961127, "Precision": 1.000000, "F1-score": 0.980178, "AAE": 60.572295, "ARE": 0.009929}),
+        ("TwoStage", {"Insert": 14.095634, "Query": 12.268712, "Recall": 0.995141, "Precision": 0.943779, "F1-score": 0.968780, "AAE": 67.694336, "ARE": 0.013583})
     ],
-
-    "memory_150000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.170624, "Query": 0.142239, "Recall": 0.674441, "Precision": 0.170349, "F1-score": 0.271997, "AAE": 1920.936599, "ARE": 0.376095}),
-        ("Elastic", {"Insert": 0.081776, "Query": 0.076709, "Recall": 0.874636, "Precision": 0.788091, "F1-score": 0.829111, "AAE": 614.186667, "ARE": 0.104478}),
-        ("CocoSketch", {"Insert": 0.080078, "Query": 0.068617, "Recall": 0.919339, "Precision": 0.405660, "F1-score": 0.562928, "AAE": 488.646934, "ARE": 0.094753}),
-        ("StableSketch", {"Insert": 0.140487, "Query": 0.112040, "Recall": 0.724976, "Precision": 1.000000, "F1-score": 0.840563, "AAE": 213.828418, "ARE": 0.019609}),
-        ("TightSketch", {"Insert": 0.148687, "Query": 0.112748, "Recall": 0.967930, "Precision": 1.000000, "F1-score": 0.983704, "AAE": 42.941767, "ARE": 0.007680}),
-        ("MomentumSketch", {"Insert": 0.136352, "Query": 0.110942, "Recall": 0.976676, "Precision": 1.000000, "F1-score": 0.988201, "AAE": 35.916418, "ARE": 0.006264}),
-        ("TwoStage", {"Insert": 0.070377, "Query": 0.081938, "Recall": 1.000000, "Precision": 0.954545, "F1-score": 0.976744, "AAE": 49.963071, "ARE": 0.009916})
-    ],
-
-    "memory_175000_threshold_0.0001": [
-        ("MVSketch", {"Insert": 0.170988, "Query": 0.145695, "Recall": 0.739553, "Precision": 0.169563, "F1-score": 0.275875, "AAE": 1393.942181, "ARE": 0.280528}),
-        ("Elastic", {"Insert": 0.086235, "Query": 0.077685, "Recall": 0.921283, "Precision": 0.817241, "F1-score": 0.866149, "AAE": 540.572785, "ARE": 0.092383}),
-        ("CocoSketch", {"Insert": 0.082672, "Query": 0.068899, "Recall": 0.938776, "Precision": 0.558059, "F1-score": 0.700000, "AAE": 364.534161, "ARE": 0.071126}),
-        ("StableSketch", {"Insert": 0.141977, "Query": 0.113856, "Recall": 0.721088, "Precision": 1.000000, "F1-score": 0.837945, "AAE": 96.208895, "ARE": 0.011929}),
-        ("TightSketch", {"Insert": 0.151626, "Query": 0.115759, "Recall": 0.979592, "Precision": 1.000000, "F1-score": 0.989691, "AAE": 35.153770, "ARE": 0.006607}),
-        ("MomentumSketch", {"Insert": 0.135970, "Query": 0.111245, "Recall": 0.988338, "Precision": 1.000000, "F1-score": 0.994135, "AAE": 27.582104, "ARE": 0.004760}),
-        ("TwoStage", {"Insert": 0.068469, "Query": 0.077295, "Recall": 0.999028, "Precision": 0.960748, "F1-score": 0.979514, "AAE": 40.730545, "ARE": 0.007966})
-    ],
-
-    # "memory_200000_threshold_0.0001": [
-    #     ("MVSketch", {"Insert": 0.170371, "Query": 0.142697, "Recall": 0.788144, "Precision": 0.180946, "F1-score": 0.294320, "AAE": 1053.277435, "ARE": 0.218353}),
-    #     ("Elastic", {"Insert": 0.083676, "Query": 0.077261, "Recall": 0.935860, "Precision": 0.799834, "F1-score": 0.862517, "AAE": 422.763240, "ARE": 0.073914}),
-    #     ("CocoSketch", {"Insert": 0.080808, "Query": 0.068091, "Recall": 0.948494, "Precision": 0.679666, "F1-score": 0.791886, "AAE": 337.330943, "ARE": 0.061543}),
-    #     ("StableSketch", {"Insert": 0.137510, "Query": 0.112739, "Recall": 0.743440, "Precision": 1.000000, "F1-score": 0.852843, "AAE": 197.568627, "ARE": 0.018802}),
-    #     ("TightSketch", {"Insert": 0.141962, "Query": 0.113667, "Recall": 0.981535, "Precision": 1.000000, "F1-score": 0.990682, "AAE": 30.602970, "ARE": 0.005740}),
-    #     ("MomentumSketch", {"Insert": 0.133682, "Query": 0.110989, "Recall": 0.982507, "Precision": 1.000000, "F1-score": 0.991176, "AAE": 24.881306, "ARE": 0.004436}),
-    #     ("TwoStage", {"Insert": 0.067252, "Query": 0.075384, "Recall": 1.000000, "Precision": 0.966197, "F1-score": 0.982808, "AAE": 33.597668, "ARE": 0.006843})
-    # ],
 }
 
 # CAIDA2018 = {
@@ -210,8 +190,8 @@ for trace_label, data in all_data_traces:
     # plot_bar_chart(data, "Insert", "Insert", threshold, hatch_patterns, trace_label=trace_label, font_size=14, figsize=(10, 6))
     # plot_bar_chart(data, "Query", "Query", threshold, hatch_patterns, trace_label=trace_label, font_size=14, figsize=(10, 6))
 
-    plot_line_chart(data, "Insert", "Insert Time (ms)", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6))
-    plot_line_chart(data, "Query", "Query Time (ms)", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6))
+    plot_line_chart(data, "Insert", "Mops", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6))
+    plot_line_chart(data, "Query", "Mops", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6))
     plot_line_chart(data, "AAE", "AAE", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6), y_max=1500)
     plot_line_chart(data, "ARE", "ARE", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6), y_max=0.3)
     plot_line_chart(data, "Recall", "Recall", threshold, markers, line_styles, trace_label=trace_label, font_size=14, figsize=(10, 6))

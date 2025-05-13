@@ -1,0 +1,108 @@
++------------------------------------------------+
+equinix-chicago.dirA.20160121-140000.UTC.anon.dat
++------------------------------------------------+
+- MVSketch
+- Throughput in Million Operations Per Second
+    Insert: 6.22149 Mops/s
+    Query: 7.66735 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.402332
+    Precision: 0.200387
+    F1 Socre: 0.267528
+    AAE: 6355.154589
+    ARE: 0.967376
++------------------------------------------------+
+- Elastic
+- Throughput in Million Operations Per Second
+    Insert: 12.049863 Mops/s
+    Query: 14.856592 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.618076
+    Precision: 0.806084
+    F1 Socre: 0.699670
+    AAE: 1562.849057
+    ARE: 0.218279
++------------------------------------------------+
+- CocoSketch
+- Throughput in Million Operations Per Second
+    Insert: 12.723206 Mops/s
+    Query: 15.770011 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.750243
+    Precision: 0.175057
+    F1 Socre: 0.283876
+    AAE: 1696.484456
+    ARE: 0.331825
++------------------------------------------------+
+- TightSketch
+- Throughput in Million Operations Per Second
+    Insert: 6.796109 Mops/s
+    Query: 9.455965 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.831876
+    Precision: 1.000000
+    F1 Socre: 0.908223
+    AAE: 145.133178
+    ARE: 0.025724
++------------------------------------------------+
+- StableSketch
+- Throughput in Million Operations Per Second
+    Insert: 7.372509 Mops/s
+    Query: 8.982033 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.628766
+    Precision: 1.000000
+    F1 Socre: 0.772076
+    AAE: 162.749614
+    ARE: 0.015773
++------------------------------------------------+
+- MomentumSketch
+- Throughput in Million Operations Per Second
+    Insert: 7.250595 Mops/s
+    Query: 8.757726 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.884354
+    Precision: 1.000000
+    F1 Socre: 0.938628
+    AAE: 121.029670
+    ARE: 0.018788
++------------------------------------------------+
+- TwoStage ( CUSketch (d = 2) + MomentumSketch )
+- Throughput in Million Operations Per Second
+    Insert: 13.871141 Mops/s
+    Query: 11.583262 Mops/s
+- CompareHH
+    Total Packets: 32163023
+    Total Flows: 1155323
+    Elephant Flows: 1029
+    Threshold: 0.010000% (Packet Count: 3216)
+    Recall: 0.932945
+    Precision: 0.901408
+    F1 Socre: 0.916905
+    AAE: 142.056250
+    ARE: 0.027640
++------------------------------------------------+

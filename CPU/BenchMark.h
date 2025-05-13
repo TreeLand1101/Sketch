@@ -116,22 +116,27 @@ private:
     template<class T>
     void Throughput(T& tupleSketch) {
         TP start, end;
-        std::cout << "- Average Time Per Operation" << std::endl;
+        std::cout << "- Throughput in Million Operations Per Second" << std::endl;
 
         start = std::chrono::high_resolution_clock::now();
         for (uint32_t j = 0; j < length; ++j) {
             tupleSketch->Insert(dataset[j]);
         }
-        end = std::chrono::high_resolution_clock::now(); 
-        std::cout << "    Insert: " << (durationms(end, start) / length) << " ms" << std::endl;
+        end = std::chrono::high_resolution_clock::now();
+        double duration_insert = std::chrono::duration<double>(end - start).count();
+        double throughput_insert = (static_cast<double>(length) / duration_insert) / 1e6;
+        std::cout << "    Insert: " << throughput_insert << " Mops/s" << std::endl;
 
         start = std::chrono::high_resolution_clock::now();
         for (uint32_t j = 0; j < length; ++j) {
             tupleSketch->Query(dataset[j]);
         }
-        end = std::chrono::high_resolution_clock::now(); 
-        std::cout << "    Query: " << (durationms(end, start) / length) << " ms" << std::endl;
+        end = std::chrono::high_resolution_clock::now();
+        double duration_query = std::chrono::duration<double>(end - start).count();
+        double throughput_query = (static_cast<double>(length) / duration_query) / 1e6;
+        std::cout << "    Query: " << throughput_query << " Mops/s" << std::endl;
     }
+
 
     // Print the top K most frequent TUPLES
     template<class T>
