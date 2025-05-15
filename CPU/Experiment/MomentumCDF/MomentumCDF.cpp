@@ -6,9 +6,9 @@
 #include <unordered_map>
 #include <algorithm>
 #include <limits>
+#include <iomanip>
 #include "MMap.h"
 #include "Abstract.h"
-#include <iomanip>
 
 template<typename DATA_TYPE>
 class MVSketch_MomentumCDF : public Abstract<DATA_TYPE> {
@@ -41,7 +41,7 @@ public:
 
     void Insert(const DATA_TYPE& item) {
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
-            uint32_t pos = hash(item, i) % LENGTH;    
+            uint32_t pos = hash(item, i) % LENGTH;
             sketch[i][pos].total_sum++;
             if (sketch[i][pos].ID[0] == '\0') {
                 sketch[i][pos].ID = item;
@@ -53,7 +53,7 @@ public:
             else {
                 if (sketch[i][pos].counter == 0) {
                     sketch[i][pos].ID = item;
-                    sketch[i][pos].counter = 1;                    
+                    sketch[i][pos].counter = 1;
                 }
                 else {
                     --sketch[i][pos].counter;
@@ -62,11 +62,11 @@ public:
         }
     }
 
-    COUNT_TYPE Query(const DATA_TYPE& item){
+    COUNT_TYPE Query(const DATA_TYPE& item) {
         COUNT_TYPE ret = std::numeric_limits<COUNT_TYPE>::max();
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
-            uint32_t pos = hash(item, i) % LENGTH;    
+            uint32_t pos = hash(item, i) % LENGTH;
             if (sketch[i][pos].ID == item) {
                 ret = std::min(ret, (sketch[i][pos].total_sum + sketch[i][pos].counter) / 2);
             }
@@ -78,7 +78,7 @@ public:
         return ret;
     }
 
-    HashMap AllQuery(){
+    HashMap AllQuery() {
         HashMap ret;
 
         for(uint32_t i = 0; i < HASH_NUM; ++i){
@@ -103,15 +103,13 @@ public:
     }
 
 private:
-
     uint32_t LENGTH;
     const uint32_t HASH_NUM = 4;
-
     Bucket** sketch;
 };
 
 int main() {
-    std::string PATH = "../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat"; 
+    std::string PATH = "../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat";
     uint32_t MEMORY = 500000;
     double alpha = 0.0001;
     COUNT_TYPE maxMomentum = 1e8;
@@ -127,79 +125,74 @@ int main() {
 
     for (uint64_t i = 0; i < length; ++i) {
         TUPLES flow = dataset[i];
-        
         tuplesMp[flow] += 1;
-
         if (tuplesMomentum.find(flow) == tuplesMomentum.end()) {
             tuplesMomentum[flow] = 0;
-        }        
-
+        }
         if (sketch->Search(flow)) {
             tuplesMomentum[flow] += sketch->Query(flow);
             if (tuplesMomentum[flow] > maxMomentum) {
-                tuplesMomentum[flow] = maxMomentum; 
-            } 
-        } 
-        else {
-            tuplesMomentum[flow] = std::max(tuplesMomentum[flow] / 2, 0);
+                tuplesMomentum[flow] = maxMomentum;
+            }
+        } else {
+            tuplesMomentum[flow] = tuplesMomentum[flow] / 2;
         }
-
         sketch->Insert(flow);
     }
 
     COUNT_TYPE threshold = static_cast<COUNT_TYPE>(alpha * length);
 
-    std::vector<COUNT_TYPE> miceMomentum;
-    std::vector<COUNT_TYPE> elephantMomentum;
+    std::vector<COUNT_TYPE> nonHeavyMomentum;
+    std::vector<COUNT_TYPE> heavyHitterMomentum;
 
     for (const auto& pair : tuplesMp) {
-        TUPLES flow = pair.first;
+        const TUPLES& flow = pair.first;
         COUNT_TYPE count = pair.second;
         COUNT_TYPE momentum = tuplesMomentum[flow];
-
         if (count >= threshold) {
-            elephantMomentum.push_back(momentum);
+            heavyHitterMomentum.push_back(momentum);
         } else {
-            miceMomentum.push_back(momentum);
+            nonHeavyMomentum.push_back(momentum);
         }
     }
 
-    std::sort(miceMomentum.begin(), miceMomentum.end());
-    std::sort(elephantMomentum.begin(), elephantMomentum.end());
+    std::sort(nonHeavyMomentum.begin(), nonHeavyMomentum.end());
+    std::sort(heavyHitterMomentum.begin(), heavyHitterMomentum.end());
 
-    std::string miceCDFLogFile = "mice_momentum_cdf.log";
-    std::string elephantCDFLogFile = "elephant_momentum_cdf.log";
-    std::ofstream miceCDFLog(miceCDFLogFile);
-    std::ofstream elephantCDFLog(elephantCDFLogFile);
+    std::string nonHeavyCSV = "nonheavy_momentum_cdf.csv";
+    std::string heavyHitterCSV = "heavyhitter_momentum_cdf.csv";
+    std::ofstream nonHeavyOut(nonHeavyCSV);
+    std::ofstream heavyHitterOut(heavyHitterCSV);
 
-    miceCDFLog << std::fixed << std::setprecision(6);
-    elephantCDFLog << std::fixed << std::setprecision(6);
+    nonHeavyOut << "momentum,cdf" << std::endl;
+    heavyHitterOut << "momentum,cdf" << std::endl;
 
-    if (!miceMomentum.empty()) {
-        for (size_t i = 0; i < miceMomentum.size(); ++i) {
-            COUNT_TYPE momentum = miceMomentum[i];
-            double cdf = static_cast<double>(i + 1) / miceMomentum.size();
-            miceCDFLog << momentum << " " << cdf << "\n";
-        }
-    } else {
-        miceCDFLog << "No data available\n";
-    }
+    nonHeavyOut << std::fixed << std::setprecision(6);
+    heavyHitterOut << std::fixed << std::setprecision(6);
 
-    if (!elephantMomentum.empty()) {
-        for (size_t i = 0; i < elephantMomentum.size(); ++i) {
-            COUNT_TYPE momentum = elephantMomentum[i];
-            double cdf = static_cast<double>(i + 1) / elephantMomentum.size();
-            elephantCDFLog << momentum << " " << cdf << "\n";
+    if (!nonHeavyMomentum.empty()) {
+        for (size_t i = 0; i < nonHeavyMomentum.size(); ++i) {
+            double cdf = static_cast<double>(i + 1) / nonHeavyMomentum.size();
+            nonHeavyOut << nonHeavyMomentum[i] << "," << cdf << std::endl;
         }
     } else {
-        elephantCDFLog << "No data available\n";
+        nonHeavyOut << "0,0" << std::endl;
     }
 
+    if (!heavyHitterMomentum.empty()) {
+        for (size_t i = 0; i < heavyHitterMomentum.size(); ++i) {
+            double cdf = static_cast<double>(i + 1) / heavyHitterMomentum.size();
+            heavyHitterOut << heavyHitterMomentum[i] << "," << cdf << std::endl;
+        }
+    } else {
+        heavyHitterOut << "0,0" << std::endl;
+    }
 
-    miceCDFLog.close();
-    elephantCDFLog.close();
+    nonHeavyOut.close();
+    heavyHitterOut.close();
 
     UnLoad(result);
+    delete sketch;
 
     return 0;
 }

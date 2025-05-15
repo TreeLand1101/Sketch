@@ -12,12 +12,10 @@ memory_values="25000 50000 75000 100000"
 # Nested loops for memory and threshold combinations
 for memory in $memory_values
 do
-    log_path="memory_${memory}_threshold.txt"
-    ./FilterPerformance ${memory} ${dataset} >> ${log_path}
+    ./FilterPerformance ${memory} ${dataset}
     echo "Finished run: memory=${memory}"
 done
 
 echo "Finished all run."
 
-
-python3 metric.py
+python3 metric.py $memory_values
