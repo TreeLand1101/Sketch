@@ -9,4 +9,4 @@ include_directories(../../Common)
 include_directories(../../Struct)
 include_directories(../../Src)
 
-add_executable(ParameterHeatmap ParameterHeatmap.cpp)
+add_executable(ParameterHeatmap ParameterHeatmap.cpp  ../../Common/murmur3.c)

@@ -1,1 +1,0 @@
-- To plot the metric in the log, you need to manually modify the data section in `metric.py` before running `python3 metric.py`.

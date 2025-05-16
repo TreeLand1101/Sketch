@@ -1,5 +1,5 @@
-Filter Name,Insert Throughput (Mops/s),Query Throughput (Mops/s),AAE,ARE,Total Packets,Total Flows
-CMSketch (d = 4),10.6361,11.4162,5531.77,2525.17,32163023,1155323
-CMSketch (d = 2),21.5403,23.5471,3075.34,1403.35,32163023,1155323
-CUSketch (d = 4),10.6085,11.5458,3013,1383.41,32163023,1155323
-CUSketch (d = 2),19.1572,22.2174,2106.68,966.505,32163023,1155323
+Filter Name,Insert Throughput (Mops),Query Throughput (Mops),AAE,ARE
+CMSketch (d = 4),23.8572,12.8521,5540.52,2528.35
+CMSketch (d = 2),48.9589,27.1716,3072,1401.4
+CUSketch (d = 4),13.5621,14.0114,3025.91,1389.19
+CUSketch (d = 2),26.4408,28.5238,2103.82,965.084

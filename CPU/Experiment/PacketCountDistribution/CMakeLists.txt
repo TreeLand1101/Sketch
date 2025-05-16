@@ -8,4 +8,4 @@ add_compile_options(-O1 -mavx2 -mfma -mbmi2 -march=native)
 include_directories(../../Common)
 include_directories(../../Struct)
 
-add_executable(PacketCountDistribution PacketCountDistribution.cpp)
+add_executable(PacketCountDistribution PacketCountDistribution.cpp  ../../Common/murmur3.c)

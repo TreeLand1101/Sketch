@@ -1,10 +1,14 @@
 #ifndef HHBENCH_H
 #define HHBENCH_H
 
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <chrono>
+#include <unordered_map>
+#include <iostream>
 
 #include "MMap.h"
 #include "CocoSketch.h"
@@ -18,70 +22,127 @@
 #include "MomentumSketch.h"
 #include "MomentumSketchSIMD.h"
 
-class BenchMark{
+class BenchMark {
 public:
-
-    BenchMark(std::string PATH, std::string name){
+    BenchMark(const std::string& PATH, const std::string& name) {
         fileName = name;
-
         result = Load(PATH.c_str());
         dataset = (TUPLES*)result.start;
         length = result.length / sizeof(TUPLES);
 
-        for(uint64_t i = 0; i < length; ++i){
+        for (uint64_t i = 0; i < length; ++i) {
             tuplesMp[dataset[i]] += 1;
         }
+
+        std::cout << "Dataset: " << PATH << std::endl;
+        std::cout << "Number of packets: " << length << std::endl;
+        std::cout << "Number of flows: " << tuplesMp.size() << std::endl << std::endl;
     }
 
-    ~BenchMark(){
+    ~BenchMark() {
+        if (outFile.is_open()) outFile.close();
         UnLoad(result);
     }
 
     template<typename Sketch>
     void HHBench(uint32_t MEMORY, double alpha) {
-
         Abstract<TUPLES>* tupleSketch;
-
         COUNT_TYPE threshold = alpha * length;
+
+        // open CSV output if not already open
+        if (!outFile.is_open()) {
+            std::ostringstream fname;
+            fname << "Performance/" << "memory_" << MEMORY << "_alpha_" << alpha
+                  << ".csv";
+            outFile.open(fname.str(), std::ios::out | std::ios::trunc);
+            if (!outFile.is_open()) {
+                std::cerr << "Unable to open file: " << fname.str() << std::endl;
+                return;
+            }
+            outFile << "Sketch Name,Insert Throughput (Mops),Query Throughput (Mops),"
+                    << "Recall,Precision,F1 Score,AAE,ARE" << std::endl;
+        }
 
         if constexpr (std::is_same_v<Sketch, TwoStage<TUPLES>>) {
             tupleSketch = new Sketch(MEMORY, threshold);
-        } 
-        else {
+        } else {
             tupleSketch = new Sketch(MEMORY);
         }
 
-        std::cout << "- " << tupleSketch->name << std::endl;
+        // compute metrics
+        auto metrics = ComputeMetrics(tupleSketch, threshold);
 
-        Throughput(tupleSketch);
+        // write CSV
+        outFile << tupleSketch->name << ","
+                << metrics.insert_throughput << ","
+                << metrics.query_throughput << ","
+                << metrics.recall << ","
+                << metrics.precision << ","
+                << metrics.f1score << ","
+                << metrics.aae << ","
+                << metrics.are << std::endl;
 
-        std::unordered_map<TUPLES, COUNT_TYPE> estTuple = tupleSketch->AllQuery();
-
-        CompareHH(estTuple, tuplesMp, threshold, alpha);
-
-        // printTopK(estTuple, 10);
-        // printTopK(tuplesMp, 10);
+        // pretty print metrics to console
+        std::cout << "=== " << tupleSketch->name << " ===" << std::endl;
+        std::cout << "Heavy Hitter Threshold  : " << threshold << std::endl;
+        std::cout << "Insert Throughput (Mops): " << metrics.insert_throughput << std::endl;
+        std::cout << "Query Throughput (Mops) : " << metrics.query_throughput << std::endl;
+        std::cout << "Recall                  : " << metrics.recall << std::endl;
+        std::cout << "Precision               : " << metrics.precision << std::endl;
+        std::cout << "F1 Score                : " << metrics.f1score << std::endl;
+        std::cout << "AAE                     : " << metrics.aae << std::endl;
+        std::cout << "ARE                     : " << metrics.are << std::endl;
+        std::cout << std::endl;
 
         delete tupleSketch;
     }
 
 private:
     std::string fileName;
-
     LoadResult result;
-
     TUPLES* dataset;
     uint64_t length;
-
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMp;
+    std::ofstream outFile;
 
-    template<class T>
-    void CompareHH(T& mp, T& record, COUNT_TYPE threshold, double alpha){
+    struct Metrics {
+        double insert_throughput;
+        double query_throughput;
+        double recall;
+        double precision;
+        double f1score;
+        double aae;
+        double are;
+    };
+
+    template<class Sketch>
+    Metrics ComputeMetrics(Sketch* tupleSketch, COUNT_TYPE threshold) {
+        using namespace std::chrono;
+        // insert throughput
+        auto t1 = high_resolution_clock::now();
+        for (uint64_t i = 0; i < length; ++i) {
+            tupleSketch->Insert(dataset[i]);
+        }
+        auto t2 = high_resolution_clock::now();
+        double duration_insert = duration<double>(t2 - t1).count();
+        double throughput_insert = (static_cast<double>(length) / duration_insert) / 1e6;
+
+        // query throughput
+        t1 = high_resolution_clock::now();
+        for (uint64_t i = 0; i < length; ++i) {
+            tupleSketch->Query(dataset[i]);
+        }
+        t2 = high_resolution_clock::now();
+        double duration_query = duration<double>(t2 - t1).count();
+        double throughput_query = (static_cast<double>(length) / duration_query) / 1e6;
+
+        // heavy hitter metrics
         double realHH = 0, estHH = 0, bothHH = 0, aae = 0, are = 0;
+        std::unordered_map<TUPLES, COUNT_TYPE> estTuple = tupleSketch->AllQuery();
 
-        for(auto it = record.begin(); it != record.end(); ++it){
+        for(auto it = tuplesMp.begin(); it != tuplesMp.end(); ++it){
             bool real, est;
-            double realF = it->second, estF = mp[it->first];
+            double realF = it->second, estF = estTuple[it->first];
             
             real = (realF > threshold);
             est = (estF > threshold);
@@ -99,75 +160,11 @@ private:
         double recall = bothHH / realHH;
         double precision = bothHH / estHH;
         double f1score = 2 * (precision * recall) / (precision + recall);
+        aae /= bothHH;
+        are /= bothHH;
 
-        std::cout << "- CompareHH" << std::endl;
-        std::cout << "    Total Packets: " << length << std::endl;
-        std::cout << "    Total Flows: " << record.size() << std::endl;
-        std::cout << "    Elephant Flows: " << (int)realHH << std::endl;
-        std::cout << "    Threshold: " << std::fixed << alpha * 100 << "% (Packet Count: "<< threshold << ")" << std::endl;
-        std::cout << "    Recall: " << recall << std::endl;
-        std::cout << "    Precision: " << precision << std::endl;
-        std::cout << "    F1 Socre: " <<  f1score << std::endl;        
-        std::cout << "    AAE: " << aae / bothHH << std::endl;
-        std::cout << "    ARE: " << are / bothHH << std::endl;
-        std::cout << "+------------------------------------------------+" << std::endl;
-    }
-
-    template<class T>
-    void Throughput(T& tupleSketch) {
-        TP start, end;
-        std::cout << "- Throughput in Million Operations Per Second" << std::endl;
-
-        start = std::chrono::high_resolution_clock::now();
-        for (uint32_t j = 0; j < length; ++j) {
-            tupleSketch->Insert(dataset[j]);
-        }
-        end = std::chrono::high_resolution_clock::now();
-        double duration_insert = std::chrono::duration<double>(end - start).count();
-        double throughput_insert = (static_cast<double>(length) / duration_insert) / 1e6;
-        std::cout << "    Insert: " << throughput_insert << " Mops/s" << std::endl;
-
-        start = std::chrono::high_resolution_clock::now();
-        for (uint32_t j = 0; j < length; ++j) {
-            tupleSketch->Query(dataset[j]);
-        }
-        end = std::chrono::high_resolution_clock::now();
-        double duration_query = std::chrono::duration<double>(end - start).count();
-        double throughput_query = (static_cast<double>(length) / duration_query) / 1e6;
-        std::cout << "    Query: " << throughput_query << " Mops/s" << std::endl;
-    }
-
-
-    // Print the top K most frequent TUPLES
-    template<class T>
-    void printTopK(T& M, int K) {
-        auto ipToString = [](uint32_t ip) -> std::string {
-            struct in_addr addr;
-            addr.s_addr = ip;
-            return inet_ntoa(addr);
-        };
-
-        std::vector<std::pair<TUPLES, COUNT_TYPE>> vec(M.begin(), M.end());
-
-        std::sort(vec.begin(), vec.end(), [](const auto& a, const auto& b) {
-            return a.second > b.second; 
-        });
-        std::cout << "Top " << K << " TUPLES:\n";
-        int count = 0;
-        for (const auto& entry : vec) { 
-            if (count++ >= K) break; 
-
-            const TUPLES& tuple = entry.first;
-            COUNT_TYPE freq = entry.second;
-
-            std::cout << "Flow: " << ipToString(tuple.srcIP()) << " / "
-                    << ipToString(tuple.dstIP()) << " / "
-                    << ntohs(tuple.srcPort()) << " / "
-                    << ntohs(tuple.dstPort()) << " / "
-                    << static_cast<int>(tuple.proto()) << " : "
-                    << "Freq: " << freq << "\n";
-        }
+        return {throughput_insert, throughput_query, recall, precision, f1score, aae, are};
     }
 };
 
-#endif
+#endif // HHBENCH_H

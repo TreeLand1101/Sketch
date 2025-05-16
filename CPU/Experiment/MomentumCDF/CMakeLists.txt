@@ -8,4 +8,4 @@ add_compile_options(-O1 -mavx2 -mfma -mbmi2 -march=native)
 include_directories(../../Common)
 include_directories(../../Src)
 
-add_executable(MomentumCDF MomentumCDF.cpp)
+add_executable(MomentumCDF MomentumCDF.cpp  ../../Common/murmur3.c)

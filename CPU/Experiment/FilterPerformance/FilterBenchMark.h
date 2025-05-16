@@ -33,30 +33,26 @@ public:
 
     template<typename Filter, typename... Args>
     void Bench(uint32_t MEMORY, Args&&... args) {
-        if (MEMORY != currentMemory) {
-            if (outFile.is_open()) {
-                outFile.close();
-            }
-            currentMemory = MEMORY;
-            std::ostringstream filename;
-            filename << "memory_" << MEMORY << ".csv";
-            outFile.open(filename.str(), std::ios::out | std::ios::trunc);
+        // open CSV output if not already open
+        if (!outFile.is_open()) {
+            std::ostringstream fname;
+            fname << "memory_" << MEMORY << ".csv";
+            outFile.open(fname.str(), std::ios::out | std::ios::trunc);
             if (!outFile.is_open()) {
-                std::cerr << "Unable to open file: " << filename.str() << std::endl;
+                std::cerr << "Unable to open file: " << fname.str() << std::endl;
                 return;
             }
-            outFile << "Filter Name,Insert Throughput (Mops/s),Query Throughput (Mops/s),AAE,ARE,Total Packets,Total Flows" << std::endl;
+            outFile << "Filter Name,Insert Throughput (Mops),Query Throughput (Mops),AAE,ARE" << std::endl;
         }
 
-        Filter* tupleFilter = new Filter(MEMORY, std::forward<Args>(args)...);
-
+        Filter* tupleFilter = new Filter(std::forward<Args>(args)...);
         auto metrics = ComputeMetrics(tupleFilter);
 
         outFile << tupleFilter->name << ","
                 << metrics.insert_throughput << ","
                 << metrics.query_throughput << ","
                 << metrics.aae << ","
-                << metrics.are << ","
+                << metrics.are << std::endl;
 
         delete tupleFilter;
     }
@@ -68,7 +64,6 @@ private:
     uint64_t length;
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMp;
     std::ofstream outFile;
-    uint32_t currentMemory = 0;
 
     struct Metrics {
         double insert_throughput;
@@ -79,7 +74,6 @@ private:
 
     template<class Filter>
     Metrics ComputeMetrics(Filter* tupleFilter) {
-        using TP = std::chrono::high_resolution_clock::time_point;
         TP start, end;
 
         start = std::chrono::high_resolution_clock::now();

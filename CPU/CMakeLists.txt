@@ -10,4 +10,4 @@ include_directories(Common)
 include_directories(Struct)
 include_directories(Src)
 
-add_executable(CPU main.cpp)
+add_executable(CPU main.cpp Common/murmur3.c)

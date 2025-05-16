@@ -23,7 +23,8 @@ class TwoStage : public Abstract<DATA_TYPE>{
 public:
     typedef std::unordered_map<DATA_TYPE, COUNT_TYPE> HashMap;
     
-    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD, double _FILTER_RATIO = 0.6, double _SKETCH_RATIO = 0.4, double _ADMISSION_RATIO = 0.9){
+    TwoStage(uint32_t _MEMORY, uint32_t _THRESHOLD, double _FILTER_RATIO = 0.6, double _SKETCH_RATIO = 0.4, double _ADMISSION_RATIO = 0.9, std::string _name = "TwoStage"){
+        this->name = _name;
         uint32_t FILTER_MEMORY = _MEMORY * _FILTER_RATIO;
         uint32_t SKETCH_MEMORY = _MEMORY * _SKETCH_RATIO;
         ADMISSION_TRESHOLD = _THRESHOLD * _ADMISSION_RATIO;
@@ -31,7 +32,7 @@ public:
         filter = new Stage1FilterType<DATA_TYPE, uint16_t>(FILTER_MEMORY, 2);
         sketch = new Stage2SketchType<DATA_TYPE>(SKETCH_MEMORY);
 
-        this->name = "TwoStage ( " + filter->name + " + " + sketch->name + " )";
+        // this->name += ("(" + filter->name + " + " + sketch->name + " )");
     }
 
     ~TwoStage(){

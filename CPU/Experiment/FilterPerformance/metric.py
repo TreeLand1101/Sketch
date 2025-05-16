@@ -12,8 +12,8 @@ def load_data(memory_values):
             df = pd.read_csv(file_path)
             data[f"memory_{memory}"] = [
                 (row["Filter Name"], {
-                    "Insert": row["Insert Throughput (Mops/s)"],
-                    "Query": row["Query Throughput (Mops/s)"],
+                    "Insert": row["Insert Throughput (Mops)"],
+                    "Query": row["Query Throughput (Mops)"],
                     "AAE": row["AAE"],
                     "ARE": row["ARE"]
                 }) for _, row in df.iterrows()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'h', 'H', 'x', '+']
     line_styles = ['-', '--']
     
-    plot_line_chart(data, "Insert", "Insert Throughput (Mops/s)", markers, line_styles, trace_label=trace_label)
-    plot_line_chart(data, "Query", "Query Throughput (Mops/s)", markers, line_styles, trace_label=trace_label)
+    plot_line_chart(data, "Insert", "Insert Throughput (Mops)", markers, line_styles, trace_label=trace_label)
+    plot_line_chart(data, "Query", "Query Throughput (Mops)", markers, line_styles, trace_label=trace_label)
     plot_line_chart(data, "AAE", "AAE", markers, line_styles, trace_label=trace_label)
     plot_line_chart(data, "ARE", "ARE", markers, line_styles, trace_label=trace_label)

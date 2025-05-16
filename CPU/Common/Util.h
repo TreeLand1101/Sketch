@@ -51,12 +51,13 @@ bool operator == (const TUPLES& a, const TUPLES& b){
     return memcmp(a.data, b.data, sizeof(TUPLES)) == 0;
 }
 
-namespace std{
+namespace std {
     template<>
-    struct hash<TUPLES>{
-        size_t operator()(const TUPLES& item) const noexcept
-        {
-            return Hash::BOBHash32((uint8_t*)&item, sizeof(TUPLES), 0);
+    struct hash<TUPLES> {
+        size_t operator()(const TUPLES& item) const noexcept {
+            uint32_t out32;
+            MurmurHash3_x86_32((uint8_t*)&item, sizeof(TUPLES), 0, &out32);
+            return out32;
         }
     };
 }
