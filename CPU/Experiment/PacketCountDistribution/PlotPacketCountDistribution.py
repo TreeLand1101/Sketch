@@ -17,7 +17,7 @@ def plot_rank_frequency(ranks, freqs, out_dir: Path, prefix: str, tag: str, labe
         ax.set_yscale('log')
         ax.xaxis.set_major_formatter(LogFormatterMathtext())
         ax.yaxis.set_major_formatter(LogFormatterMathtext())
-        ax.set_title(f"{label} Rank-Frequency Distribution (Log Scale)")
+        ax.set_title(f"{label} Rank-Frequency Distribution of (Log Scale)")
         suffix = f"{prefix}_{tag}_rank_frequency_log.png"
     else:
         ax.yaxis.set_major_formatter(ScalarFormatter())
@@ -53,7 +53,7 @@ def plot_cdf(freqs, out_dir: Path, prefix: str, tag: str, label: str, log_x: boo
         suffix = f"{prefix}_{tag}_frequency_cdf.png"
 
     ax.set_xlabel("Frequency")
-    ax.set_ylabel("Probability")
+    ax.set_ylabel("CDF")
     ax.grid(True, which="both", linestyle='--', linewidth=0.5)
 
     out = out_dir / suffix

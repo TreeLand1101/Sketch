@@ -24,8 +24,8 @@
 
 class BenchMark {
 public:
-    BenchMark(const std::string& PATH, const std::string& name) {
-        fileName = name;
+    BenchMark(const std::string& PATH) {
+        filePath = PATH;
         result = Load(PATH.c_str());
         dataset = (TUPLES*)result.start;
         length = result.length / sizeof(TUPLES);
@@ -34,7 +34,7 @@ public:
             tuplesMp[dataset[i]] += 1;
         }
 
-        std::cout << "Dataset: " << PATH << std::endl;
+        std::cout << "Dataset: " << filePath << std::endl;
         std::cout << "Number of packets: " << length << std::endl;
         std::cout << "Number of flows: " << tuplesMp.size() << std::endl << std::endl;
     }
@@ -52,7 +52,7 @@ public:
         // open CSV output if not already open
         if (!outFile.is_open()) {
             std::ostringstream fname;
-            fname << "Performance/" << "memory_" << MEMORY << "_alpha_" << alpha
+            fname << "Performance/" << filePath << "/memory_" << MEMORY << "_alpha_" << alpha
                   << ".csv";
             outFile.open(fname.str(), std::ios::out | std::ios::trunc);
             if (!outFile.is_open()) {
@@ -98,7 +98,7 @@ public:
     }
 
 private:
-    std::string fileName;
+    std::string filePath;
     LoadResult result;
     TUPLES* dataset;
     uint64_t length;

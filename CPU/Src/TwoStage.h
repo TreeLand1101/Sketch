@@ -15,7 +15,7 @@
 #include "MomentumSketchSIMD.h"
 #include "TightSketch.h"
 
-#define Stage1FilterType CUSketch
+#define Stage1FilterType CMSketch
 #define Stage2SketchType MomentumSketch
 
 template<typename DATA_TYPE>

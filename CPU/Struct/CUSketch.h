@@ -27,7 +27,7 @@ public:
         delete [] index;
     }
 
-    void Insert(const DATA_TYPE& item) {
+    COUNT_TYPE Insert(const DATA_TYPE& item) {
         COUNT_TYPE minVal = std::numeric_limits<COUNT_TYPE>::max();
 
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
@@ -36,11 +36,13 @@ public:
             minVal = std::min(minVal, sketch[i][position]);
         }
 
-        COUNT_TYPE temp = minVal + 1;
+        COUNT_TYPE ret = minVal + 1;
 
         for (uint32_t i = 0; i < HASH_NUM; ++i) {
-            sketch[i][index[i]] = std::max(sketch[i][index[i]], temp);
+            sketch[i][index[i]] = std::max(sketch[i][index[i]], ret);
         }
+
+        return ret;
     }
 
     bool InsertWithThreshold(const DATA_TYPE& item, COUNT_TYPE ADMISSION_TRESHOLD) {

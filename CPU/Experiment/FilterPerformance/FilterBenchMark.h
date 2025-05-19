@@ -45,7 +45,7 @@ public:
             outFile << "Filter Name,Insert Throughput (Mops),Query Throughput (Mops),AAE,ARE" << std::endl;
         }
 
-        Filter* tupleFilter = new Filter(std::forward<Args>(args)...);
+        Filter* tupleFilter = new Filter(MEMORY, std::forward<Args>(args)...);
         auto metrics = ComputeMetrics(tupleFilter);
 
         outFile << tupleFilter->name << ","

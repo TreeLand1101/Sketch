@@ -3,13 +3,13 @@ import numpy as np
 import pandas as pd
 import sys
 
-def load_data(memory_values, alpha):
+def load_data(dataset, memory_values, alpha):
     """
-    Load data from CSV files using alpha parameter and expected column names
+    Load data from CSV files based on dataset, memory values, and alpha
     """
     data = {}
     for memory in memory_values:
-        file_path = f"Performance/memory_{memory}_alpha_{alpha}.csv"
+        file_path = f"Performance/{dataset}/memory_{memory}_alpha_{alpha}.csv"
         try:
             df = pd.read_csv(file_path)
             data[f"memory_{memory}_alpha_{alpha}"] = [
@@ -28,8 +28,8 @@ def load_data(memory_values, alpha):
             print(f"Warning: {file_path} not found")
     return data
 
-def plot_line_chart(data, metric, short_title, alpha, markers, line_styles,
-                    trace_label="", font_size=14, figsize=(10, 6), y_max=None):
+def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_styles,
+                    font_size=14, figsize=(10, 6), y_max=None):
     plt.figure(figsize=figsize)
     filtered_data = {k: v for k, v in data.items() if k.endswith(f"alpha_{alpha}")}
     memory_keys = sorted(filtered_data.keys(), key=lambda k: int(k.split('_')[1]))
@@ -58,33 +58,33 @@ def plot_line_chart(data, metric, short_title, alpha, markers, line_styles,
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=4, fontsize=font_size)
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.tight_layout()
-    output_file = f"{trace_label}_{metric}_alpha_{alpha}_line.png" if trace_label else f"{metric}_alpha_{alpha}_line.png"
+    output_file = f"Performance/{dataset}/{metric}_alpha_{alpha}_line.png"
     plt.savefig(output_file, bbox_inches='tight')
     plt.close()
     print(f"Saved line chart to {output_file}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python metric.py <alpha> <memory1> <memory2> ...")
+    if len(sys.argv) < 4:
+        print("Usage: python metric.py <dataset> <alpha> <memory1> <memory2> ...")
         sys.exit(1)
     
-    alpha = float(sys.argv[1])
-    memory_values = list(map(int, sys.argv[2:]))
-    trace_label = "CAIDA2016"
+    dataset = sys.argv[1] 
+    alpha = float(sys.argv[2])  
+    memory_values = list(map(int, sys.argv[3:])) 
 
     markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'h', 'H', 'x', '+']
     line_styles = ['-', '--']
 
-    data = load_data(memory_values, alpha)
+    data = load_data(dataset, memory_values, alpha)
 
     if not data:
         print("No valid data loaded.")
         sys.exit(1)
 
-    plot_line_chart(data, "Insert Throughput (Mops)", "Insert (Mops)", alpha, markers, line_styles, trace_label=trace_label)
-    plot_line_chart(data, "Query Throughput (Mops)", "Query (Mops)", alpha, markers, line_styles, trace_label=trace_label)
-    plot_line_chart(data, "AAE", "AAE", alpha, markers, line_styles, trace_label=trace_label, y_max=1500)
-    plot_line_chart(data, "ARE", "ARE", alpha, markers, line_styles, trace_label=trace_label, y_max=0.3)
-    plot_line_chart(data, "Recall", "Recall", alpha, markers, line_styles, trace_label=trace_label)
-    plot_line_chart(data, "Precision", "Precision", alpha, markers, line_styles, trace_label=trace_label)
-    plot_line_chart(data, "F1 Score", "F1 Score", alpha, markers, line_styles, trace_label=trace_label)
+    plot_line_chart(data, "Insert Throughput (Mops)", "Insert (Mops)", alpha, dataset, markers, line_styles)
+    plot_line_chart(data, "Query Throughput (Mops)", "Query (Mops)", alpha, dataset, markers, line_styles)
+    plot_line_chart(data, "AAE", "AAE", alpha, dataset, markers, line_styles, y_max=1500)
+    plot_line_chart(data, "ARE", "ARE", alpha, dataset, markers, line_styles, y_max=0.3)
+    plot_line_chart(data, "Recall", "Recall", alpha, dataset, markers, line_styles)
+    plot_line_chart(data, "Precision", "Precision", alpha, dataset, markers, line_styles)
+    plot_line_chart(data, "F1 Score", "F1 Score", alpha, dataset, markers, line_styles)
