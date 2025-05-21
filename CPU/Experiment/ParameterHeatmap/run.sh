@@ -4,7 +4,7 @@
 make
 
 # Dataset file
-dataset="../../202111011400.dat"
+dataset="../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat"
 
 # Configurable parameters
 memory_values="100000"

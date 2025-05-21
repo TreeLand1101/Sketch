@@ -11,14 +11,15 @@
 #include <algorithm>
 
 struct Metrics {
-    double f1score;
-    double precision;
+    double insert_throughput;
+    double query_throughput;
     double recall;
+    double precision;
+    double f1score;
     double aae;
     double are;
-    double avgInsertTime;
-    double avgQueryTime;
 };
+
 
 class BenchMark {
 public:
@@ -40,7 +41,7 @@ public:
         COUNT_TYPE threshold = alpha * length;
         TwoStage<TUPLES>* tupleSketch = new TwoStage<TUPLES>(MEMORY, threshold, FILTER_RATIO, SKETCH_RATIO, ADMISSION_RATIO);
 
-        Metrics metrics = ComputeMetrics(tupleSketch, threshold, alpha);
+        Metrics metrics = ComputeMetrics(tupleSketch, threshold);
 
         delete tupleSketch;
         return metrics;
@@ -53,54 +54,53 @@ private:
     uint64_t length;
     std::unordered_map<TUPLES, COUNT_TYPE> tuplesMp;
 
-    Metrics ComputeMetrics(TwoStage<TUPLES>* tupleSketch, COUNT_TYPE threshold, double alpha) {
-        TP start, end;
-        double avgInsertTime = 0, avgQueryTime = 0;
-
-        start = std::chrono::high_resolution_clock::now();
-        for (uint32_t j = 0; j < length; ++j) {
-            tupleSketch->Insert(dataset[j]);
+    Metrics ComputeMetrics(TwoStage<TUPLES>* tupleSketch, COUNT_TYPE threshold) {
+        using namespace std::chrono;
+        // insert throughput
+        auto t1 = high_resolution_clock::now();
+        for (uint64_t i = 0; i < length; ++i) {
+            tupleSketch->Insert(dataset[i]);
         }
-        end = std::chrono::high_resolution_clock::now(); 
+        auto t2 = high_resolution_clock::now();
+        double duration_insert = duration<double>(t2 - t1).count();
+        double insert_throughput = (static_cast<double>(length) / duration_insert) / 1e6;
 
-        avgInsertTime = durationms(end, start) / length;
-
-        start = std::chrono::high_resolution_clock::now();
-        for (uint32_t j = 0; j < length; ++j) {
-            tupleSketch->Query(dataset[j]);
+        // query throughput
+        t1 = high_resolution_clock::now();
+        for (uint64_t i = 0; i < length; ++i) {
+            tupleSketch->Query(dataset[i]);
         }
-        end = std::chrono::high_resolution_clock::now();
+        t2 = high_resolution_clock::now();
+        double duration_query = duration<double>(t2 - t1).count();
+        double query_throughput = (static_cast<double>(length) / duration_query) / 1e6;
 
-        avgQueryTime = durationms(end, start) / length;
-
+        // heavy hitter metrics
+        double realHH = 0, estHH = 0, bothHH = 0, aae = 0, are = 0;
         std::unordered_map<TUPLES, COUNT_TYPE> estTuple = tupleSketch->AllQuery();
 
-        double realHH = 0, estHH = 0, bothHH = 0, aae = 0, are = 0;
-        for (auto it = tuplesMp.begin(); it != tuplesMp.end(); ++it) {
-            bool real = (it->second > threshold);
-            double estF = estTuple[it->first];
-            bool est = (estF > threshold);
+        for(auto it = tuplesMp.begin(); it != tuplesMp.end(); ++it){
+            bool real, est;
+            double realF = it->second, estF = estTuple[it->first];
+            
+            real = (realF > threshold);
+            est = (estF > threshold);
+
             realHH += real;
             estHH += est;
-            if (real && est) {
+
+            if(real && est){
                 bothHH += 1;
-                aae += std::abs(it->second - estF);
-                are += std::abs(it->second - estF) / it->second;
+                aae += abs(realF - estF);
+                are += abs(realF - estF) / realF;
             }
         }
-        double recall = (realHH > 0) ? bothHH / realHH : 0;
-        double precision = (estHH > 0) ? bothHH / estHH : 0;
-        double f1score = (precision + recall > 0) ? 2 * (precision * recall) / (precision + recall) : 0;
 
-        Metrics metrics;
-        metrics.f1score = f1score;
-        metrics.precision = precision;
-        metrics.recall = recall;
-        metrics.aae = (bothHH > 0) ? aae / bothHH : 0;
-        metrics.are = (bothHH > 0) ? are / bothHH : 0;
-        metrics.avgInsertTime = avgInsertTime;
-        metrics.avgQueryTime = avgQueryTime;
-        return metrics;
+        double recall = bothHH / realHH;
+        double precision = bothHH / estHH;
+        double f1score = 2 * (precision * recall) / (precision + recall);
+        aae /= bothHH;
+        are /= bothHH;
+
+        return {insert_throughput, query_throughput, recall, precision, f1score, aae, are};
     }
 };
-

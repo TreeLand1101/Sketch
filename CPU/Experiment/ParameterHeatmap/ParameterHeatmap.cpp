@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    fprintf(fp, "Dataset,FilterRatio,SketchRatio,AdmissionRatio,F1score,Precision,Recall,InsertTime,QueryTime\n");
+    fprintf(fp, "Dataset,Filter Ratio,Sketch Ratio,Admission Ratio,F1 Score,Precision,Recall,Insert Throughput (Mops),Query Throughput (Mops)\n");
     
     for (uint32_t i = 3; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
@@ -59,8 +59,8 @@ int main(int argc, char *argv[]) {
                         metrics.f1score, 
                         metrics.precision, 
                         metrics.recall, 
-                        metrics.avgInsertTime, 
-                        metrics.avgQueryTime);
+                        metrics.insert_throughput, 
+                        metrics.query_throughput);
             }
         }
     }

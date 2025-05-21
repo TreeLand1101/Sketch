@@ -17,7 +17,7 @@ def plot_rank_frequency(ranks, freqs, out_dir: Path, prefix: str, tag: str, labe
         ax.set_yscale('log')
         ax.xaxis.set_major_formatter(LogFormatterMathtext())
         ax.yaxis.set_major_formatter(LogFormatterMathtext())
-        ax.set_title(f"{label} Rank-Frequency Distribution of (Log Scale)")
+        ax.set_title(f"{label} Rank-Frequency Distribution (Log Scale)")
         suffix = f"{prefix}_{tag}_rank_frequency_log.png"
     else:
         ax.yaxis.set_major_formatter(ScalarFormatter())
@@ -62,8 +62,9 @@ def plot_cdf(freqs, out_dir: Path, prefix: str, tag: str, label: str, log_x: boo
     print(f"saved to {out}")
 
 def process_file(out_dir: Path, prefix: str, tag: str, label: str):
-    txt_file = out_dir / f"{prefix}_{tag}.txt"
-    freqs = np.loadtxt(txt_file)
+    # Read CSV instead of TXT, skip header
+    csv_file = out_dir / f"{prefix}_{tag}.csv"
+    freqs = np.loadtxt(csv_file, delimiter=',', skiprows=1)
     ranks = np.arange(1, freqs.size + 1)
 
     plot_rank_frequency(ranks, freqs, out_dir, prefix, tag, label, log_scale=False)
@@ -75,7 +76,7 @@ def process_file(out_dir: Path, prefix: str, tag: str, label: str):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Plot rank-frequency and CDF from frequency files"
+        description="Plot rank-frequency and CDF from frequency CSV files"
     )
     parser.add_argument("stems", nargs='+', help="Dataset stems (folder names)")
     parser.add_argument("--memory", type=int, default=MEMORY_DEFAULT,
@@ -93,11 +94,11 @@ def main():
             continue
 
         for tag, label in [("all", "All Flows"), ("retained", "Retained Flows")]:
-            txt_path = out_dir / f"{prefix}_{tag}.txt"
-            if not txt_path.exists():
-                print(f"Missing: {txt_path}")
+            csv_path = out_dir / f"{prefix}_{tag}.csv"
+            if not csv_path.exists():
+                print(f"Missing: {csv_path}")
                 continue
-            print(f"Processing {txt_path.name}...")
+            print(f"Processing {csv_path.name}...")
             process_file(out_dir, prefix, tag, label)
 
 if __name__ == "__main__":

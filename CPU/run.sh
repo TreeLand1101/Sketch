@@ -4,7 +4,7 @@
 make
 
 # Dataset file
-datasets="equinix-chicago.dirA.20160121-140000.UTC.anon.dat 202111011400.dat"
+datasets="equinix-chicago.dirA.20160121-140000.UTC.anon.dat 202111011400.dat Campus.dat"
 
 # Configurable parameters
 memory_values="25000 50000 75000 100000 125000"
@@ -25,7 +25,7 @@ do
             echo "Finished run: memory=${memory}, alpha=${alpha} for dataset=${dataset}"
         done
     done
-    # python3 metric.py "$dataset" "$alphas" $memory_values
+    python3 metric.py "$dataset" "$alphas" $memory_values
 done
 
 echo "Finished all runs and generated plots."

@@ -49,7 +49,6 @@ public:
         Abstract<TUPLES>* tupleSketch;
         COUNT_TYPE threshold = alpha * length;
 
-        // open CSV output if not already open
         if (!outFile.is_open()) {
             std::ostringstream fname;
             fname << "Performance/" << filePath << "/memory_" << MEMORY << "_alpha_" << alpha
@@ -69,10 +68,8 @@ public:
             tupleSketch = new Sketch(MEMORY);
         }
 
-        // compute metrics
         auto metrics = ComputeMetrics(tupleSketch, threshold);
 
-        // write CSV
         outFile << tupleSketch->name << ","
                 << metrics.insert_throughput << ","
                 << metrics.query_throughput << ","
@@ -82,7 +79,6 @@ public:
                 << metrics.aae << ","
                 << metrics.are << std::endl;
 
-        // pretty print metrics to console
         std::cout << "=== " << tupleSketch->name << " ===" << std::endl;
         std::cout << "Heavy Hitter Threshold  : " << threshold << std::endl;
         std::cout << "Insert Throughput (Mops): " << metrics.insert_throughput << std::endl;
@@ -124,8 +120,8 @@ private:
             tupleSketch->Insert(dataset[i]);
         }
         auto t2 = high_resolution_clock::now();
-        double duration_insert = duration<double>(t2 - t1).count();
-        double throughput_insert = (static_cast<double>(length) / duration_insert) / 1e6;
+        double insert_duration = duration<double>(t2 - t1).count();
+        double insert_throughput = (static_cast<double>(length) / insert_duration) / 1e6;
 
         // query throughput
         t1 = high_resolution_clock::now();
@@ -133,8 +129,8 @@ private:
             tupleSketch->Query(dataset[i]);
         }
         t2 = high_resolution_clock::now();
-        double duration_query = duration<double>(t2 - t1).count();
-        double throughput_query = (static_cast<double>(length) / duration_query) / 1e6;
+        double query_duration = duration<double>(t2 - t1).count();
+        double query_throughput = (static_cast<double>(length) / query_duration) / 1e6;
 
         // heavy hitter metrics
         double realHH = 0, estHH = 0, bothHH = 0, aae = 0, are = 0;
@@ -163,7 +159,7 @@ private:
         aae /= bothHH;
         are /= bothHH;
 
-        return {throughput_insert, throughput_query, recall, precision, f1score, aae, are};
+        return {insert_throughput, query_throughput, recall, precision, f1score, aae, are};
     }
 };
 
