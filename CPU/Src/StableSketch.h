@@ -58,7 +58,7 @@ public:
             }
         }
         
-        if (randomGenerator() % static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].stability + 1) == 0) {
+        if (randomGenerator() % static_cast<uint64_t>(sketch[R][M].counter * sketch[R][M].stability + 1) == 0) {
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;

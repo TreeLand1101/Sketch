@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
         // Log summary
         std::cout << "\n=== File: " << inFile << " ===\n"
                   << "Threshold: " << threshold << "\n"
-                  << "Total Packets: " << length << "\n"
+                  << "Packets Before Filter: " << length << "\n"
                   << "Flows Before Filter: " << flowFrequency.size() << "\n"
                   << "Packets After Filter: " << RetainedCount << "\n"
                   << "Flows After Filter: " << retainedFlowFrequency.size() << "\n";

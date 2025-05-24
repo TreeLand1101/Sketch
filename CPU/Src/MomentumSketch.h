@@ -74,7 +74,7 @@ public:
         sketch[R][M].momentum /= 2;
 
         // Probabilistically replace the item based on counter and momentum
-        if (randomGenerator() % (static_cast<unsigned long long>(sketch[R][M].counter * sketch[R][M].momentum + 1)) == 0) {
+        if (randomGenerator() % (static_cast<uint64_t>(sketch[R][M].counter * sketch[R][M].momentum + 1)) == 0) {
             // Decrement counter and if it reaches 0, replace with new item
             if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;

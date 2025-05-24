@@ -14,15 +14,15 @@ template<typename T>
 inline uint32_t hash(const T& data, uint32_t seed = 0);
 
 template<typename T>
-inline std::array<uint32_t, 4> hash128(const T& data, uint32_t seed = 0);
+inline void hash128(const T& data, uint32_t out32[4], uint32_t seed = 0);
 
-inline unsigned long long randomGenerator();
+inline uint64_t randomGenerator();
 
 static std::random_device rd;
 static std::mt19937_64 rng(rd());
 static std::uniform_real_distribution<double> dis(0, 1);
 
-inline unsigned long long randomGenerator(){
+inline uint64_t randomGenerator(){
     return rng();
 }
 
@@ -36,10 +36,8 @@ public:
     }
 
     template<typename T>
-    static std::array<uint32_t, 4> MurmurHash128(const T& data, uint32_t seed) {
-        uint32_t out32[4];
+    static void MurmurHash128(const T& data, uint32_t out32[4], uint32_t seed) {
         MurmurHash3_x86_128(&data, sizeof(T), seed, out32);
-        return {{ out32[0], out32[1], out32[2], out32[3] }};
     }
 };
 
@@ -49,8 +47,8 @@ inline uint32_t hash(const T& data, uint32_t seed){
 }
 
 template<typename T>
-inline std::array<uint32_t, 4> hash128(const T& data, uint32_t seed){
-    return Hash::MurmurHash128(data, seed);
+inline void hash128(const T& data, uint32_t out32[4], uint32_t seed){
+    return Hash::MurmurHash128(data, out32, seed);
 }
 
 #endif
