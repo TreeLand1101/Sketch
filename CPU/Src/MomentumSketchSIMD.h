@@ -5,48 +5,11 @@
 #include <bit>
 #include <bitset>
 #include <cstdint>
+#include <cstring>
 #include <iostream>
 #include <limits>
 #include <omp.h>
 #include <immintrin.h>
-
-#define TUPLES_LEN 13
-
-struct TUPLES {
-    uint8_t data[TUPLES_LEN];
-
-    inline uint32_t srcIP() const {
-        return *((uint32_t*)(data));
-    }
-
-    inline uint32_t dstIP() const {
-        return *((uint32_t*)(&data[4]));
-    }
-
-    inline uint16_t srcPort() const {
-        return *((uint16_t*)(&data[8]));
-    }
-
-    inline uint16_t dstPort() const {
-        return *((uint16_t*)(&data[10]));
-    }
-
-    inline uint8_t proto() const {
-        return *((uint8_t*)(&data[12]));
-    }
-
-    uint8_t& operator[](size_t index) {
-        return data[index];
-    }
-
-    inline uint64_t srcIP_dstIP() const {
-        return *((uint64_t*)(data));
-    }
-};
-
-bool operator==(const TUPLES& a, const TUPLES& b) {
-    return memcmp(a.data, b.data, sizeof(TUPLES)) == 0;
-}
 
 template<typename DATA_TYPE>
 class MomentumSketchSIMD : public Abstract<DATA_TYPE> {
@@ -76,12 +39,6 @@ public:
         delete [] sketch;
     }
 
-    __m128i to_m128i(const DATA_TYPE& item) {
-        alignas(16) uint8_t buffer[16] = {0};
-        memcpy(buffer, item.data, TUPLES_LEN);
-        return _mm_load_si128(reinterpret_cast<__m128i*>(buffer));
-    }
-
     void Insert(const DATA_TYPE& item) {
         COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
         int R = -1, M = -1;
@@ -89,51 +46,51 @@ public:
         uint32_t onehash[4];
         hash128(item, onehash);
 
-        Bucket* sbucket[4];
-        for(int i = 0; i < HASH_NUM; ++i) {
-            uint32_t bucket = onehash[i] % LENGTH;
-            sbucket[i] = &sketch[i][bucket];
-        }
+        __m256i vhash = _mm256_set_epi32(0, onehash[0], 0, onehash[1], 0, onehash[2], 0, onehash[3]);
+        __m256i vwidth = _mm256_set1_epi32(LENGTH);
+        union {__m256i vbucket; uint64_t index[4];};
+        vbucket = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
 
-        __m512i vkey = _mm512_set_epi128(
-            to_m128i(sbucket[3]->ID),
-            to_m128i(sbucket[2]->ID),
-            to_m128i(sbucket[1]->ID),
-            to_m128i(sbucket[0]->ID)
+        __m512i vkey = _mm512_set_epi64(
+            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
+            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low64(),
+            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low64(),
+            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low64()
         );
 
-        __m128i item_m128i = to_m128i(item);
-        __m512i comkey = _mm512_set1_epi128(item_m128i);
-
-        __mmask16 mask = _mm512_cmpeq_epi128_mask(vkey, comkey);
-
-        for (int i = 0; i < 4; ++i) {
-            if (mask & (1 << i)) {
-                sbucket[i]->momentum += sbucket[i]->counter;
-                if (sbucket[i]->momentum < 0)
-                    sbucket[i]->momentum = std::numeric_limits<COUNT_TYPE>::max();
-                sbucket[i]->counter++;
-                return;
-            }
-        }
+        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
+        __mmask8 cmp64 = _mm512_cmpeq_epi64_mask(vkey, comkey);
 
         for(int i = 0; i < HASH_NUM; ++i) {
-            if(sbucket[i]->ID[0] == '\0') {
-                sbucket[i]->ID = item;
-                sbucket[i]->counter = 1;
-                sbucket[i]->momentum = 1;
-                return;
+            if ((cmp64 & (0b11 << (i * 2))) == (0b11 << (i * 2))) {
+                if (std::numeric_limits<COUNT_TYPE>::max() - sketch[i][index[i]].momentum < sketch[i][index[i]].counter) {
+                    sketch[i][index[i]].momentum = std::numeric_limits<COUNT_TYPE>::max();
+                } 
+                else {
+                    sketch[i][index[i]].momentum += sketch[i][index[i]].counter;
+                }
+                sketch[i][index[i]].counter++;
+                return;                
             }
-            if(sbucket[i]->counter < min) {
-                min = sbucket[i]->counter;
-                R = i;
-                M = onehash[i] % LENGTH;
+            else {
+                if (sketch[i][index[i]].ID[0] == '\0') {
+                    sketch[i][index[i]].ID = item;
+                    sketch[i][index[i]].counter = 1;
+                    sketch[i][index[i]].momentum = 1;
+                    return;
+                }                
+                if (sketch[i][index[i]].counter < min) {
+                    min = sketch[i][index[i]].counter;
+                    R = i;
+                    M = index[i];
+                }                
             }
         }
 
         sketch[R][M].momentum /= 2;
-        if(randomGenerator() % (uint64_t)(sketch[R][M].counter * sketch[R][M].momentum + 1) == 0) {
-            if(--sketch[R][M].counter == 0) {
+
+        if (randomGenerator() % (static_cast<uint64_t>(sketch[R][M].counter * sketch[R][M].momentum + 1)) == 0) {
+            if (--sketch[R][M].counter == 0) {
                 sketch[R][M].ID = item;
                 sketch[R][M].counter = 1;
                 sketch[R][M].momentum = 1;
@@ -141,14 +98,29 @@ public:
         }
     }
 
-    COUNT_TYPE Query(const DATA_TYPE& item) {
+    COUNT_TYPE Query(const DATA_TYPE& item){
         uint32_t onehash[4];
         hash128(item, onehash);
 
-        for(uint32_t i = 0; i < HASH_NUM; ++i) {
-            uint32_t bucket = onehash[i] % LENGTH;
-            Bucket* b = &sketch[i][bucket];
-            if(b->ID == item) return b->counter;
+        __m256i vhash = _mm256_set_epi32(0, onehash[0], 0, onehash[1], 0, onehash[2], 0, onehash[3]);
+        __m256i vwidth = _mm256_set1_epi32(LENGTH);
+        union {__m256i vbucket; uint64_t index[4];};
+        vbucket = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
+
+        __m512i vkey = _mm512_set_epi64(
+            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
+            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low64(),
+            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low64(),
+            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low64()
+        );
+
+        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
+        __mmask8 cmp64 = _mm512_cmpeq_epi64_mask(vkey, comkey);
+
+        for(int i = 0; i < HASH_NUM; ++i) {
+            if ((cmp64 & (0b11 << (i * 2))) == (0b11 << (i * 2))) {
+                return sketch[i][index[i]].counter;
+            }
         }
         return 0;
     }
@@ -157,8 +129,8 @@ public:
         HashMap ret;
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
-            for (uint32_t j = 0; j < LENGTH; ++j) {
-                if (sketch[i][j].ID[0] != '\0' && ret.find(sketch[i][j].ID) == ret.end()) {
+            for(uint32_t j = 0; j < LENGTH; ++j) {
+                if(sketch[i][j].ID[0] != '\0' && ret.find(sketch[i][j].ID) == ret.end()) {
                     ret[sketch[i][j].ID] = Query(sketch[i][j].ID);
                 }
             }
@@ -170,7 +142,6 @@ public:
 private:
     uint32_t LENGTH;
     const uint32_t HASH_NUM = 4;
-
     Bucket** sketch;
 };
 

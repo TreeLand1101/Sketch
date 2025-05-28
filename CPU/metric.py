@@ -3,6 +3,11 @@ import numpy as np
 import pandas as pd
 import sys
 
+# Font size constants
+TITLE_SIZE = 16
+LABEL_SIZE = 14
+TICK_SIZE = 12
+
 def load_data(dataset, memory_values, alpha):
     """
     Load data from CSV files based on dataset, memory values, and alpha
@@ -29,8 +34,9 @@ def load_data(dataset, memory_values, alpha):
     return data
 
 def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_styles,
-                    font_size=14, figsize=(10, 6), y_max=None):
+                    figsize=(10, 6), y_max=None):
     plt.figure(figsize=figsize)
+
     filtered_data = {k: v for k, v in data.items() if k.endswith(f"alpha_{alpha}")}
     memory_keys = sorted(filtered_data.keys(), key=lambda k: int(k.split('_')[1]))
     methods = [entry[0] for entry in filtered_data[memory_keys[0]]] if memory_keys else []
@@ -47,17 +53,24 @@ def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_sty
                  marker=markers[i % len(markers)], linestyle=style,
                  label=method, alpha=0.7, markersize=8)
 
-    plt.xticks(memories, memories, fontsize=font_size)
-    plt.yticks(fontsize=font_size)
-    plt.xlabel("Memory (KB)", fontsize=font_size)
-    plt.ylabel(short_title, fontsize=font_size)
+    # Title (if desired; uncomment the next line to include)
+    # plt.title(f"{dataset} — {short_title}", fontsize=TITLE_SIZE)
+
+    plt.xticks(memories, memories, fontsize=TICK_SIZE)
+    plt.yticks(fontsize=TICK_SIZE)
+    plt.xlabel("Memory (KB)", fontsize=LABEL_SIZE)
+    plt.ylabel(short_title, fontsize=LABEL_SIZE)
+
     if y_max is not None:
         plt.ylim(0, y_max)
     elif metric in ["Recall", "Precision", "F1 Score"]:
         plt.ylim(0, 1)
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=4, fontsize=font_size)
+
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2),
+               ncol=4, fontsize=LABEL_SIZE)
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.tight_layout()
+
     output_file = f"Performance/{dataset}/{metric}_alpha_{alpha}_line.png"
     plt.savefig(output_file, bbox_inches='tight')
     plt.close()

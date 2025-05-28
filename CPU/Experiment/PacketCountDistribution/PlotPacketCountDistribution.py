@@ -5,78 +5,90 @@ import argparse
 from pathlib import Path
 from matplotlib.ticker import LogFormatterMathtext, ScalarFormatter
 
+# Default parameters
 MEMORY_DEFAULT = 100000
 ALPHA_DEFAULT = 0.0001
 
-def plot_rank_frequency(ranks, freqs, out_dir: Path, prefix: str, tag: str, label: str, log_scale: bool):
+# Font size constants
+TITLE_SIZE = 16
+LABEL_SIZE = 14
+TICK_SIZE = 12
+
+
+def plot_rank_frequency(ranks, freqs, out_dir: Path, prefix: str, label_flow: str, log_scale: bool):
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(ranks, freqs, marker='o', linestyle='-', alpha=0.7)
 
+    flow_cap = label_flow.capitalize()
     if log_scale:
+        title_text = f"Rank-Frequency of {flow_cap} Flows (Log Scale)"
+        suffix = f"{prefix}_rank-frequency_of_{label_flow}_flows_log.png"
         ax.set_xscale('log')
         ax.set_yscale('log')
         ax.xaxis.set_major_formatter(LogFormatterMathtext())
         ax.yaxis.set_major_formatter(LogFormatterMathtext())
-        ax.set_title(f"{label} Rank-Frequency Distribution (Log Scale)")
-        suffix = f"{prefix}_{tag}_rank_frequency_log.png"
     else:
+        title_text = f"Rank-Frequency of {flow_cap} Flows"
+        suffix = f"{prefix}_rank-frequency_of_{label_flow}_flows.png"
         ax.yaxis.set_major_formatter(ScalarFormatter())
         ax.ticklabel_format(style='plain', axis='y')
-        ax.set_title(f"{label} Rank-Frequency Distribution")
-        suffix = f"{prefix}_{tag}_rank_frequency.png"
 
-    ax.set_xlabel("Rank")
-    ax.set_ylabel("Frequency")
-    ax.grid(True, which="both", linestyle='--', linewidth=0.5)
+    ax.set_title(title_text, fontsize=TITLE_SIZE)
+    ax.set_xlabel("Rank", fontsize=LABEL_SIZE)
+    ax.set_ylabel("Frequency", fontsize=LABEL_SIZE)
+    ax.tick_params(axis='both', labelsize=TICK_SIZE)
+    ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
     out = out_dir / suffix
     fig.savefig(out)
     plt.close(fig)
-    print(f"saved to {out}")
+    print(f"Saved to {out}")
 
 
-def plot_cdf(freqs, out_dir: Path, prefix: str, tag: str, label: str, log_x: bool):
+def plot_cdf(freqs, out_dir: Path, prefix: str, label_flow: str, log_x: bool):
     sorted_freq = np.sort(freqs)
     cdf = np.linspace(1 / freqs.size, 1, freqs.size)
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(sorted_freq, cdf, marker='o', linestyle='-', alpha=0.7)
 
+    flow_cap = label_flow.capitalize()
     if log_x:
+        title_text = f"CDF of {flow_cap} Flows (Log Scale)"
+        suffix = f"{prefix}_cdf_of_{label_flow}_flows_log.png"
         ax.set_xscale('log')
         ax.xaxis.set_major_formatter(LogFormatterMathtext())
-        ax.set_title(f"{label} Frequency CDF (Log Scale)")
-        suffix = f"{prefix}_{tag}_frequency_cdf_log.png"
     else:
+        title_text = f"CDF of {flow_cap} Flows"
+        suffix = f"{prefix}_cdf_of_{label_flow}_flows.png"
         ax.xaxis.set_major_formatter(ScalarFormatter())
         ax.ticklabel_format(style='plain', axis='x')
-        ax.set_title(f"{label} Frequency CDF")
-        suffix = f"{prefix}_{tag}_frequency_cdf.png"
 
-    ax.set_xlabel("Frequency")
-    ax.set_ylabel("CDF")
-    ax.grid(True, which="both", linestyle='--', linewidth=0.5)
+    ax.set_title(title_text, fontsize=TITLE_SIZE)
+    ax.set_xlabel("Frequency", fontsize=LABEL_SIZE)
+    ax.set_ylabel("CDF", fontsize=LABEL_SIZE)
+    ax.tick_params(axis='both', labelsize=TICK_SIZE)
+    ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
     out = out_dir / suffix
     fig.savefig(out)
     plt.close(fig)
-    print(f"saved to {out}")
+    print(f"Saved to {out}")
 
-def process_file(out_dir: Path, prefix: str, tag: str, label: str):
-    # Read CSV instead of TXT, skip header
+
+def process_file(out_dir: Path, prefix: str, tag: str, label_flow: str):
     csv_file = out_dir / f"{prefix}_{tag}.csv"
     freqs = np.loadtxt(csv_file, delimiter=',', skiprows=1)
     ranks = np.arange(1, freqs.size + 1)
 
-    plot_rank_frequency(ranks, freqs, out_dir, prefix, tag, label, log_scale=False)
-    plot_rank_frequency(ranks, freqs, out_dir, prefix, tag, label, log_scale=True)
-
-    plot_cdf(freqs, out_dir, prefix, tag, label, log_x=False)
-    plot_cdf(freqs, out_dir, prefix, tag, label, log_x=True)
+    plot_rank_frequency(ranks, freqs, out_dir, prefix, label_flow, log_scale=False)
+    plot_rank_frequency(ranks, freqs, out_dir, prefix, label_flow, log_scale=True)
+    plot_cdf(freqs, out_dir, prefix, label_flow, log_x=False)
+    plot_cdf(freqs, out_dir, prefix, label_flow, log_x=True)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Plot rank-frequency and CDF from frequency CSV files"
+        description="Plot Rank-Frequency Distribution and CDF of Flow Frequencies"
     )
     parser.add_argument("stems", nargs='+', help="Dataset stems (folder names)")
     parser.add_argument("--memory", type=int, default=MEMORY_DEFAULT,
@@ -93,13 +105,14 @@ def main():
             print(f"Warning: not a directory: {out_dir}")
             continue
 
-        for tag, label in [("all", "All Flows"), ("retained", "Retained Flows")]:
+        for tag, label_flow in [("total", "total"), ("retained", "retained")]:
             csv_path = out_dir / f"{prefix}_{tag}.csv"
             if not csv_path.exists():
                 print(f"Missing: {csv_path}")
                 continue
             print(f"Processing {csv_path.name}...")
-            process_file(out_dir, prefix, tag, label)
+            process_file(out_dir, prefix, tag, label_flow)
+
 
 if __name__ == "__main__":
     main()

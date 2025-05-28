@@ -42,8 +42,16 @@ struct TUPLES{
         return data[index];
     }
     
-    inline uint64_t srcIP_dstIP() const{
+    inline uint64_t low64() const {
         return *((uint64_t*)(data));
+    }
+
+    inline uint64_t high64() const {
+        uint64_t v = 0;
+        v |= uint64_t(srcPort()) << 48;
+        v |= uint64_t(dstPort()) << 32;
+        v |= uint64_t(proto())   << 24;
+        return v;
     }
 };
 
