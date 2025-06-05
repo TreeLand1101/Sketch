@@ -48,8 +48,8 @@ public:
 
         __m256i vhash = _mm256_set_epi32(0, onehash[0], 0, onehash[1], 0, onehash[2], 0, onehash[3]);
         __m256i vwidth = _mm256_set1_epi32(LENGTH);
-        union {__m256i vbucket; uint64_t index[4];};
-        vbucket = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
+        union {__m256i vindex; uint64_t index[4];};
+        vindex = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
 
         __m512i vkey = _mm512_set_epi64(
             sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
@@ -59,10 +59,12 @@ public:
         );
 
         __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
-        __mmask8 cmp64 = _mm512_cmpeq_epi64_mask(vkey, comkey);
+        __mmask8 mask = _mm512_cmpeq_epi64_mask(vkey, comkey);
+
+        uint8_t bit_pair_mask = 0b11;
 
         for(int i = 0; i < HASH_NUM; ++i) {
-            if ((cmp64 & (0b11 << (i * 2))) == (0b11 << (i * 2))) {
+            if ((mask & bit_pair_mask) == bit_pair_mask) {
                 if (std::numeric_limits<COUNT_TYPE>::max() - sketch[i][index[i]].momentum < sketch[i][index[i]].counter) {
                     sketch[i][index[i]].momentum = std::numeric_limits<COUNT_TYPE>::max();
                 } 
@@ -85,6 +87,7 @@ public:
                     M = index[i];
                 }                
             }
+            bit_pair_mask <<= 2;
         }
 
         sketch[R][M].momentum /= 2;
@@ -104,8 +107,8 @@ public:
 
         __m256i vhash = _mm256_set_epi32(0, onehash[0], 0, onehash[1], 0, onehash[2], 0, onehash[3]);
         __m256i vwidth = _mm256_set1_epi32(LENGTH);
-        union {__m256i vbucket; uint64_t index[4];};
-        vbucket = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
+        union {__m256i vindex; uint64_t index[4];};
+        vindex = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
 
         __m512i vkey = _mm512_set_epi64(
             sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
@@ -115,12 +118,15 @@ public:
         );
 
         __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
-        __mmask8 cmp64 = _mm512_cmpeq_epi64_mask(vkey, comkey);
+        __mmask8 mask = _mm512_cmpeq_epi64_mask(vkey, comkey);
+
+        uint8_t bit_pair_mask = 0b11;
 
         for(int i = 0; i < HASH_NUM; ++i) {
-            if ((cmp64 & (0b11 << (i * 2))) == (0b11 << (i * 2))) {
+            if ((mask & bit_pair_mask) == bit_pair_mask) {
                 return sketch[i][index[i]].counter;
             }
+            bit_pair_mask <<= 2;
         }
         return 0;
     }

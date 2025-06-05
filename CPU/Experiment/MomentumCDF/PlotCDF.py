@@ -1,32 +1,54 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import sys
+
+def extract_basename_without_ext(path):
+    fname = os.path.basename(path)
+    return os.path.splitext(fname)[0]
 
 def read_csv(file_name):
-    """
-    Reads a CSV file with header 'momentum,cdf'
-    and returns two arrays: momentum values and CDF values.
-    """
     data = np.loadtxt(file_name, delimiter=',', skiprows=1)
     return data[:, 0], data[:, 1]
 
-# File names
-nonheavy_file = 'nonheavy_momentum_cdf.csv'
-heavyhitter_file = 'heavyhitter_momentum_cdf.csv'
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python3 PlotCDF.py <dataset1> [dataset2 ...]")
+        sys.exit(1)
 
-# Read data
-nonheavy_x, nonheavy_y = read_csv(nonheavy_file)
-heavyhitter_x, heavyhitter_y = read_csv(heavyhitter_file)
+    datasets = sys.argv[1:]
 
-# Plot the data
-plt.plot(nonheavy_x, nonheavy_y, marker='o', linestyle='-', label='Non-Heavy Flows')
-plt.plot(heavyhitter_x, heavyhitter_y, marker='o', linestyle='-', label='Heavy Hitters')
+    CAP_VALUE = 10**8
 
-# Set labels and title
-plt.xlabel("Momentum")
-plt.ylabel("CDF")
-plt.title("Momentum CDF for Non-Heavy Flows and Heavy-Hitter")
-plt.legend()
-plt.grid(True, which="both", linestyle="--")
+    for ds in datasets:
+        basename = extract_basename_without_ext(ds)
+        folder = basename
 
-# Save the plot
-plt.savefig("momentum_cdf_plot.png")
+        nonheavy_file    = os.path.join(folder, "nonheavy_momentum_cdf.csv")
+        heavyhitter_file = os.path.join(folder, "heavyhitter_momentum_cdf.csv")
+
+        if not os.path.exists(nonheavy_file) or not os.path.exists(heavyhitter_file):
+            print(f"Warning: CSV not found in folder '{folder}'. Skipping.")
+            continue
+
+        nonheavy_x, nonheavy_y = read_csv(nonheavy_file)
+        heavy_x, heavy_y       = read_csv(heavyhitter_file)
+
+        nonheavy_x = np.minimum(nonheavy_x, CAP_VALUE)
+        heavy_x    = np.minimum(heavy_x, CAP_VALUE)
+
+        plt.figure()
+        plt.plot(nonheavy_x, nonheavy_y, marker='o', linestyle='-', label='Non-Heavy Flows')
+        plt.plot(heavy_x,    heavy_y,    marker='o', linestyle='-', label='Heavy Hitters')
+
+        plt.xlabel("Momentum")
+        plt.ylabel("CDF")
+        plt.title(f"Momentum CDF")
+        plt.legend()
+        plt.grid(True, which="both", linestyle="--")
+
+        out_png = os.path.join(folder, "momentum_cdf_plot.png")
+        plt.savefig(out_png)
+        plt.close()
+
+        print(f"Saved plot: {out_png}")

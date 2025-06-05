@@ -1,5 +1,0 @@
-Filter Name,Insert Throughput (Mops),Query Throughput (Mops),AAE,ARE
-CMSketch (d = 4),11.7748,13.2268,5540.52,2528.35
-CMSketch (d = 2),24.6955,27.4554,3072,1401.4
-CUSketch (d = 4),13.571,14.5094,3025.91,1389.19
-CUSketch (d = 2),27.2804,27.8445,2103.82,965.084

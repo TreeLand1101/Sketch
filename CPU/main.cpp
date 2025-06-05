@@ -13,11 +13,11 @@ int main(int argc, char *argv[]) {
         BenchMark dataset(argv[i]);
         // dataset.HHBench<MVSketch<TUPLES>>(memory, threshold);
         // dataset.HHBench<Elastic<TUPLES>>(memory, threshold);
-        // dataset.HHBench<CocoSketch<TUPLES>>(memory, threshold);
-        // dataset.HHBench<TightSketch<TUPLES>>(memory, threshold);
-        // dataset.HHBench<StableSketch<TUPLES>>(memory, threshold);
+        dataset.HHBench<CocoSketch<TUPLES>>(memory, threshold);
+        dataset.HHBench<TightSketch<TUPLES>>(memory, threshold);
+        dataset.HHBench<StableSketch<TUPLES>>(memory, threshold);
         dataset.HHBench<MomentumSketch<TUPLES>>(memory, threshold);
-        dataset.HHBench<MomentumSketchSIMD<TUPLES>>(memory, threshold);
+        // dataset.HHBench<MomentumSketchSIMD<TUPLES>>(memory, threshold);
         // dataset.HHBench<TwoStage<TUPLES>>(memory, threshold);
     }
     return 0;

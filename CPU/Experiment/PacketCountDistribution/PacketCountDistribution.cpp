@@ -89,10 +89,10 @@ int main(int argc, char* argv[]) {
         // Log summary
         std::cout << "\n=== File: " << inFile << " ===\n"
                   << "Threshold: " << threshold << "\n"
-                  << "Packets Before Filter: " << length << "\n"
-                  << "Flows Before Filter: " << flowFrequency.size() << "\n"
-                  << "Packets After Filter: " << RetainedCount << "\n"
-                  << "Flows After Filter: " << retainedFlowFrequency.size() << "\n";
+                  << "Total Packets: " << length << "\n"
+                  << "Total Flows: " << flowFrequency.size() << "\n"
+                  << "Retained Packets: " << RetainedCount << "\n"
+                  << "Retained Flows: " << retainedFlowFrequency.size() << "\n";
 
         // Output frequency files as CSV
         ComputeFrequencyDistribution(
