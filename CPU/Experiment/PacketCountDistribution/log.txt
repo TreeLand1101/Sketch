@@ -1,0 +1,54 @@
+
+=== File: "../../equinix-chicago.dirA.20160121-140000.UTC.anon.dat" ===
+Threshold: 3216
+Total Packets: 32163023
+Total Flows: 1155323
+Retained Packets: 8054789
+Retained Flows: 7308
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-chicago.dirA.20160121-140000.UTC.anon.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-chicago.dirA.20160121-140000.UTC.anon.dat/memory_128KB_threshold_0.000100_retained.csv"
+
+=== File: "../../equinix-nyc.dirA.20180315-125910.UTC.anon.dat" ===
+Threshold: 2236
+Total Packets: 22366454
+Total Flows: 1197319
+Retained Packets: 7486254
+Retained Flows: 4598
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20180315-125910.UTC.anon.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20180315-125910.UTC.anon.dat/memory_128KB_threshold_0.000100_retained.csv"
+
+=== File: "../../equinix-nyc.dirA.20190117-125910.UTC.anon.dat" ===
+Threshold: 2957
+Total Packets: 29578511
+Total Flows: 2318625
+Retained Packets: 8861787
+Retained Flows: 8996
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20190117-125910.UTC.anon.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/equinix-nyc.dirA.20190117-125910.UTC.anon.dat/memory_128KB_threshold_0.000100_retained.csv"
+
+=== File: "../../Campus.dat" ===
+Threshold: 4536
+Total Packets: 45363645
+Total Flows: 16242921
+Retained Packets: 4909624
+Retained Flows: 1370817
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/Campus.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/Campus.dat/memory_128KB_threshold_0.000100_retained.csv"
+
+=== File: "../../202111011400.dat" ===
+Threshold: 7487
+Total Packets: 74874817
+Total Flows: 11517777
+Retained Packets: 36303648
+Retained Flows: 2514
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/202111011400.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/202111011400.dat/memory_128KB_threshold_0.000100_retained.csv"
+
+=== File: "../../202211011400.dat" ===
+Threshold: 10578
+Total Packets: 105785612
+Total Flows: 11780751
+Retained Packets: 52293350
+Retained Flows: 2642
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/202211011400.dat/memory_128KB_threshold_0.000100_total.csv"
+Saved: "/home/cial/SIMD_Sketch/Sketch/CPU/Experiment/PacketCountDistribution/202211011400.dat/memory_128KB_threshold_0.000100_retained.csv"

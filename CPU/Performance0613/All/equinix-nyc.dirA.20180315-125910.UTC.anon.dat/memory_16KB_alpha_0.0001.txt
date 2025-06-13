@@ -1,0 +1,94 @@
+Dataset: equinix-nyc.dirA.20180315-125910.UTC.anon.dat
+Number of packets: 22366454
+Number of flows: 1197319
+
+=== MomentumSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 9.89377
+Query Throughput (Mops) : 13.2711
+Recall                  : 0.264423
+Precision               : 1
+F1 Score                : 0.418251
+AAE                     : 1076.01
+ARE                     : 0.138555
+
+=== CMHeap ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 4.39144
+Query Throughput (Mops) : 6.36323
+Recall                  : 0.0309066
+Precision               : 0.5625
+F1 Score                : 0.0585938
+AAE                     : 13456.3
+ARE                     : 0.80985
+
+=== SpaceSaving ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 5.65406
+Query Throughput (Mops) : 9.74881
+Recall                  : 0.0467033
+Precision               : 0.377778
+F1 Score                : 0.0831296
+AAE                     : 100042
+ARE                     : 17.0068
+
+=== TwoStage ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 11.1046
+Query Throughput (Mops) : 9.69284
+Recall                  : 0.0982143
+Precision               : 0.959732
+F1 Score                : 0.178193
+AAE                     : 2570.83
+ARE                     : 0.210511
+
+=== MVSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 8.84086
+Query Throughput (Mops) : 11.6204
+Recall                  : 0.0982143
+Precision               : 0.311547
+F1 Score                : 0.149347
+AAE                     : 35938.3
+ARE                     : 6.5886
+
+=== Elastic ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 15.9953
+Query Throughput (Mops) : 19.6516
+Recall                  : 0.129808
+Precision               : 0.9
+F1 Score                : 0.226891
+AAE                     : 6137.76
+ARE                     : 0.640169
+
+=== CocoSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 15.9839
+Query Throughput (Mops) : 22.4615
+Recall                  : 0.260302
+Precision               : 0.393971
+F1 Score                : 0.313482
+AAE                     : 13166.7
+ARE                     : 2.86165
+
+=== TightSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 8.69677
+Query Throughput (Mops) : 13.3383
+Recall                  : 0.247253
+Precision               : 1
+F1 Score                : 0.396476
+AAE                     : 1180.83
+ARE                     : 0.149213
+
+=== StableSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 9.36436
+Query Throughput (Mops) : 13.2099
+Recall                  : 0.266484
+Precision               : 1
+F1 Score                : 0.420824
+AAE                     : 147.485
+ARE                     : 0.0194491
+
