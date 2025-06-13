@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 import pandas as pd
 import sys
 
 LABEL_SIZE = 20
-TICK_SIZE = 14
-LEGEND_SIZE = 14
+TICK_SIZE = 16
+LEGEND_SIZE = 16
+
+VIVID_CM = colormaps['tab10']
 
 def load_data(memory_values):
     data = {}
@@ -24,18 +28,17 @@ def load_data(memory_values):
             print(f"Warning: {file_path} not found")
     return data
 
+
 def plot_line_chart(data, metric, ylabel, markers, line_styles, figsize=(10, 6)):
     plt.figure(figsize=figsize)
     memory_keys = sorted(data.keys(), key=lambda k: int(k.split('_')[1].rstrip('KB')))
     memories = [int(k.split('_')[1].rstrip('KB')) for k in memory_keys]
-    unique_memories = sorted(set(memories))
-    x_pos = list(range(len(unique_memories)))
-    methods = [entry[0] for entry in data[f"memory_{unique_memories[0]}KB"]]
+    x_pos = list(range(len(memories)))
+    methods = [entry[0] for entry in data[memory_keys[0]]]
 
     for i, method in enumerate(methods):
         values = []
-        for memory in unique_memories:
-            key = f"memory_{memory}KB"
+        for key in memory_keys:
             val = next((entry[1][metric] for entry in data[key] if entry[0] == method), None)
             values.append(val)
         plt.plot(
@@ -43,12 +46,14 @@ def plot_line_chart(data, metric, ylabel, markers, line_styles, figsize=(10, 6))
             values,
             marker=markers[i % len(markers)],
             linestyle=line_styles[i % len(line_styles)],
+            linewidth=2.5,
+            color=VIVID_CM(i % VIVID_CM.N),
             label=method,
-            alpha=0.7,
+            alpha=0.9,
             markersize=8
         )
 
-    plt.xticks(x_pos, [str(m) for m in unique_memories], fontsize=TICK_SIZE)
+    plt.xticks(x_pos, [str(m) for m in memories], fontsize=TICK_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
     plt.xlabel("Memory (KB)", fontsize=LABEL_SIZE)
     plt.ylabel(ylabel, fontsize=LABEL_SIZE)
@@ -56,15 +61,17 @@ def plot_line_chart(data, metric, ylabel, markers, line_styles, figsize=(10, 6))
         fontsize=LEGEND_SIZE,
         loc='upper center',
         bbox_to_anchor=(0.5, 1.15),
-        ncol=len(methods),
+        ncol=len(methods)
     )
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.tight_layout()
 
-    output_file = f"{metric.replace(' ', '_').replace('(', '').replace(')', '')}_line.png"
+    fname = metric.replace(' ', '_').replace('(', '').replace(')', '')
+    output_file = f"{fname}_line.png"
     plt.savefig(output_file, bbox_inches='tight')
     plt.close()
     print(f"Saved line chart to {output_file}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

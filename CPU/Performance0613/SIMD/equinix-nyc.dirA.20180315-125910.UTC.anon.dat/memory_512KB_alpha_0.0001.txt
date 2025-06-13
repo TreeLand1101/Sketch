@@ -4,21 +4,21 @@ Number of flows: 1197319
 
 === MomentumSketchSIMD ===
 Heavy Hitter Threshold  : 2236
-Insert Throughput (Mops): 15.6424
-Query Throughput (Mops) : 18.6766
-Recall                  : 0.995192
+Insert Throughput (Mops): 15.5861
+Query Throughput (Mops) : 18.7016
+Recall                  : 0.994505
 Precision               : 1
-F1 Score                : 0.99759
-AAE                     : 5.00621
-ARE                     : 0.00132244
+F1 Score                : 0.997245
+AAE                     : 5.21892
+ARE                     : 0.00133812
 
 === MomentumSketch ===
 Heavy Hitter Threshold  : 2236
-Insert Throughput (Mops): 11.5682
-Query Throughput (Mops) : 13.9503
+Insert Throughput (Mops): 11.5435
+Query Throughput (Mops) : 14.0447
 Recall                  : 0.99794
 Precision               : 1
 F1 Score                : 0.998969
-AAE                     : 6.38816
-ARE                     : 0.00163731
+AAE                     : 6.39711
+ARE                     : 0.00158874
 
