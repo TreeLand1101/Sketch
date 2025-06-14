@@ -5,7 +5,7 @@ import pandas as pd
 import sys
 
 LABEL_SIZE = 20
-TICK_SIZE = 16
+TICK_SIZE = 20
 LEGEND_SIZE = 16
 
 VIVID_CM = colormaps['tab10']

@@ -150,7 +150,7 @@ private:
             if(real && est){
                 bothHH += 1;
                 aae += abs(realF - estF);
-                are += abs(realF - estF) / realF;
+                are += abs(realF - estF) / realF;                    
             }
         }
 

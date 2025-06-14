@@ -7,7 +7,7 @@ import sys
 import os
 
 LABEL_SIZE  = 20
-TICK_SIZE   = 16
+TICK_SIZE   = 20
 LEGEND_SIZE = 16
 
 # Define a vivid colormap
@@ -57,14 +57,13 @@ def write_metric_csv(data, metric, dataset, alpha, memory_values):
 
 
 def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_styles,
-                    figsize=(12, 8), y_max=None):
+                    figsize=(12, 8), y_min=None, y_max=None):
     fig, ax = plt.subplots(figsize=figsize, constrained_layout=True)
 
     filtered_data = {k: v for k, v in data.items() if k.endswith(f"alpha_{alpha}")}
     memories = sorted(int(k.split('_')[1].rstrip('KB')) for k in filtered_data)
     methods = [e[0] for e in filtered_data[f"memory_{memories[0]}KB_alpha_{alpha}"]]
     x_pos = list(range(len(memories)))
-
     colors = [VIVID_CM(i % VIVID_CM.N) for i in range(len(methods))]
 
     for i, method in enumerate(methods):
@@ -76,7 +75,7 @@ def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_sty
             x_pos, values,
             marker=markers[i % len(markers)],
             linestyle=line_styles[i % len(line_styles)],
-            linewidth=3,                # Thicker lines
+            linewidth=3.5,
             color=colors[i],
             label=method,
             alpha=0.9,
@@ -86,16 +85,24 @@ def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_sty
     ax.set_xticks(x_pos)
     ax.set_xticklabels([str(m) for m in memories], fontsize=TICK_SIZE)
     ax.tick_params(axis='y', labelsize=TICK_SIZE)
-
     ax.set_xlabel("Memory (KB)", fontsize=LABEL_SIZE)
     ax.set_ylabel(short_title, fontsize=LABEL_SIZE)
 
-    if y_max is not None:
-        ax.set_ylim(0, y_max)
-    elif metric in ["Recall", "Precision", "F1 Score"]:
+        # Apply y-axis limits
+    if y_min is not None or y_max is not None:
+        low = y_min if y_min is not None else 0
+        high = y_max if y_max is not None else ax.get_ylim()[1]
+        ax.set_ylim(low, high)
+    elif metric in ["Recall","Precision","F1 Score"]:
         ax.set_ylim(0, 1)
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=4, fontsize=LEGEND_SIZE)
+    ax.legend(
+        loc='upper center',
+        bbox_to_anchor=(0.5, 1.2),
+        ncol=4,
+        fontsize=LEGEND_SIZE,
+        frameon=True
+    )
     ax.grid(True, linestyle='--', alpha=0.7)
 
     output_file = f"Performance/{dataset}/{short_title.replace(' ', '_')}_alpha_{alpha}_line.png"
@@ -105,7 +112,7 @@ def plot_line_chart(data, metric, short_title, alpha, dataset, markers, line_sty
 
 
 def plot_bar_chart(data, metric, short_title, alpha, dataset,
-                   figsize=(12, 8), y_max=None):
+                   figsize=(12, 8), y_min=None, y_max=None):
     fig, ax = plt.subplots(figsize=figsize, constrained_layout=True)
 
     filtered_data = {k: v for k, v in data.items() if k.endswith(f"alpha_{alpha}")}
@@ -123,22 +130,30 @@ def plot_bar_chart(data, metric, short_title, alpha, dataset,
         ax.bar(
             x + i*width, values, width=width,
             color=VIVID_CM(i % VIVID_CM.N),
-            label=method  # Added label for legend
+            label=method
         )
 
     ax.set_xticks(x + width*(num_methods-1)/2)
     ax.set_xticklabels([str(m) for m in memories], fontsize=TICK_SIZE)
     ax.tick_params(axis='y', labelsize=TICK_SIZE)
-
     ax.set_xlabel("Memory (KB)", fontsize=LABEL_SIZE)
     ax.set_ylabel(short_title, fontsize=LABEL_SIZE)
 
-    if y_max is not None:
-        ax.set_ylim(0, y_max)
-    elif metric in ["Recall", "Precision", "F1 Score"]:
+    # Apply y-axis limits
+    if y_min is not None or y_max is not None:
+        low = y_min if y_min is not None else (0 if metric in ["Recall","Precision","F1 Score"] else ax.get_ylim()[0])
+        high = y_max if y_max is not None else (1 if metric in ["Recall","Precision","F1 Score"] else ax.get_ylim()[1])
+        ax.set_ylim(low, high)
+    elif metric in ["Recall","Precision","F1 Score"]:
         ax.set_ylim(0, 1)
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.2), ncol=4, fontsize=LEGEND_SIZE)
+    ax.legend(
+        loc='upper center',
+        bbox_to_anchor=(0.5, 1.2),
+        ncol=4,
+        fontsize=LEGEND_SIZE,
+        frameon=True
+    )
     ax.grid(True, axis='y', linestyle='--', alpha=0.7)
 
     output_file = f"Performance/{dataset}/{short_title}_alpha_{alpha}_bar.png"
@@ -156,7 +171,8 @@ if __name__ == "__main__":
     memory_values = list(map(int, sys.argv[3:]))
 
     markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'h', 'H', 'x', '+']
-    line_styles = ['-', '--']
+    # Use only solid line style for all plots
+    line_styles = ['-']
 
     data = load_data(dataset, memory_values, alpha)
 
@@ -167,13 +183,13 @@ if __name__ == "__main__":
     # Line charts
     # plot_line_chart(data, "Insert Throughput (Mops)", "Insert Throughput (Mops)", alpha, dataset, markers, line_styles)
     # plot_line_chart(data, "Query Throughput (Mops)", "Query Throughput (Mops)", alpha, dataset, markers, line_styles)
-    # plot_line_chart(data, "AAE", "AAE", alpha, dataset, markers, line_styles, y_max=1500)
-    # plot_line_chart(data, "ARE", "ARE", alpha, dataset, markers, line_styles, y_max=0.3)
-    # plot_line_chart(data, "Recall", "Recall", alpha, dataset, markers, line_styles)
-    # plot_line_chart(data, "Precision", "Precision", alpha, dataset, markers, line_styles)
-    # plot_line_chart(data, "F1 Score", "F1 Score", alpha, dataset, markers, line_styles)
+    # plot_line_chart(data, "AAE", "AAE", alpha, dataset, markers, line_styles, y_max=800)
+    # plot_line_chart(data, "ARE", "ARE", alpha, dataset, markers, line_styles, y_max=0.2)
+    # plot_line_chart(data, "Recall", "Recall", alpha, dataset, markers, line_styles, y_min=0, y_max=1.05)
+    # plot_line_chart(data, "Precision", "Precision", alpha, dataset, markers, line_styles, y_min=0, y_max=1.05)
+    # plot_line_chart(data, "F1 Score", "F1 Score", alpha, dataset, markers, line_styles, y_min=0, y_max=1.05)
 
-    # Bar charts
+    # Bar charts for throughput
     plot_bar_chart(data, "Insert Throughput (Mops)", "Insert Throughput (Mops)", alpha, dataset)
     plot_bar_chart(data, "Query Throughput (Mops)", "Query Throughput (Mops)", alpha, dataset)
 
