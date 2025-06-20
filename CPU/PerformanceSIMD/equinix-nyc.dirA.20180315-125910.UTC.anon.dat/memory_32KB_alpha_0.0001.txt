@@ -1,0 +1,24 @@
+Dataset: equinix-nyc.dirA.20180315-125910.UTC.anon.dat
+Number of packets: 22366454
+Number of flows: 1197319
+
+=== MomentumSketchSIMD ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 15.0273
+Query Throughput (Mops) : 21.9934
+Recall                  : 0.513736
+Precision               : 1
+F1 Score                : 0.678766
+AAE                     : 436.606
+ARE                     : 0.0827585
+
+=== MomentumSketch ===
+Heavy Hitter Threshold  : 2236
+Insert Throughput (Mops): 10.3346
+Query Throughput (Mops) : 13.5874
+Recall                  : 0.521291
+Precision               : 1
+F1 Score                : 0.685327
+AAE                     : 426.876
+ARE                     : 0.081688
+

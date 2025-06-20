@@ -1,0 +1,24 @@
+Dataset: Campus.dat
+Number of packets: 45363645
+Number of flows: 16242921
+
+=== MomentumSketchSIMD ===
+Heavy Hitter Threshold  : 4536
+Insert Throughput (Mops): 14.2739
+Query Throughput (Mops) : 24.8053
+Recall                  : 1
+Precision               : 1
+F1 Score                : 1
+AAE                     : 2.41026
+ARE                     : 0.000327197
+
+=== MomentumSketch ===
+Heavy Hitter Threshold  : 4536
+Insert Throughput (Mops): 8.67933
+Query Throughput (Mops) : 12.3622
+Recall                  : 1
+Precision               : 1
+F1 Score                : 1
+AAE                     : 3.03846
+ARE                     : 0.000410284
+
