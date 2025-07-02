@@ -4,18 +4,18 @@ Number of flows: 16242921
 
 === MomentumSketch ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 7.88461
-Query Throughput (Mops) : 9.77193
+Insert Throughput (Mops): 7.59181
+Query Throughput (Mops) : 9.68851
 Recall                  : 1
 Precision               : 1
 F1 Score                : 1
-AAE                     : 0.769231
-ARE                     : 8.44431e-05
+AAE                     : 4.24359
+ARE                     : 0.000231867
 
 === CMHeap ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 3.4716
-Query Throughput (Mops) : 4.99484
+Insert Throughput (Mops): 3.52674
+Query Throughput (Mops) : 5.12582
 Recall                  : 1
 Precision               : 0.95122
 F1 Score                : 0.975
@@ -24,8 +24,8 @@ ARE                     : 0.0219909
 
 === SpaceSaving ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 4.26547
-Query Throughput (Mops) : 8.84234
+Insert Throughput (Mops): 4.16587
+Query Throughput (Mops) : 8.80323
 Recall                  : 1
 Precision               : 0.829787
 F1 Score                : 0.906977
@@ -34,8 +34,8 @@ ARE                     : 0.120098
 
 === TwoStage ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 19.1478
-Query Throughput (Mops) : 20.4935
+Insert Throughput (Mops): 19.3004
+Query Throughput (Mops) : 20.6297
 Recall                  : 1
 Precision               : 0.975
 F1 Score                : 0.987342
@@ -44,8 +44,8 @@ ARE                     : 0.0038999
 
 === MVSketch ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 6.64243
-Query Throughput (Mops) : 9.21959
+Insert Throughput (Mops): 6.7533
+Query Throughput (Mops) : 9.1424
 Recall                  : 1
 Precision               : 0.906977
 F1 Score                : 0.95122
@@ -54,8 +54,8 @@ ARE                     : 0.0480849
 
 === Elastic ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 12.8264
-Query Throughput (Mops) : 16.1024
+Insert Throughput (Mops): 13.2418
+Query Throughput (Mops) : 16.3578
 Recall                  : 1
 Precision               : 0.95122
 F1 Score                : 0.975
@@ -64,31 +64,31 @@ ARE                     : 0.0180692
 
 === CocoSketch ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 13.0834
-Query Throughput (Mops) : 18.2826
-Recall                  : 1
-Precision               : 0.939759
-F1 Score                : 0.968944
-AAE                     : 205.308
-ARE                     : 0.0149043
+Insert Throughput (Mops): 13.0174
+Query Throughput (Mops) : 18.4084
+Recall                  : 0.987179
+Precision               : 0.987179
+F1 Score                : 0.987179
+AAE                     : 178.091
+ARE                     : 0.0141098
 
 === TightSketch ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 7.19114
-Query Throughput (Mops) : 9.73394
+Insert Throughput (Mops): 7.29709
+Query Throughput (Mops) : 9.62719
 Recall                  : 1
 Precision               : 1
 F1 Score                : 1
-AAE                     : 4.23077
-ARE                     : 0.000315739
+AAE                     : 5.57692
+ARE                     : 0.000518603
 
 === StableSketch ===
 Heavy Hitter Threshold  : 4536
-Insert Throughput (Mops): 6.99833
-Query Throughput (Mops) : 9.71133
-Recall                  : 0.974359
+Insert Throughput (Mops): 7.06662
+Query Throughput (Mops) : 9.60512
+Recall                  : 0.923077
 Precision               : 1
-F1 Score                : 0.987013
-AAE                     : 203.145
-ARE                     : 0.0108204
+F1 Score                : 0.96
+AAE                     : 3003.14
+ARE                     : 0.0310105
 

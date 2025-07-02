@@ -37,11 +37,7 @@ public:
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t pos = hash(item, i) % LENGTH;    
             sketch[i][pos].total_sum++;
-            if (sketch[i][pos].ID[0] == '\0') {
-                sketch[i][pos].ID = item;
-                sketch[i][pos].counter = 1;
-            }
-            else if (item == sketch[i][pos].ID) {
+            if (item == sketch[i][pos].ID) {
                 sketch[i][pos].counter++;
             }
             else {
@@ -77,7 +73,7 @@ public:
 
         for(uint32_t i = 0; i < HASH_NUM; ++i){
             for (uint32_t j = 0; j < LENGTH; ++j) {
-                if (sketch[i][j].ID[0] != '\0' && ret.find(sketch[i][j].ID) == ret.end()) {
+                if (sketch[i][j].ID[0] != '\0' && sketch[i][j].counter != 0 && ret.find(sketch[i][j].ID) == ret.end()) {
                     ret[sketch[i][j].ID] = Query(sketch[i][j].ID);
                 }
             }

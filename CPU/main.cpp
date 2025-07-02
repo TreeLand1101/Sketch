@@ -27,11 +27,25 @@ int main(int argc, char *argv[]) {
         // dataset.HHBench<MomentumSketchSIMD<TUPLES>>(memory, alpha);
         // dataset.HHBench<MomentumSketch<TUPLES>>(memory, alpha);
 
-        /* PefromanceMomentumSketchVariant */
+        /* PefromanceDecayProbability */
         dataset.HHBench<Default<TUPLES>>(memory, alpha);
         dataset.HHBench<Additive<TUPLES>>(memory, alpha);
         dataset.HHBench<MomentumOnly<TUPLES>>(memory, alpha);
         dataset.HHBench<CounterOnly<TUPLES>>(memory, alpha);
+
+        /* PefromanceMomentumSketchDecayFactor */
+        // for (double d = 1.02; d < 1.1; d += 0.02) {
+        //     MomentumSketchDecayFactor<TUPLES>::SetDecayFactor(d);
+        //     dataset.HHBench<MomentumSketchDecayFactor<TUPLES>>(memory, alpha);
+        // }
+        // for (double d = 1.1; d < 1.5; d += 0.05) {
+        //     MomentumSketchDecayFactor<TUPLES>::SetDecayFactor(d);
+        //     dataset.HHBench<MomentumSketchDecayFactor<TUPLES>>(memory, alpha);
+        // }
+        // for (double d = 1.5; d < 2.1; d += 0.1) {
+        //     MomentumSketchDecayFactor<TUPLES>::SetDecayFactor(d);
+        //     dataset.HHBench<MomentumSketchDecayFactor<TUPLES>>(memory, alpha);
+        // }
     }
     return 0;
 }

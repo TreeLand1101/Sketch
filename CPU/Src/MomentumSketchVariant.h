@@ -31,11 +31,11 @@ public:
     void Insert(const DATA_TYPE& item) {
         COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
         int R = -1;
-        int M = -1;
+        int P = -1;
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t pos = hash(item, i) % LENGTH;   
-            if (sketch[i][pos].ID[0] == '\0') {
+            if (sketch[i][pos].ID[0] == '\0' && sketch[i][pos].counter == 0) {
                 sketch[i][pos].ID = item;
                 sketch[i][pos].counter = 1;
                 sketch[i][pos].momentum = 1;
@@ -54,17 +54,17 @@ public:
             if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
-                M = pos;
+                P = pos;
             }
         }
 
-        sketch[R][M].momentum /= 2;
+        sketch[R][P].momentum /= 2;
 
-        if (randomGenerator() % ((uint64_t)sketch[R][M].counter + sketch[R][M].momentum + 1) == 0) {
-            if (--sketch[R][M].counter == 0) {
-                sketch[R][M].ID = item;
-                sketch[R][M].counter = 1;
-                sketch[R][M].momentum = 1;
+        if (randomGenerator() % ((uint64_t)sketch[R][P].counter + sketch[R][P].momentum + 1) == 0) {
+            if (--sketch[R][P].counter == 0) {
+                sketch[R][P].ID = item;
+                sketch[R][P].counter = 1;
+                sketch[R][P].momentum = 1;
             }
         }
     }
@@ -84,11 +84,11 @@ public:
     void Insert(const DATA_TYPE& item) {
         COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
         int R = -1;
-        int M = -1;
+        int P = -1;
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t pos = hash(item, i) % LENGTH;   
-            if (sketch[i][pos].ID[0] == '\0') {
+            if (sketch[i][pos].ID[0] == '\0' && sketch[i][pos].counter == 0) {
                 sketch[i][pos].ID = item;
                 sketch[i][pos].counter = 1;
                 sketch[i][pos].momentum = 1;
@@ -107,17 +107,17 @@ public:
             if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
-                M = pos;
+                P = pos;
             }
         }
 
-        sketch[R][M].momentum /= 2;
+        sketch[R][P].momentum /= 2;
 
-        if (randomGenerator() % ((uint64_t)sketch[R][M].momentum + 1) == 0) {
-            if (--sketch[R][M].counter == 0) {
-                sketch[R][M].ID = item;
-                sketch[R][M].counter = 1;
-                sketch[R][M].momentum = 1;
+        if (randomGenerator() % ((uint64_t)sketch[R][P].momentum + 1) == 0) {
+            if (--sketch[R][P].counter == 0) {
+                sketch[R][P].ID = item;
+                sketch[R][P].counter = 1;
+                sketch[R][P].momentum = 1;
             }
         }
     }
@@ -137,11 +137,11 @@ public:
     void Insert(const DATA_TYPE& item) {
         COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
         int R = -1;
-        int M = -1;
+        int P = -1;
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             uint32_t pos = hash(item, i) % LENGTH;   
-            if (sketch[i][pos].ID[0] == '\0') {
+            if (sketch[i][pos].ID[0] == '\0' && sketch[i][pos].counter == 0) {
                 sketch[i][pos].ID = item;
                 sketch[i][pos].counter = 1;
                 sketch[i][pos].momentum = 1;
@@ -160,21 +160,81 @@ public:
             if (sketch[i][pos].counter < min) {
                 min = sketch[i][pos].counter;
                 R = i;
-                M = pos;
+                P = pos;
             }
         }
 
-        sketch[R][M].momentum /= 2;
+        sketch[R][P].momentum /= 2;
 
-        if (randomGenerator() % ((uint64_t)sketch[R][M].counter + 1) == 0) {
-            if (--sketch[R][M].counter == 0) {
-                sketch[R][M].ID = item;
-                sketch[R][M].counter = 1;
-                sketch[R][M].momentum = 1;
+        if (randomGenerator() % ((uint64_t)sketch[R][P].counter + 1) == 0) {
+            if (--sketch[R][P].counter == 0) {
+                sketch[R][P].ID = item;
+                sketch[R][P].counter = 1;
+                sketch[R][P].momentum = 1;
             }
         }
     }
 
 };
+
+template<typename DATA_TYPE>
+class MomentumSketchDecayFactor : public MomentumSketch<DATA_TYPE> {
+public:
+    using MomentumSketch<DATA_TYPE>::LENGTH;
+    using MomentumSketch<DATA_TYPE>::HASH_NUM;
+    using MomentumSketch<DATA_TYPE>::sketch;
+
+    MomentumSketchDecayFactor(uint32_t _MEMORY,
+                      std::string _name = /* std::string("df = ") + */ std::to_string(decay_factor_))
+        : MomentumSketch<DATA_TYPE>(_MEMORY, _name) {}
+
+    static void SetDecayFactor(double df) { decay_factor_ = df; }
+
+    void Insert(const DATA_TYPE& item) {
+        COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
+        int R = -1;
+        int P = -1;
+
+        for(uint32_t i = 0; i < HASH_NUM; ++i) {
+            uint32_t pos = hash(item, i) % LENGTH;   
+            if (sketch[i][pos].ID[0] == '\0' && sketch[i][pos].counter == 0) {
+                sketch[i][pos].ID = item;
+                sketch[i][pos].counter = 1;
+                sketch[i][pos].momentum = 1;
+                return;
+            }
+            if (item == sketch[i][pos].ID) {
+                if (std::numeric_limits<COUNT_TYPE>::max() - sketch[i][pos].momentum < sketch[i][pos].counter) {
+                    sketch[i][pos].momentum = std::numeric_limits<COUNT_TYPE>::max();
+                } 
+                else {
+                    sketch[i][pos].momentum += sketch[i][pos].counter;
+                }
+                sketch[i][pos].counter++;
+                return;
+            }
+            if (sketch[i][pos].counter < min) {
+                min = sketch[i][pos].counter;
+                R = i;
+                P = pos;
+            }
+        }
+
+        sketch[R][P].momentum /= decay_factor_;
+
+        if (randomGenerator() % ((uint64_t)sketch[R][P].counter * sketch[R][P].momentum + 1) == 0) {
+            if (--sketch[R][P].counter == 0) {
+                sketch[R][P].ID = item;
+                sketch[R][P].counter = 1;
+                sketch[R][P].momentum = 1;
+            }
+        }
+    }
+
+    static double decay_factor_;
+};
+
+template<typename DATA_TYPE>
+double MomentumSketchDecayFactor<DATA_TYPE>::decay_factor_ = 2;
 
 #endif

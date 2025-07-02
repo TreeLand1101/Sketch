@@ -41,7 +41,7 @@ public:
 
     void Insert(const DATA_TYPE& item) {
         COUNT_TYPE min = std::numeric_limits<COUNT_TYPE>::max();
-        int R = -1, M = -1;
+        int R = -1, P = -1;
 
         uint32_t onehash[4];
         hash128(item, onehash);
@@ -52,13 +52,13 @@ public:
         vindex = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
 
         __m512i vkey = _mm512_set_epi64(
-            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
-            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low64(),
-            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low64(),
-            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low64()
+            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low40(),
+            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low40(),
+            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low40(),
+            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low40()
         );
 
-        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
+        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low40()));
         __mmask8 mask = _mm512_cmpeq_epi64_mask(vkey, comkey);
 
         uint8_t bit_pair_mask = 0b11;
@@ -84,19 +84,19 @@ public:
                 if (sketch[i][index[i]].counter < min) {
                     min = sketch[i][index[i]].counter;
                     R = i;
-                    M = index[i];
+                    P = index[i];
                 }                
             }
             bit_pair_mask <<= 2;
         }
 
-        sketch[R][M].momentum /= 2;
+        sketch[R][P].momentum /= DECAY_FACTOR;
 
-        if (randomGenerator() % ((uint64_t)sketch[R][M].counter * sketch[R][M].momentum + 1) == 0) {
-            if (--sketch[R][M].counter == 0) {
-                sketch[R][M].ID = item;
-                sketch[R][M].counter = 1;
-                sketch[R][M].momentum = 1;
+        if (randomGenerator() % ((uint64_t)sketch[R][P].counter * sketch[R][P].momentum + 1) == 0) {
+            if (--sketch[R][P].counter == 0) {
+                sketch[R][P].ID = item;
+                sketch[R][P].counter = 1;
+                sketch[R][P].momentum = 1;
             }
         }
     }
@@ -111,13 +111,13 @@ public:
         vindex = _mm256_srli_epi64(_mm256_mul_epu32(vhash, vwidth), 32);
 
         __m512i vkey = _mm512_set_epi64(
-            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low64(),
-            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low64(),
-            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low64(),
-            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low64()
+            sketch[3][index[3]].ID.high64(), sketch[3][index[3]].ID.low40(),
+            sketch[2][index[2]].ID.high64(), sketch[2][index[2]].ID.low40(),
+            sketch[1][index[1]].ID.high64(), sketch[1][index[1]].ID.low40(),
+            sketch[0][index[0]].ID.high64(), sketch[0][index[0]].ID.low40()
         );
 
-        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low64()));
+        __m512i comkey = _mm512_broadcast_i64x2(_mm_set_epi64x(item.high64(), item.low40()));
         __mmask8 mask = _mm512_cmpeq_epi64_mask(vkey, comkey);
 
         uint8_t bit_pair_mask = 0b11;
@@ -136,7 +136,7 @@ public:
 
         for(uint32_t i = 0; i < HASH_NUM; ++i) {
             for(uint32_t j = 0; j < LENGTH; ++j) {
-                if(sketch[i][j].ID[0] != '\0' && ret.find(sketch[i][j].ID) == ret.end()) {
+                if (sketch[i][j].ID[0] != '\0' && sketch[i][j].counter != 0 && ret.find(sketch[i][j].ID) == ret.end()) {
                     ret[sketch[i][j].ID] = Query(sketch[i][j].ID);
                 }
             }
@@ -147,6 +147,7 @@ public:
 
     uint32_t LENGTH;
     const uint32_t HASH_NUM = 4;
+    const double DECAY_FACTOR = 1.1;
     Bucket** sketch;
 };
 

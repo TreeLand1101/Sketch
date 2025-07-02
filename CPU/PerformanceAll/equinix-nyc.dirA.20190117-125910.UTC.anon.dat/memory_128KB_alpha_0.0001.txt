@@ -4,18 +4,18 @@ Number of flows: 2318625
 
 === MomentumSketch ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 10.409
-Query Throughput (Mops) : 13.2945
-Recall                  : 0.971631
+Insert Throughput (Mops): 10.2691
+Query Throughput (Mops) : 13.2848
+Recall                  : 0.966473
 Precision               : 1
-F1 Score                : 0.985612
-AAE                     : 41.7704
-ARE                     : 0.00790916
+F1 Score                : 0.982951
+AAE                     : 55.7859
+ARE                     : 0.00937547
 
 === CMHeap ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 4.14877
-Query Throughput (Mops) : 6.31344
+Insert Throughput (Mops): 4.23436
+Query Throughput (Mops) : 6.58118
 Recall                  : 0.35332
 Precision               : 0.853583
 F1 Score                : 0.499772
@@ -24,8 +24,8 @@ ARE                     : 0.105909
 
 === SpaceSaving ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 5.51782
-Query Throughput (Mops) : 8.7613
+Insert Throughput (Mops): 5.51941
+Query Throughput (Mops) : 8.72132
 Recall                  : 0.363636
 Precision               : 0.391667
 F1 Score                : 0.377131
@@ -34,28 +34,28 @@ ARE                     : 1.86703
 
 === TwoStage ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 16.7413
-Query Throughput (Mops) : 14.5758
-Recall                  : 0.923275
-Precision               : 0.976142
-F1 Score                : 0.948973
-AAE                     : 72.3631
-ARE                     : 0.0147056
+Insert Throughput (Mops): 16.9335
+Query Throughput (Mops) : 14.883
+Recall                  : 0.925854
+Precision               : 0.975543
+F1 Score                : 0.95005
+AAE                     : 65.9513
+ARE                     : 0.0132041
 
 === MVSketch ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 8.5251
-Query Throughput (Mops) : 10.0493
-Recall                  : 0.65893
-Precision               : 0.292083
-F1 Score                : 0.404752
-AAE                     : 2217.69
-ARE                     : 0.448378
+Insert Throughput (Mops): 8.67723
+Query Throughput (Mops) : 10.1798
+Recall                  : 0.640877
+Precision               : 0.347431
+F1 Score                : 0.450589
+AAE                     : 2181.73
+ARE                     : 0.435185
 
 === Elastic ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 16.1129
-Query Throughput (Mops) : 18.4409
+Insert Throughput (Mops): 16.4971
+Query Throughput (Mops) : 19.1208
 Recall                  : 0.745326
 Precision               : 0.896819
 F1 Score                : 0.814085
@@ -64,31 +64,31 @@ ARE                     : 0.114714
 
 === CocoSketch ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 16.4021
-Query Throughput (Mops) : 20.2059
-Recall                  : 0.889749
-Precision               : 0.455446
-F1 Score                : 0.602489
-AAE                     : 643.249
-ARE                     : 0.130262
+Insert Throughput (Mops): 16.085
+Query Throughput (Mops) : 20.7599
+Recall                  : 0.891683
+Precision               : 0.448153
+F1 Score                : 0.596506
+AAE                     : 602.761
+ARE                     : 0.125062
 
 === TightSketch ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 9.10567
-Query Throughput (Mops) : 13.352
-Recall                  : 0.956802
+Insert Throughput (Mops): 9.37864
+Query Throughput (Mops) : 13.3394
+Recall                  : 0.954223
 Precision               : 1
-F1 Score                : 0.977924
-AAE                     : 54.8342
-ARE                     : 0.0110759
+F1 Score                : 0.976575
+AAE                     : 56.6054
+ARE                     : 0.0111942
 
 === StableSketch ===
 Heavy Hitter Threshold  : 2957
-Insert Throughput (Mops): 9.76063
-Query Throughput (Mops) : 13.2049
-Recall                  : 0.718246
+Insert Throughput (Mops): 9.90135
+Query Throughput (Mops) : 13.338
+Recall                  : 0.724049
 Precision               : 1
-F1 Score                : 0.836023
-AAE                     : 161.513
-ARE                     : 0.015675
+F1 Score                : 0.83994
+AAE                     : 144.28
+ARE                     : 0.0148949
 

@@ -42,11 +42,11 @@ struct TUPLES{
         return data[index];
     }
     
-    inline uint64_t low64() const {
+    inline uint64_t high64() const {
         return *((uint64_t*)(data));
     }
 
-    inline uint64_t high64() const {
+    inline uint64_t low40() const {
         uint64_t v = 0;
         v |= uint64_t(srcPort()) << 48;
         v |= uint64_t(dstPort()) << 32;
